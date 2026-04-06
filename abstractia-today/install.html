@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Installation Inquiry — ABSTRACTIA</title>
+<meta name="description" content="Bring ABSTRACTIA to your space. Museum, gallery, home, or event — inquire about installations by Maxximillian.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/install.css">
+</head>
+<body>
+
+<nav id="nav" class="scrolled">
+  <a href="/" class="nav-logo">ABSTR<span>A</span>CTIA</a>
+  <ul class="nav-links">
+    <li><a href="/#gallery">Works</a></li>
+    <li><a href="exhibitions.html">Exhibitions</a></li>
+    <li><a href="installations.html">Installations</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="install.html" class="edition-pill active-page">Bring it to your space</a>
+  </div>
+</nav>
+
+<div class="install-page">
+  <div class="install-inner">
+
+    <p class="page-eyebrow">Bring ABSTRACTIA to your space</p>
+    <h1 class="page-title">INSTALLATION<br>INQUIRY</h1>
+    <p class="page-intro">
+      ABSTRACTIA is never-ending interactive art — it lives on screens, walls, and in rooms.
+      Every engagement begins with owning the work. What happens next depends on what you want to build.
+    </p>
+
+    <div class="progress-bar">
+      <div class="progress-step done" id="ps1"></div>
+      <div class="progress-step" id="ps2"></div>
+      <div class="progress-step" id="ps3"></div>
+      <div class="progress-step" id="ps4"></div>
+    </div>
+
+    <div id="formWrap">
+
+      <div class="form-section">
+        <p class="form-section-label">01 — What are you looking for?</p>
+        <div class="path-select">
+          <div class="path-card" id="pathScreen" onclick="selectPath('screen')">
+            <div class="path-icon">▣</div>
+            <p class="path-title">Screen the Work</p>
+            <p class="path-desc">You own a work of ABSTRACTIA and want to display it. I'll send a video walkthrough and complete display kit — everything you need to show it beautifully on any screen you already have.</p>
+          </div>
+          <div class="path-card" id="pathInstall" onclick="selectPath('install')">
+            <div class="path-icon">◈</div>
+            <p class="path-title">Commission an Installation</p>
+            <p class="path-desc">You want ABSTRACTIA to take over a space — a wall, a room, a venue. Custom hardware, projection, flexible LCD. Maxximillian and a small team design and install on-site.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="ownership-box" id="ownershipBox" style="display:none">
+        <p class="ownership-box-title">A note on ownership</p>
+        <p id="ownershipText"></p>
+      </div>
+
+      <div id="contactSection" style="display:none">
+        <div class="form-section">
+          <p class="form-section-label">02 — About you</p>
+          <div class="field-row">
+            <div class="field"><label>Name</label><input type="text" id="fName" placeholder="Your full name"></div>
+            <div class="field"><label>Organization</label><input type="text" id="fOrg" placeholder="Museum, gallery, business, or private"></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Email</label><input type="email" id="fEmail" placeholder="your@email.com"></div>
+            <div class="field"><label>Phone (optional)</label><input type="tel" id="fPhone" placeholder="+1 000 000 0000"></div>
+          </div>
+          <div class="field">
+            <label>Type of space</label>
+            <select id="fSpaceType">
+              <option value="">— Select —</option>
+              <option value="museum">Museum or cultural institution</option>
+              <option value="gallery">Commercial gallery</option>
+              <option value="event">Event venue or festival</option>
+              <option value="commercial">Corporate or hospitality space</option>
+              <option value="home">Private collector / home</option>
+              <option value="retail">Retail or public space</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Location</label>
+            <input type="text" id="fLocation" placeholder="City, State / Country">
+          </div>
+        </div>
+
+        <div id="screenSection" style="display:none">
+          <div class="form-section">
+            <p class="form-section-label">03 — Screening details</p>
+            <div class="field">
+              <label>Which work(s) do you own?</label>
+              <input type="text" id="fWorks" placeholder="e.g. X AQUA, LXXX SUNSET — or 'not yet collected'">
+            </div>
+            <div class="field">
+              <label>Display context</label>
+              <select id="fDisplayCtx">
+                <option value="">— Select —</option>
+                <option>Personal / home display</option>
+                <option>Private event (non-commercial)</option>
+                <option>Gallery or museum exhibition — ticketed</option>
+                <option>Commercial venue — permanent feature</option>
+                <option>Corporate lobby or office</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Screen size / setup you have</label>
+              <input type="text" id="fScreen" placeholder='e.g. 85" 4K TV, dual monitors, existing projector'>
+            </div>
+            <div class="field">
+              <label>Tell us about the space</label>
+              <textarea id="fScreenNotes" placeholder="Describe the space, the show, or what you're imagining..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div id="installSection" style="display:none">
+          <div class="form-section">
+            <p class="form-section-label">03 — Installation type</p>
+            <div class="install-tiers">
+              <div class="tier-card" id="tierTemp" onclick="selectTier('temporary')">
+                <p class="tier-name">Temporary</p>
+                <p class="tier-price">From $15,000</p>
+                <p class="tier-desc">Pop-up shows, festivals, events. We arrive, install, run it, strike it. Days to weeks.</p>
+              </div>
+              <div class="tier-card" id="tierSemi" onclick="selectTier('semi')">
+                <p class="tier-name">Semi-Permanent</p>
+                <p class="tier-price">From $15,000</p>
+                <p class="tier-desc">Seasonal residencies, rotating exhibitions. Hardware stays, content can evolve.</p>
+              </div>
+              <div class="tier-card" id="tierPerm" onclick="selectTier('permanent')">
+                <p class="tier-name">Permanent</p>
+                <p class="tier-price">Custom quote</p>
+                <p class="tier-desc">Integrated into the architecture. Built to last. Lobby, atrium, outdoor wall.</p>
+              </div>
+            </div>
+            <div class="field">
+              <label>Which work(s) do you own or plan to collect?</label>
+              <input type="text" id="fInstallWorks" placeholder="e.g. LXXX SUNSET — or 'interested in collecting first'">
+            </div>
+            <div class="field-row">
+              <div class="field"><label>Space dimensions (approx.)</label><input type="text" id="fDims" placeholder="e.g. 40ft × 20ft wall"></div>
+              <div class="field"><label>Proposed dates</label><input type="text" id="fDates" placeholder="e.g. June 2025 or TBD"></div>
+            </div>
+            <div class="field">
+              <label>Display hardware preference</label>
+              <select id="fHardware">
+                <option value="">— Not sure yet —</option>
+                <option>Flexible LCD panels</option>
+                <option>Projection</option>
+                <option>LED wall</option>
+                <option>Existing screens in venue</option>
+                <option>Open to recommendation</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Tell us about the vision</label>
+              <textarea id="fInstallNotes" placeholder="Describe the space, the experience you want to create..."></textarea>
+            </div>
+            <div class="field">
+              <label>Budget range</label>
+              <select id="fBudget">
+                <option value="">— Select —</option>
+                <option>$15,000 – $30,000</option>
+                <option>$30,000 – $60,000</option>
+                <option>$60,000 – $100,000</option>
+                <option>$100,000+</option>
+                <option>Prefer to discuss</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div id="curateSection" style="display:none">
+          <div class="form-section">
+            <p class="form-section-label" id="curateLabel">04 — Exhibition options</p>
+            <div class="checkbox-row">
+              <input type="checkbox" id="chkCurate">
+              <label for="chkCurate">I'm interested in having Maxximillian curate the exhibition or show sequence</label>
+            </div>
+            <div class="checkbox-row">
+              <input type="checkbox" id="chkOwns">
+              <label for="chkOwns">I confirm that any works displayed will be owned by me or my organization, or I will collect them prior to the show</label>
+            </div>
+            <div class="checkbox-row">
+              <input type="checkbox" id="chkConsent">
+              <label for="chkConsent">I understand that commercial display of ABSTRACTIA without ownership or an active agreement with the artist is not permitted</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="submit-row">
+          <button class="btn-primary" onclick="submitForm()">Send Inquiry ↗</button>
+          <p class="submit-note">We'll respond within 3–5 business days.<br>All inquiries go directly to Maxximillian.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="success-panel" id="successPanel">
+      <div class="success-mark">◈</div>
+      <p class="success-title">INQUIRY RECEIVED</p>
+      <p class="success-body">Your inquiry has been sent directly to Maxximillian.<br>Expect a response within 3–5 business days.<br><br>
+      In the meantime, explore the full series at <a href="/" style="color:var(--mag)">abstractia.today</a></p>
+    </div>
+
+  </div>
+</div>
+
+<script src="js/supabase.js"></script>
+<script src="js/install.js"></script>
+</body>
+</html>

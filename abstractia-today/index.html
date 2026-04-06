@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABSTRACTIA — Never-ending Interactive Art by Maxximillian</title>
+<meta name="description" content="ABSTRACTIA is never-ending interactive art you own and control. 365 works by Maxximillian. I–CCCLXV.">
+<meta property="og:title" content="ABSTRACTIA — Never-ending Interactive Art">
+<meta property="og:description" content="365 living works by Maxximillian. You own it. You control it.">
+<meta property="og:url" content="https://abstractia.today">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav id="nav">
+  <a href="/" class="nav-logo">ABSTR<span>A</span>CTIA</a>
+  <ul class="nav-links">
+    <li><a href="#gallery">Works</a></li>
+    <li><a href="exhibitions.html">Exhibitions</a></li>
+    <li><a href="installations.html">Installations</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="install.html" class="edition-pill">Bring it to your space ↗</a>
+  </div>
+</nav>
+
+<div id="hero">
+  <canvas id="waveCanvas"></canvas>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Never-ending Interactive Art — You Own &amp; Control</p>
+    <h1 class="hero-wordmark">ABSTRACTIA</h1>
+    <p class="hero-sub">By Maxximillian &nbsp;·&nbsp; 365 Works &nbsp;·&nbsp; I–CCCLXV</p>
+    <div class="hero-cta-row">
+      <button class="btn-primary" onclick="document.getElementById('gallery').scrollIntoView({behavior:'smooth'})">Enter the Gallery</button>
+      <a href="about.html" class="btn-ghost">The World</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</div>
+
+<div class="ticker-bar">
+  <div class="ticker-inner">
+    <span>ABSTRACTIA · NEVER-ENDING INTERACTIVE ART · YOU OWN &amp; CONTROL · BY MAXXIMILLIAN</span>
+    <span>365 WORKS · UNIQUE · TINY EDITIONS · LIMITED · MONTHLY · PARTNER INSTALLATIONS</span>
+    <span>ABSTRACTIA · NEVER-ENDING INTERACTIVE ART · YOU OWN &amp; CONTROL · BY MAXXIMILLIAN</span>
+    <span>365 WORKS · UNIQUE · TINY EDITIONS · LIMITED · MONTHLY · PARTNER INSTALLATIONS</span>
+  </div>
+</div>
+
+<section id="gallery">
+  <div class="section-header">
+    <h2 class="section-title">THE WORKS</h2>
+    <span class="section-count" id="workCount">I–CCCLXV</span>
+  </div>
+  <div class="section-filters">
+    <button class="filter-btn active" onclick="filterWorks('all',this)">All Works</button>
+    <button class="filter-btn" onclick="filterWorks('unique',this)">Unique (1/1)</button>
+    <button class="filter-btn" onclick="filterWorks('tiny',this)">Tiny Edition (≤5)</button>
+    <button class="filter-btn" onclick="filterWorks('limited',this)">Limited (420)</button>
+    <button class="filter-btn" onclick="filterWorks('monthly',this)">Monthly</button>
+    <button class="filter-btn" onclick="filterWorks('partner',this)">Partner Installations</button>
+    <button class="filter-btn" onclick="filterWorks('waves',this)">Waves</button>
+    <button class="filter-btn" onclick="filterWorks('lines',this)">Lines</button>
+  </div>
+  <div class="gallery-grid" id="galleryGrid">
+    <div class="gallery-loading">Loading works...</div>
+  </div>
+</section>
+
+<div class="featured-strip" id="exhibitions">
+  <div class="featured-video-frame">
+    <canvas id="featuredWave"></canvas>
+    <div class="video-placeholder">
+      <div class="play-btn" onclick="window.open('https://youtube.com','_blank')"></div>
+      <span>Watch Exhibition Walkthrough</span>
+    </div>
+  </div>
+  <div class="featured-text">
+    <p class="featured-label">Featured Work</p>
+    <h2 class="featured-title" id="featuredTitle">ABSTRACTIA<br>IN THE WORLD</h2>
+    <p class="featured-body">Living works of public art. They respond to time, touch, and data. Each one is yours to own, control, and display — on any screen, in any space.</p>
+    <div class="key-hints">
+      <div class="key-hint"><span class="key">W</span> Waves</div>
+      <div class="key-hint"><span class="key">L</span> Lines</div>
+      <div class="key-hint"><span class="key">C</span> Companion</div>
+      <div class="key-hint"><span class="key">↑↓</span> Speed</div>
+    </div>
+    <a href="install.html" class="btn-primary">Bring it to your space ↗</a>
+  </div>
+</div>
+
+<section id="about">
+  <div class="section-header">
+    <h2 class="section-title">THE WORLD</h2>
+  </div>
+  <div class="world-grid">
+    <div class="world-card">
+      <div class="world-icon">∞</div>
+      <h3 class="world-card-title">Never-Ending</h3>
+      <p class="world-card-body">Each work is alive. Time-of-day palettes, interactive states, data triggers. The art responds to the world — and to you.</p>
+    </div>
+    <div class="world-card">
+      <div class="world-icon">⊕</div>
+      <h3 class="world-card-title">You Own &amp; Control</h3>
+      <p class="world-card-body">Collectors hold the remote. Switch states, trigger modes, connect to real-world data. Your piece, your rules.</p>
+    </div>
+    <div class="world-card">
+      <div class="world-icon">◈</div>
+      <h3 class="world-card-title">Public Art</h3>
+      <p class="world-card-body">These works belong in the world. Permanent installations, food courts, Miami Wynwood, the Bitcoin Conference. ABSTRACTIA at scale.</p>
+    </div>
+    <div class="world-card">
+      <div class="world-icon">↯</div>
+      <h3 class="world-card-title">Partner Installations</h3>
+      <p class="world-card-body">Skelevaggio. Pepavaggio. Swell. ABSTRACTIA lives inside themed worlds, extending the universe through collaboration.</p>
+    </div>
+    <div class="world-card">
+      <div class="world-icon">⬡</div>
+      <h3 class="world-card-title">365 Works</h3>
+      <p class="world-card-body">A complete series — Roman numerals I through CCCLXV. Unique, tiny, limited, monthly editions. Each number has a story.</p>
+    </div>
+    <div class="world-card">
+      <div class="world-icon">◉</div>
+      <h3 class="world-card-title">Machines</h3>
+      <p class="world-card-body">Physical objects. Claw machines. A plastic ball, a QR code, a digital work that's yours forever. Art that fits in your pocket.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-brand">
+    <div class="footer-logo">ABSTRACTIA</div>
+    <p>Never-ending Interactive Art You Own &amp; Control.<br>By Maxximillian. 365 works. I–CCCLXV.<br><br>abstractia.today</p>
+  </div>
+  <div>
+    <p class="footer-col-title">Collect</p>
+    <ul class="footer-links">
+      <li><a href="#gallery">Unique (1/1)</a></li>
+      <li><a href="#gallery">Tiny Editions</a></li>
+      <li><a href="#gallery">Limited (420)</a></li>
+      <li><a href="#gallery">Monthly Editions</a></li>
+      <li><a href="install.html">Installations</a></li>
+    </ul>
+  </div>
+  <div>
+    <p class="footer-col-title">Universe</p>
+    <ul class="footer-links">
+      <li><a href="#">Skelevaggio</a></li>
+      <li><a href="#">Pepavaggio</a></li>
+      <li><a href="#">Swell</a></li>
+      <li><a href="exhibitions.html">Exhibitions</a></li>
+      <li><a href="about.html">About Maxximillian</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="footer-bottom">
+  <span>© Maxximillian — ABSTRACTIA — abstractia.today</span>
+  <span>Never-ending Interactive Art You Own &amp; Control</span>
+</div>
+
+<!-- WORK MODAL -->
+<div class="modal-bg" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <p class="modal-numeral" id="modalNumeral"></p>
+    <h2 class="modal-title" id="modalTitle"></h2>
+    <p class="modal-subtitle" id="modalSubtitle"></p>
+    <div class="modal-canvas-wrap">
+      <canvas id="modalCanvas"></canvas>
+    </div>
+    <div class="modal-states">
+      <p class="states-label">Interactive States</p>
+      <div class="states-grid" id="modalStates"></div>
+    </div>
+    <p class="modal-body" id="modalBody"></p>
+    <div class="modal-actions">
+      <a class="btn-primary" id="modalCollect" href="#" target="_blank">Collect this work ↗</a>
+      <a class="btn-ghost" id="modalVideo" href="#" target="_blank">Watch Exhibition ↗</a>
+    </div>
+  </div>
+</div>
+
+<script src="js/supabase.js"></script>
+<script src="js/gallery.js"></script>
+<script src="js/hero.js"></script>
+</body>
+</html>

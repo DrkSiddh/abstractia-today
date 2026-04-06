@@ -1,0 +1,65 @@
+/* ABSTRACTIA — Install Page Styles */
+
+.install-page { padding-top: 80px; }
+.install-inner { max-width: 780px; margin: 0 auto; padding: 60px 32px 80px; }
+
+.page-eyebrow { font-family: var(--fm); font-size: 10px; letter-spacing: 0.3em; color: var(--mag); text-transform: uppercase; margin-bottom: 12px; }
+.page-title { font-family: var(--fd); font-size: clamp(48px,8vw,80px); line-height: 0.92; margin-bottom: 20px; }
+.page-intro { font-size: 14px; color: var(--mut); line-height: 1.85; border-left: 2px solid var(--mag); padding-left: 20px; margin-bottom: 48px; max-width: 580px; }
+
+.progress-bar { display: flex; gap: 4px; margin-bottom: 40px; }
+.progress-step { height: 2px; flex: 1; background: var(--bdr); transition: background 0.3s; }
+.progress-step.done { background: var(--mag); }
+
+.form-section { margin-bottom: 40px; }
+.form-section-label { font-family: var(--fm); font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--mag); border-bottom: 1px solid var(--bdr); padding-bottom: 10px; margin-bottom: 24px; }
+
+.path-select { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-bottom: 32px; }
+.path-card { background: var(--surf); border: 1px solid var(--bdr); padding: 28px 24px; cursor: pointer; transition: border-color 0.2s, background 0.2s; position: relative; }
+.path-card:hover { border-color: rgba(255,45,120,0.4); }
+.path-card.selected { border-color: var(--mag); background: var(--mag-dim); }
+.path-card.selected::after { content:''; position:absolute; top:12px; right:12px; width:8px; height:8px; background:var(--mag); border-radius:50%; }
+.path-icon { font-family: var(--fd); font-size: 36px; color: var(--mag); opacity: 0.5; margin-bottom: 12px; line-height: 1; }
+.path-title { font-family: var(--fd); font-size: 22px; letter-spacing: 0.03em; margin-bottom: 6px; }
+.path-desc { font-size: 12px; color: var(--mut); line-height: 1.7; }
+
+.ownership-box { background: var(--surf2); border: 1px solid rgba(255,184,48,0.25); padding: 20px 24px; margin-bottom: 32px; }
+.ownership-box-title { font-family: var(--fm); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+.ownership-box p { font-size: 13px; color: var(--mut); line-height: 1.75; }
+
+.field { margin-bottom: 20px; }
+.field label { display: block; font-family: var(--fm); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--mut); margin-bottom: 8px; }
+.field input, .field select, .field textarea { width: 100%; background: var(--surf); border: 1px solid var(--bdr); color: var(--txt); font-family: var(--fb); font-size: 14px; padding: 12px 16px; outline: none; transition: border-color 0.2s; -webkit-appearance: none; }
+.field select option { background: #13131C; color: #F0EEE8; }
+.field input:focus, .field select:focus, .field textarea:focus { border-color: var(--mag); }
+.field textarea { resize: vertical; min-height: 100px; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+.install-tiers { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; margin-bottom: 24px; }
+.tier-card { background: var(--surf); border: 1px solid var(--bdr); padding: 20px 16px; cursor: pointer; transition: border-color 0.2s, background 0.2s; position: relative; }
+.tier-card:hover { border-color: rgba(255,45,120,0.3); }
+.tier-card.selected { border-color: var(--mag); background: var(--mag-dim); }
+.tier-card.selected::after { content:''; position:absolute; top:10px; right:10px; width:6px; height:6px; background:var(--mag); border-radius:50%; }
+.tier-name { font-family: var(--fd); font-size: 18px; letter-spacing: 0.03em; margin-bottom: 4px; }
+.tier-price { font-family: var(--fm); font-size: 10px; color: var(--mag); letter-spacing: 0.1em; margin-bottom: 8px; }
+.tier-desc { font-size: 11px; color: var(--mut); line-height: 1.6; }
+
+.checkbox-row { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
+.checkbox-row input[type=checkbox] { width: 16px; height: 16px; min-width: 16px; margin-top: 2px; accent-color: var(--mag); cursor: pointer; }
+.checkbox-row label { font-size: 13px; color: var(--mut); line-height: 1.7; cursor: pointer; }
+
+.submit-row { display: flex; align-items: center; gap: 20px; margin-top: 40px; }
+.submit-note { font-family: var(--fm); font-size: 10px; color: var(--mut); letter-spacing: 0.1em; line-height: 1.6; }
+
+.success-panel { display: none; background: var(--surf); border: 1px solid rgba(255,45,120,0.3); padding: 48px 40px; text-align: center; }
+.success-panel.visible { display: block; }
+.success-mark { font-family: var(--fd); font-size: 64px; color: var(--mag); margin-bottom: 16px; }
+.success-title { font-family: var(--fd); font-size: 36px; margin-bottom: 12px; }
+.success-body { font-size: 13px; color: var(--mut); line-height: 1.8; }
+
+.active-page { background: var(--mag) !important; color: #fff !important; }
+
+@media (max-width: 600px) {
+  .path-select, .install-tiers, .field-row { grid-template-columns: 1fr; }
+  .install-inner { padding: 40px 20px 60px; }
+}
