@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.11.11/lib/p5.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/p5@0.7.0/lib/addons/p5.sound.min.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "mediabunny": "https://cdn.jsdelivr.net/npm/mediabunny@1.25.8/+esm"
+      }
+    }
+  </script>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
+      overflow: auto;
+      background: transparent;
+    }
+
+    main {
+      height: 100%;
+      display: flex;
+      overflow: auto;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #p5_loading {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      animation-delay: 1s;
+      color: #4e5d7b;
+      font-family: "FK Grotesk Regular", sans-serif;
+      font-size: 30px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 30px;
+      letter-spacing: -1.5px;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .5; }
+    }
+  </style>
+  <title>34 Abstractia Frequency | Made on juno.transient.xyz</title>
+</head>
+<body>
+  
+    
+  <script>
+    let cnv;
+let isMobile;
+let imgSkelevaggioLoves34;
+let imgAbstractLindiaGif;
+let videoEarthAccordingToMermaids;
+let videoBlaqqatDevV;
+let videoOpeningAbstractia; 
+let videoAbstractiaVILagoon;
+let imgControlsII;
+let audioHarmonicEtherealCoSunlitRays;
+let audioOpeningIIAbstractia;
+let audioAbstractiaIV;
+let audioHarmonicWave;
+let audioAhVIHarmonics;
+let button;
+let fontRock3D;
+
+let scene = 0;
+let fadeAlpha = 0;
+let fadeRate = 4;
+let showAlternateView = false;
+let showCompanionView = false;
+let showLinesMode = false;
+let showWavesMode = false;
+let showOpeningVideo = false; 
+let waveCount = 0;
+let waveStep = 0;
+let lineStep = 0;
+let isHushed = false;
+let isHarmonicsMuted = false;
+let showMountainMode = false;
+const LERP_RATE = 0.05;
+let isQuietMode = false;
+let isDevMuted = false;
+let showControlsMenu = false;
+let isDeveloperMode = false;
+let isHovering = false;
+
+let welcomeVolume = 0;
+let bVideoVolume = 0;
+let bubbles = [];
+
+let currentPaletteHex = [];
+let targetPaletteHex = [];
+let paletteLerpRate = 0.015;
+let bgScrollOffset = 0;
+
+const DAY_PALETTE = ["03045e", "023e8a", "0077b6", "00b4d8", "00ffff", "0077b6", "023e8a", "00b4d8", "0096c7", "03045e"];
+const NIGHT_PALETTE = ["240046", "3c096c", "5a189a", "7b2cbf", "9d4edd", "ff00ff", "7b2cbf", "5a189a", "240046", "ff00ff"];
+const TWILIGHT_PALETTE = ["ff0054", "ff0000", "ff4d6d", "c9184a", "a4133c", "ff0054", "590d22", "ff4d6d", "ff0054", "c9184a"];
+const LIME_PALETTE = ["004b23", "00ff00", "38b000", "70e000", "9ef01a", "ccff33", "38b000", "00ff00", "004b23", "ccff33"];
+const DAWN_PALETTE_BASE = ["ff0054", "ff5400", "be3e82", "ff0a54", "ff477e", "ff5c8a", "fb5607", "ff0a54", "ff5400", "ff0054"];
+const BRIGHTS_PALETTE = ["35ff69", "42bfdd", "f5b700", "00a1e4", "e63462", "d138bf", "f06449", "35ff69", "42bfdd", "f5b700"];
+const LATE_NIGHT_PALETTE = ["378B9D", "3E9E6C", "D7C339", "524368", "774253", "378B9D", "3E9E6C", "D7C339", "524368", "774253"];
+const FOUR_TWENTY_PALETTE = ["45CBBB", "3E9E6C", "ABD74E", "40B7A3", "5A8839", "45CBBB", "3E9E6C", "ABD74E", "40B7A3", "5A8839"];
+
+let colorsPalette = [];
+let lastPaletteType = "";
+
+function preload() {
+  imgSkelevaggioLoves34 = loadImage("https://dae.transientusercontent.xyz/uploads/4abaab1a-88aa-4a46-a0e4-8e0040254cc8");
+  audioHarmonicEtherealCoSunlitRays = loadSound("https://dae.transientusercontent.xyz/uploads/295133e5-d5e2-4d2c-a968-85ea4a5872c1");
+  fontRock3D = loadFont("https://dae.transientusercontent.xyz/uploads/fa827533-05e2-4540-b01f-5b7c3bcdeed4");
+  imgControlsII = loadImage("https://dae.transientusercontent.xyz/uploads/0a2a9b8d-b82c-4fd9-8843-e432c7787c93");
+  audioOpeningIIAbstractia = loadSound("https://dae.transientusercontent.xyz/uploads/bb00503d-13ad-4177-a995-d6d2c6b13b2c");
+  audioAbstractiaIV = loadSound("https://dae.transientusercontent.xyz/uploads/b8517588-e48c-4409-8df2-d866f151a537");
+  audioHarmonicWave = loadSound("https://dae.transientusercontent.xyz/uploads/28761e45-6707-4e36-bf7e-04e5695066a0");
+  audioAhVIHarmonics = loadSound("https://dae.transientusercontent.xyz/uploads/871216ee-5f74-4fbd-b6b9-1d03e1af3074");
+}
+
+function getPaletteByTime() {
+  let h = hour();
+  let m = minute();
+  let totalMins = h * 60 + m;
+  
+  if (h === 16 && m >= 20) {
+    return { colors: FOUR_TWENTY_PALETTE, type: "FOUR_TWENTY" };
+  }
+  if ((h >= 20) || (h === 0 && m <= 11)) {
+    return { colors: LATE_NIGHT_PALETTE, type: "LATE_NIGHT" };
+  }
+  
+  if (totalMins >= 213 && totalMins <= 419) return { colors: DAWN_PALETTE_BASE, type: "DAWN" };
+  else if (totalMins >= 540 && totalMins <= 790) return { colors: BRIGHTS_PALETTE, type: "BRIGHTS" };
+  else if (h === 17) return { colors: LIME_PALETTE, type: "LIME" };
+  else if (h >= 18 && h < 20) return { colors: TWILIGHT_PALETTE, type: "TWILIGHT" };
+  else if (h >= 21 || h < 3) return { colors: NIGHT_PALETTE, type: "NIGHT" };
+  else return { colors: DAY_PALETTE, type: "DAY" };
+}
+
+function setup() {
+  cnv = createCanvas(windowWidth, windowHeight);
+  imageMode(CENTER);
+  isMobile = (('ontouchstart' in window) || navigator.maxTouchPoints > 0) && width < 767;
+
+  cnv.elt.style.touchAction = 'none';
+  cnv.elt.addEventListener('touchmove', e => { e.preventDefault(); }, { passive: false });
+
+  let style = document.createElement('style');
+  style.innerHTML = `@font-face { font-family: 'Rock3D-Regular'; src: url('https://dae.transientusercontent.xyz/uploads/fa827533-05e2-4540-b01f-5b7c3bcdeed4') format('truetype'); }`;
+  document.head.appendChild(style);
+
+  videoOpeningAbstractia = createVideo('https://dae.transientusercontent.xyz/uploads/1fa7dbd7-3daf-46e6-96d4-361f8359f0bf');
+  videoOpeningAbstractia.elt.setAttribute('playsinline', '');
+  videoOpeningAbstractia.elt.setAttribute('webkit-playsinline', '');
+  videoOpeningAbstractia.loop();
+  videoOpeningAbstractia.hide();
+  videoOpeningAbstractia.volume(0);
+
+  videoAbstractiaVILagoon = createVideo('https://dae.transientusercontent.xyz/uploads/ce9725c5-a281-4c42-8d1c-7088ec0881eb');
+  videoAbstractiaVILagoon.elt.setAttribute('playsinline', '');
+  videoAbstractiaVILagoon.elt.setAttribute('webkit-playsinline', '');
+  videoAbstractiaVILagoon.loop();
+  videoAbstractiaVILagoon.hide();
+  videoAbstractiaVILagoon.pause();
+  videoAbstractiaVILagoon.volume(0.9);
+
+  videoEarthAccordingToMermaids = createVideo('https://dae.transientusercontent.xyz/uploads/6dffff3a-5ce8-4968-9a74-2c2e940d5a25');
+  videoEarthAccordingToMermaids.elt.muted = true;
+  videoEarthAccordingToMermaids.elt.setAttribute('playsinline', '');
+  videoEarthAccordingToMermaids.elt.setAttribute('webkit-playsinline', '');
+  videoEarthAccordingToMermaids.loop();
+  videoEarthAccordingToMermaids.hide();
+  videoEarthAccordingToMermaids.pause();
+
+  imgAbstractLindiaGif = createVideo('https://dae.transientusercontent.xyz/uploads/ee55ee3a-c3c7-4095-b2dc-7baaef466749');
+  imgAbstractLindiaGif.elt.muted = true;
+  imgAbstractLindiaGif.elt.setAttribute('playsinline', '');
+  imgAbstractLindiaGif.elt.setAttribute('webkit-playsinline', '');
+  imgAbstractLindiaGif.loop();
+  imgAbstractLindiaGif.hide();
+  imgAbstractLindiaGif.pause();
+
+  videoBlaqqatDevV = createVideo('https://dae.transientusercontent.xyz/uploads/5b0267d3-f495-4633-8355-90929be15143');
+  videoBlaqqatDevV.elt.setAttribute('playsinline', '');
+  videoBlaqqatDevV.elt.setAttribute('webkit-playsinline', '');
+  videoBlaqqatDevV.loop();
+  videoBlaqqatDevV.hide();
+  videoBlaqqatDevV.pause();
+  videoBlaqqatDevV.volume(1);
+
+  audioHarmonicEtherealCoSunlitRays.setLoop(false);
+  audioHarmonicEtherealCoSunlitRays.setVolume(0.5);
+
+  if (audioOpeningIIAbstractia) {
+    audioOpeningIIAbstractia.setLoop(false);
+    audioOpeningIIAbstractia.setVolume(0.8);
+  }
+  if (audioAbstractiaIV) {
+    audioAbstractiaIV.setLoop(true);
+    audioAbstractiaIV.setVolume(0.5);
+  }
+  if (audioHarmonicWave) {
+    audioHarmonicWave.setLoop(true);
+    audioHarmonicWave.setVolume(0);
+  }
+  if (audioAhVIHarmonics) {
+    audioAhVIHarmonics.setLoop(true);
+    audioAhVIHarmonics.setVolume(0);
+  }
+
+  button = createButton('Get Abstract');
+  button.mousePressed(handleDiveIn);
+  button.mouseOver(() => { isHovering = true; });
+  button.mouseOut(() => { isHovering = false; });
+
+  button.style('font-family', 'Rock3D-Regular, sans-serif');
+  button.style('letter-spacing', '2px');
+  button.style('font-size', '36px');
+  button.style('padding', '15px 30px');
+  button.style('border', 'none');
+  button.style('border-radius', '8px');
+  button.style('cursor', 'pointer');
+  button.style('color', 'white');
+  button.style('background-color', 'transparent');
+  button.style('position', 'absolute');
+  button.style('white-space', 'nowrap');
+
+  button.position(width * 0.9 - 160, height * 0.75 + 110);
+
+  let initial = getPaletteByTime();
+  currentPaletteHex = [...initial.colors];
+  targetPaletteHex = [...initial.colors];
+  lastPaletteType = initial.type;
+
+  for (let hex of currentPaletteHex) {
+    colorsPalette.push(color('#' + hex));
+  }
+}
+
+function startAudioContext() {
+  if (getAudioContext().state !== 'running') {
+    getAudioContext().resume();
+  }
+}
+
+function updatePalette() {
+  let result = getPaletteByTime();
+  if (result.type !== lastPaletteType) {
+    let newSet = [...result.colors];
+    targetPaletteHex = newSet;
+    lastPaletteType = result.type;
+  }
+}
+
+function lerpPalettes() {
+  for (let i = 0; i < targetPaletteHex.length; i++) {
+    let targetColor = color('#' + targetPaletteHex[i]);
+    if (colorsPalette[i]) {
+      colorsPalette[i] = lerpColor(colorsPalette[i], targetColor, paletteLerpRate);
+    } else {
+      colorsPalette[i] = targetColor;
+    }
+  }
+}
+
+function getLoopFade(vid) {
+  let d = vid.duration();
+  let t = vid.time();
+  if (d <= 0) return 1;
+  let fadeBound = 1.5;
+  if (t < fadeBound) return map(t, 0, fadeBound, 0, 1);
+  if (t > d - fadeBound) return map(t, d - fadeBound, d, 1, 0);
+  return 1;
+}
+
+function keyPressed() {
+  let k = key.toLowerCase();
+  if (k === 'b') {
+    if (scene === 2) {
+      showOpeningVideo = !showOpeningVideo;
+      if (showOpeningVideo) {
+        showAlternateView = false;
+        isDeveloperMode = false;
+        showControlsMenu = false;
+        videoBlaqqatDevV.pause();
+        videoOpeningAbstractia.loop();
+      } else {
+        videoOpeningAbstractia.pause();
+      }
+    }
+  } else if (k === 'a') {
+    if (scene === 2) {
+      showAlternateView = !showAlternateView;
+      if (showAlternateView) { 
+        showOpeningVideo = false;
+        isDeveloperMode = false; 
+        showControlsMenu = false; 
+        videoBlaqqatDevV.pause();
+      }
+    }
+  } else if (k === 'c') {
+    if (scene === 2) {
+      let firstHex = targetPaletteHex.shift();
+      targetPaletteHex.push(firstHex);
+      let firstCol = colorsPalette.shift();
+      colorsPalette.push(firstCol);
+      showCompanionView = !showCompanionView;
+    }
+  } else if (k === 'l') {
+    if (scene === 2) {
+      lineStep = (lineStep + 1) % 5;
+      if (lineStep === 0) {
+        showLinesMode = false;
+      } else {
+        showLinesMode = true;
+        if (audioAhVIHarmonics && !audioAhVIHarmonics.isPlaying()) {
+          audioAhVIHarmonics.loop();
+        }
+      }
+    }
+  } else if (k === 'z') {
+    if (scene === 2) isHarmonicsMuted = !isHarmonicsMuted;
+  } else if (k === 'w') {
+    if (scene === 2) {
+      waveStep = (waveStep + 1) % 5;
+      if (waveStep === 0) {
+        showWavesMode = false;
+        waveCount = 0;
+      } else {
+        showWavesMode = true;
+        waveCount = waveStep * 8; 
+        if (audioHarmonicWave && !audioHarmonicWave.isPlaying()) audioHarmonicWave.loop();
+      }
+    }
+  } else if (k === 'h') {
+    if (scene === 2) isHushed = !isHushed;
+  } else if (k === 's') {
+    if (scene === 2) showMountainMode = !showMountainMode;
+  } else if (k === 'q') {
+    if (scene === 2) isQuietMode = !isQuietMode;
+  } else if (k === 'm') {
+    if (scene === 2) {
+      isDevMuted = !isDevMuted;
+      videoBlaqqatDevV.volume(isDevMuted ? 0 : 1);
+    }
+  } else if (k === 'i') {
+    if (scene === 2) {
+      showControlsMenu = !showControlsMenu;
+      if (showControlsMenu) {
+        isDeveloperMode = false;
+        showAlternateView = false;
+        showOpeningVideo = false;
+        videoBlaqqatDevV.pause();
+      }
+    }
+  } else if (k === 'd') {
+    if (scene === 2) {
+      if (!showAlternateView && !showOpeningVideo) {
+        isDeveloperMode = !isDeveloperMode;
+        if (isDeveloperMode) {
+          showControlsMenu = false;
+          videoBlaqqatDevV.loop();
+          videoBlaqqatDevV.volume(isDevMuted ? 0 : 0.9);
+        } else {
+          videoBlaqqatDevV.pause();
+        }
+      }
+    }
+  }
+}
+
+function drawOmbreBackground() {
+  bgScrollOffset -= 2.0;
+  noFill();
+  strokeWeight(3);
+  const palette = colorsPalette;
+
+  for (let y = -40; y < height + 40; y += 6) {
+    let inter = ((y * 0.4 - bgScrollOffset) * 0.0006) % 1;
+    if (inter < 0) inter += 1;
+    let palettePos = inter * (palette.length - 1);
+    let idx = floor(palettePos);
+    let f = palettePos % 1;
+    let finalCol = lerpColor(palette[idx], palette[(idx + 1) % palette.length], f);
+
+    beginShape();
+    stroke(finalCol);
+    for (let x = -100; x <= width + 100; x += 150) {
+      let dy = noise(x * 0.005, y * 0.005, frameCount * 0.01) * 80 - 40;
+      vertex(x, y + dy);
+    }
+    endShape();
+  }
+}
+
+function drawMountainPattern() {
+  push();
+  blendMode(LIGHTEST); 
+  noStroke();
+  let layers = 3; 
+  let time = frameCount * 0.0001; 
+  
+  for (let i = 0; i < layers; i++) {
+    let c = colorsPalette[(i * 3) % colorsPalette.length];
+    fill(red(c), green(c), blue(c), 60);
+    
+    beginShape();
+    let midY = height / 2;
+    for (let x = -200; x <= width + 200; x += 150) {
+      let n = noise(x * 0.0005, i * 10, time);
+      let y = midY + (n - 0.5) * height * 1.5;
+      vertex(x, y);
+    }
+    vertex(width + 200, height);
+    vertex(-200, height);
+    endShape(CLOSE);
+  }
+  pop();
+}
+
+function drawHighContrastSmokePattern() {
+  push();
+  blendMode(OVERLAY); 
+  noStroke();
+  let time = frameCount * 0.01;
+  let layers = 8;
+
+  for (let i = 0; i < layers; i++) {
+    let c = colorsPalette[(i + 1) % colorsPalette.length];
+    let y = map(i, 0, layers, height * 0.2, height * 0.8);
+    let h = noise(i, time * 0.5) * 150;
+    
+    fill(red(c), green(c), blue(c), 80);
+    rect(0, y + sin(time + i) * 50, width, h);
+  }
+  pop();
+}
+
+function drawUndulatingWavePattern() {
+  push();
+  blendMode(ADD);
+  strokeWeight(2.5);
+  noFill();
+  const patternColors = colorsPalette.map(c => color(red(c), green(c), blue(c), 140));
+  let numLines = waveCount;
+  let time = frameCount * 0.003;
+  for (let i = 0; i < numLines; i++) {
+    let baseY = map(i, 0, numLines, height * 0.1, height * 0.9);
+    let c1 = patternColors[i % patternColors.length];
+    let c2 = patternColors[(i + 3) % patternColors.length];
+    beginShape();
+    for (let x = -50; x < width + 50; x += 30) {
+      let y = getRollingY(x, baseY, i, time);
+      let col = lerpColor(c1, c2, x / width);
+      stroke(col);
+      vertex(x, y);
+    }
+    endShape();
+  }
+  pop();
+}
+
+function getRollingY(x, baseY, i, time) {
+  let roll = sin(x * 0.0006 - time * 1.0 + i * 0.5) * 220;
+  let undulate = cos(time * 0.4 + x * 0.0012 + i * 1.1) * 90;
+  let n = noise(x * 0.0012, i * 0.25, time * 0.8) * 140;
+  return baseY + roll + undulate + n;
+}
+
+function drawZigZagLinePattern() {
+  if (lineStep === 4) {
+    drawElectricForestPattern();
+    return;
+  }
+
+  push();
+  if (lineStep === 3) blendMode(SCREEN);
+  else blendMode(ADD);
+
+  const patternColors = colorsPalette.map(c => {
+    let r = red(c), g = green(c), b = blue(c);
+    let maxV = max(r, g, b);
+    if (maxV < 50) { r += 100; g += 100; b += 100; }
+    return color(r, g, b);
+  });
+  
+  let numRays = (4 + lineStep * 3);
+  let baseSpeed = 0.5;
+  if (lineStep === 2) baseSpeed /= 3.0;
+  if (lineStep === 3) baseSpeed /= 4.0;
+
+  let period = map(lineStep, 1, 4, 700, 300);
+  let baseAmp = map(lineStep, 1, 4, 350, 750);
+  let baseWeight = map(lineStep, 1, 4, 12, 45);
+
+  noFill();
+  
+  for (let i = 0; i < numRays; i++) {
+    let zFactor = sin(frameCount * (lineStep === 3 ? 0.001 : 0.005) + i * 0.4); 
+    let travelSpeed = baseSpeed * (1 + zFactor * 0.3);
+    let xOffset = (frameCount * travelSpeed + i * (width / numRays)) % (width + 1200) - 600;
+    
+    let dynamicAmp = baseAmp * (1 + cos(frameCount * 0.01 + i) * 0.15);
+    let dynamicWeight = baseWeight * (1.2 + zFactor * 0.8);
+    
+    let c = patternColors[i % patternColors.length];
+
+    stroke(red(c), green(c), blue(c), map(zFactor, -1, 1, 10, 45));
+    strokeWeight(dynamicWeight * 5.0);
+    drawSingleZigZag(xOffset, period, dynamicAmp, i, travelSpeed);
+
+    stroke(red(c), green(c), blue(c), map(zFactor, -1, 1, 40, 95));
+    strokeWeight(dynamicWeight * 2.2);
+    drawSingleZigZag(xOffset, period, dynamicAmp, i, travelSpeed);
+
+    stroke(red(c), green(c), blue(c), map(zFactor, -1, 1, 180, 255));
+    strokeWeight(dynamicWeight * 0.5);
+    drawSingleZigZag(xOffset, period, dynamicAmp, i, travelSpeed);
+  }
+  pop();
+}
+
+function drawElectricForestPattern() {
+  push();
+  blendMode(SCREEN); 
+  let time = frameCount * 0.0015; 
+  let trees = 18;
+  noStroke();
+  
+  for (let i = 0; i < trees; i++) {
+    let c = colorsPalette[i % colorsPalette.length];
+    let nVal = noise(i * 10, time * 0.4);
+    let alpha = map(nVal, 0, 1, 40, 220); 
+    fill(red(c), green(c), blue(c), alpha);
+
+    let xBase = map(i, 0, trees, 0, width);
+    let sway = sin(time + i) * 120;
+    let w = map(nVal, 0, 1, 20, 150);
+    rect(xBase + sway, 0, w, height);
+  }
+  pop();
+}
+
+function drawSingleZigZag(xOff, period, amp, rayIdx, speed) {
+  beginShape();
+  for(let y = -400; y <= height + 400; y += 40) {
+    let phase = (y + frameCount * (speed * 1.5) + rayIdx * 120);
+    let zig = (abs(phase % period - (period / 2)) - (period / 4)) * (amp / (period / 4));
+    let sway = sin(y * 0.002 + frameCount * 0.01) * 50;
+    vertex(xOff + zig + sway, y);
+  }
+  endShape();
+}
+
+function draw() {
+  updatePalette();
+  lerpPalettes();
+  background(0);
+
+  if (scene === 0 || scene === 1) {
+    let loopFade = getLoopFade(videoOpeningAbstractia);
+    videoOpeningAbstractia.volume(welcomeVolume * loopFade);
+    drawWelcomeScreen();
+
+    if (scene === 0) {
+      welcomeVolume = lerp(welcomeVolume, 1.0, 0.02);
+      animateButton();
+      handleHoverEffects();
+      button.show();
+    } else if (scene === 1) {
+      welcomeVolume = lerp(welcomeVolume, 0, 0.12);
+      handleFadeOut();
+      button.hide();
+    }
+  }
+
+  if (scene === 2) {
+    drawVideoScreen();
+    handleAudioVolume();
+    if (showControlsMenu) drawControlsImageOverlay();
+    handleFadeIn();
+  }
+}
+
+function drawControlsImageOverlay() {
+  let img = imgControlsII;
+  if (img && img.width > 0) {
+    push();
+    blendMode(HARD_LIGHT);
+    tint(255, 255 * 0.9);
+    let ratio = max(width / img.width, height / img.height);
+    image(img, width / 2, height / 2, img.width * ratio, img.height * ratio);
+    pop();
+  }
+}
+
+function drawDeveloperVideoGraphic() {
+  let vid = videoBlaqqatDevV;
+  if (vid && vid.width > 0) {
+    push();
+    blendMode(HARD_LIGHT);
+    tint(255, 255 * 0.9);
+    let ratio = max(width / vid.width, height / vid.height);
+    image(vid, width / 2, height / 2, vid.width * ratio, vid.height * ratio);
+    pop();
+  }
+}
+
+function drawAlternateImageOverlay() {
+  let img = imgSkelevaggioLoves34;
+  if (!img || img.width === 0) return;
+  push();
+  blendMode(SCREEN); 
+  let ratioImg = max(width / img.width, height / img.height);
+  image(img, width / 2, height / 2, img.width * ratioImg, img.height * ratioImg);
+  pop();
+}
+
+function drawOpeningVideoOverlay() {
+  let vid = videoOpeningAbstractia;
+  if (!vid || vid.width === 0) return;
+  push();
+  tint(255, 255);
+  let ratio = max(width / vid.width, height / vid.height);
+  image(vid, width / 2, height / 2, vid.width * ratio, vid.height * ratio);
+  pop();
+}
+
+function handleHoverEffects() {
+  if (isHovering) {
+    let centerX = (width * 0.9) - 160, centerY = height * 0.75 + 110;
+    for (let i = 0; i < 2; i++) bubbles.push(new Bubble(centerX + random(-10, 10), centerY + random(-10, 10)));
+  }
+  for (let i = bubbles.length - 1; i >= 0; i--) {
+    bubbles[i].update();
+    bubbles[i].display();
+    if (bubbles[i].isDead()) bubbles.splice(i, 1);
+  }
+}
+
+function handleAudioVolume() {
+  if (audioAbstractiaIV && audioAbstractiaIV.isPlaying()) {
+    let targetVolume = isQuietMode ? 0.0 : 0.5;
+    audioAbstractiaIV.setVolume(lerp(audioAbstractiaIV.getVolume(), targetVolume, LERP_RATE));
+  }
+  
+  if (audioHarmonicWave && audioHarmonicWave.isPlaying()) {
+    let waveVolBase = showWavesMode ? (waveStep * 0.2) : 0;
+    let targetWaveVolume = isHushed ? 0 : waveVolBase;
+    audioHarmonicWave.setVolume(lerp(audioHarmonicWave.getVolume(), targetWaveVolume, LERP_RATE));
+  }
+
+  if (audioAhVIHarmonics && audioAhVIHarmonics.isPlaying()) {
+    let harmonicsVolBase = showLinesMode ? 0.6 : 0;
+    let targetHarmonicsVolume = isHarmonicsMuted ? 0 : harmonicsVolBase;
+    audioAhVIHarmonics.setVolume(lerp(audioAhVIHarmonics.getVolume(), targetHarmonicsVolume, LERP_RATE));
+  }
+
+  let loopFade = getLoopFade(videoOpeningAbstractia);
+  let targetBVol = showOpeningVideo ? 1.0 : 0.0;
+  bVideoVolume = lerp(bVideoVolume, targetBVol, 0.05);
+  videoOpeningAbstractia.volume(bVideoVolume * loopFade);
+}
+
+function drawWelcomeScreen() {
+  if (!videoOpeningAbstractia || videoOpeningAbstractia.width === 0) return;
+  push();
+  let ratio = max(width / videoOpeningAbstractia.width, height / videoOpeningAbstractia.height);
+  image(videoOpeningAbstractia, width / 2, height / 2, videoOpeningAbstractia.width * ratio, videoOpeningAbstractia.height * ratio);
+  pop();
+}
+
+function drawVideoScreen() {
+  if (showLinesMode) {
+    if (lineStep >= 1 && lineStep <= 2) background(0);
+    else if (lineStep === 3) drawOmbreBackground(); 
+    else if (lineStep === 4) background(0); 
+  } else {
+    drawOmbreBackground();
+  }
+  
+  if (!showAlternateView && !showOpeningVideo && !isDeveloperMode) {
+    if (imgAbstractLindiaGif && imgAbstractLindiaGif.width > 0) {
+      imgAbstractLindiaGif.loop();
+      push();
+      if (showCompanionView) blendMode(SCREEN);
+      let ratioBase = max(width / imgAbstractLindiaGif.width, height / imgAbstractLindiaGif.height);
+      image(imgAbstractLindiaGif, width / 2, height / 2, imgAbstractLindiaGif.width * ratioBase, imgAbstractLindiaGif.height * ratioBase);
+      pop();
+    }
+  }
+
+  if (showCompanionView) drawHighContrastSmokePattern();
+  if (showMountainMode) drawMountainPattern();
+  if (showWavesMode) drawUndulatingWavePattern();
+  if (showLinesMode) drawZigZagLinePattern();
+
+  if (showAlternateView) drawAlternateImageOverlay();
+  else if (showOpeningVideo) drawOpeningVideoOverlay();
+  else if (isDeveloperMode) drawDeveloperVideoGraphic();
+}
+
+function animateButton() {
+  let scaleFactor = map(sin(frameCount * 0.05), -1, 1, 1, 1.05);
+  button.style('transform', `translate(-50%, -55%) scale(${scaleFactor})`);
+}
+
+function handleDiveIn() {
+  startAudioContext();
+  if (audioOpeningIIAbstractia && audioOpeningIIAbstractia.isLoaded()) audioOpeningIIAbstractia.play();
+  if (scene === 0) {
+    scene = 1;
+    button.attribute('disabled', '');
+  }
+}
+
+function handleFadeOut() {
+  fadeAlpha += fadeRate;
+  fill(0, fadeAlpha);
+  rect(0, 0, width, height);
+  if (fadeAlpha >= 255) {
+    fadeAlpha = 255;
+    scene = 2;
+    if (videoOpeningAbstractia) videoOpeningAbstractia.pause();
+    if (audioAbstractiaIV && !audioAbstractiaIV.isPlaying()) audioAbstractiaIV.play();
+  }
+}
+
+function handleFadeIn() {
+  fadeAlpha -= fadeRate;
+  fill(0, fadeAlpha);
+  rect(0, 0, width, height);
+  if (fadeAlpha <= 0) fadeAlpha = 0;
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  if (button) button.position(width * 0.9 - 160, height * 0.75 + 110);
+}
+
+class Bubble {
+  constructor(x, y) {
+    this.pos = createVector(x, y);
+    this.vel = p5.Vector.fromAngle(random(TWO_PI), random(2, 5));
+    this.lifespan = 255;
+    this.size = random(18, 36);
+  }
+  update() {
+    this.pos.add(this.vel);
+    this.vel.y = lerp(this.vel.y, -2, 0.05);
+    this.vel.mult(0.98);
+    this.lifespan -= 2.5;
+  }
+  display() {
+    push();
+    textSize(this.size);
+    textAlign(CENTER, CENTER);
+    fill(255, this.lifespan);
+    text("🫧", this.pos.x, this.pos.y);
+    pop();
+  }
+  isDead() { return this.lifespan < 0; }
+}
+  </script>
+
+
+</body></html>

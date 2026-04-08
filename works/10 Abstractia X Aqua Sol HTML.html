@@ -1,0 +1,825 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.11.11/lib/p5.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/p5@0.7.0/lib/addons/p5.sound.min.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "mediabunny": "https://cdn.jsdelivr.net/npm/mediabunny@1.25.8/+esm"
+      }
+    }
+  </script>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
+      overflow: auto;
+      background: transparent;
+    }
+
+    main {
+      height: 100%;
+      display: flex;
+      overflow: auto;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #p5_loading {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      animation-delay: 1s;
+      color: #4e5d7b;
+      font-family: "FK Grotesk Regular", sans-serif;
+      font-size: 30px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 30px;
+      letter-spacing: -1.5px;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .5; }
+    }
+  </style>
+  <title>10 Abstractia X Aqua Sol | Made on juno.transient.xyz</title>
+</head>
+<body>
+  
+    
+  <script>
+    let cnv;
+let isMobile;
+let videoOpenAbstractia7AquaAlt; 
+let videoWavesIsleAbstractia; 
+let imgWifPatronsAbstractia;
+let imgAbstractLindiaGif;
+let videoEarthAccordingToMermaids;
+let imgAbstractiaCommunityCard; 
+let imgAbstractiaInteractiveControlsCyanDecoDualWindows;
+let audioOpeningIIAbstractia;
+let audioAbstractiaIV;
+let audioSandsUnderh20; 
+let button;
+let maskBuffer; 
+let patronMaskBuffer; 
+
+let scene = 0; 
+let fadeAlpha = 0;
+let fadeRate = 4; 
+let showAlternateView = false;
+let showCompanionView = false; 
+let showLinesMode = false; 
+let showWavesMode = false;
+let waveCount = 5;
+let showMountainMode = false; 
+let showSoothingMode = false; 
+const LERP_RATE = 0.05;
+let isQuietMode = false;
+let isDevMuted = false;
+let devVolume = 1.0;
+let openingVol = 0;
+let hasStartedAudio = false;
+let showControlsMenu = false;
+let isDeveloperMode = false;
+let isHovering = false;
+
+let bubbles = []; 
+let backgroundBlobs = [];
+let solParticles = []; 
+
+let currentPaletteHex = [];
+let targetPaletteHex = [];
+let paletteLerpRate = 0.015;
+
+const DAY_PALETTE = ["0077b6", "0096c7", "00b4d8", "48cae4", "90e0ef"];
+const NIGHT_PALETTE = ["5a189a", "7b2cbf", "9d4edd", "c77dff", "e0aaff"];
+const TWILIGHT_PALETTE = ["ff70a6", "ff9770", "ffd670", "e9ff70", "70ffaf"];
+const LIME_PALETTE = ["38b000", "70e000", "9ef01a", "ccff33", "70e000"];
+const DAWN_PALETTE_BASE = ["f56476", "e43f6f", "be3e82", "ff99ac", "ff70a6"];
+const BRIGHTS_PALETTE = ["35ff69", "42bfdd", "f5b700", "00a1e4", "e63462", "d138bf"];
+const GOLDEN_HOUR_PALETTE = ["fee440", "f0e14d", "ffea00", "ffd60a", "fbff12"];
+const AQUA_SOL_PALETTE = ["#EDE342", "#F2BF6C", "#F69A97", "#FB76C1", "#FF51EB"];
+
+let colorsPalette = []; 
+let aquaSolColors = [];
+let lastPaletteType = ""; 
+
+function preload() {
+  imgWifPatronsAbstractia = loadImage("https://dae.transientusercontent.xyz/uploads/01e851eb-76aa-472b-b3ae-3803d37e82dc");
+  imgAbstractiaInteractiveControlsCyanDecoDualWindows = loadImage("https://dae.transientusercontent.xyz/uploads/8b3b010a-814c-4405-982b-de1fbd572b28"); 
+  imgAbstractiaCommunityCard = loadImage("https://dae.transientusercontent.xyz/uploads/067b752f-b4bd-41f1-8ab5-3df1f95453b6");
+  audioOpeningIIAbstractia = loadSound("https://dae.transientusercontent.xyz/uploads/bb00503d-13ad-4177-a995-d6d2c6b13b2c"); 
+  audioAbstractiaIV = loadSound("https://dae.transientusercontent.xyz/uploads/b8517588-e48c-4409-8df2-d866f151a537"); 
+  audioSandsUnderh20 = loadSound("https://dae.transientusercontent.xyz/uploads/e93ae68a-319b-4ec4-9507-6cfddee62a80");
+}
+
+function getPaletteByTime() {
+    let h = hour();
+    let m = minute();
+    let totalMins = h * 60 + m;
+    let p;
+
+    if (totalMins >= 300 && totalMins <= 660) {
+        p = { colors: GOLDEN_HOUR_PALETTE, type: "GOLDEN" };
+    } else if (totalMins >= 213 && totalMins < 300) {
+        p = { colors: DAWN_PALETTE_BASE, type: "DAWN" };
+    } else if (totalMins >= 540 && totalMins <= 790) {
+        p = { colors: BRIGHTS_PALETTE, type: "BRIGHTS" };
+    } else if ((h === 16 && m >= 20) || (h === 17)) {
+        p = { colors: LIME_PALETTE, type: "LIME" };
+    } else if (h >= 18 && h < 21) {
+        p = { colors: TWILIGHT_PALETTE, type: "TWILIGHT" };
+    } else if (h >= 21 || h < 3) {
+        p = { colors: NIGHT_PALETTE, type: "NIGHT" };
+    } else {
+        p = { colors: DAY_PALETTE, type: "DAY" };
+    }
+    return p;
+}
+
+function setup() {
+  cnv = createCanvas(windowWidth, windowHeight);
+  imageMode(CENTER);
+  isMobile = (('ontouchstart' in window) || navigator.maxTouchPoints > 0) && width < 767;
+  
+  cnv.elt.style.touchAction = 'none';
+  cnv.elt.addEventListener('touchmove', e => { e.preventDefault(); }, { passive: false });
+  
+  let style = document.createElement('style');
+  style.innerHTML = `@font-face { font-family: 'Rock3D-Regular'; src: url('https://dae.transientusercontent.xyz/uploads/fa827533-05e2-4540-b01f-5b7c3bcdeed4') format('truetype'); }`;
+  document.head.appendChild(style);
+
+  maskBuffer = createGraphics(windowWidth, windowHeight);
+  patronMaskBuffer = createGraphics(windowWidth, windowHeight);
+
+  videoOpenAbstractia7AquaAlt = createVideo('https://dae.transientusercontent.xyz/uploads/d8becf6d-d4ab-4f06-af4d-8e31764967be');
+  videoOpenAbstractia7AquaAlt.elt.muted = true;
+  videoOpenAbstractia7AquaAlt.elt.setAttribute('playsinline', '');
+  videoOpenAbstractia7AquaAlt.elt.setAttribute('webkit-playsinline', '');
+  videoOpenAbstractia7AquaAlt.loop();
+  videoOpenAbstractia7AquaAlt.hide();
+
+  videoWavesIsleAbstractia = createVideo('https://dae.transientusercontent.xyz/uploads/37864ad3-23e1-418c-863a-02e465fb22c7');
+  videoWavesIsleAbstractia.elt.muted = true;
+  videoWavesIsleAbstractia.elt.setAttribute('playsinline', '');
+  videoWavesIsleAbstractia.elt.setAttribute('webkit-playsinline', '');
+  videoWavesIsleAbstractia.loop();
+  videoWavesIsleAbstractia.hide();
+
+  videoEarthAccordingToMermaids = createVideo('https://dae.transientusercontent.xyz/uploads/6dffff3a-5ce8-4968-9a74-2c2e940d5a25');
+  videoEarthAccordingToMermaids.elt.muted = true;
+  videoEarthAccordingToMermaids.elt.setAttribute('playsinline', '');
+  videoEarthAccordingToMermaids.elt.setAttribute('webkit-playsinline', '');
+  videoEarthAccordingToMermaids.loop();
+  videoEarthAccordingToMermaids.hide(); 
+  videoEarthAccordingToMermaids.pause();
+
+  imgAbstractLindiaGif = createVideo('https://dae.transientusercontent.xyz/uploads/ee55ee3a-c3c7-4095-b2dc-7baaef466749');
+  imgAbstractLindiaGif.elt.muted = true;
+  imgAbstractLindiaGif.elt.setAttribute('playsinline', '');
+  imgAbstractLindiaGif.elt.setAttribute('webkit-playsinline', '');
+  imgAbstractLindiaGif.loop();
+  imgAbstractLindiaGif.hide();
+
+  if (audioOpeningIIAbstractia) {
+    audioOpeningIIAbstractia.setLoop(true);
+    audioOpeningIIAbstractia.setVolume(0);
+  }
+  if (audioAbstractiaIV) {
+    audioAbstractiaIV.setLoop(true);
+    audioAbstractiaIV.setVolume(0.5);
+  }
+  if (audioSandsUnderh20) {
+    audioSandsUnderh20.setLoop(true);
+    audioSandsUnderh20.setVolume(0);
+  }
+
+  button = createButton('Get Abstract');
+  button.mousePressed(handleDiveIn);
+  button.mouseOver(() => { isHovering = true; });
+  button.mouseOut(() => { isHovering = false; });
+  button.style('font-family', 'Rock3D-Regular, sans-serif'); 
+  button.style('letter-spacing', '2px');
+  button.style('font-size', '36px');
+  button.style('padding', '15px 30px');
+  button.style('border', 'none');
+  button.style('border-radius', '8px');
+  button.style('cursor', 'pointer');
+  button.style('color', 'white'); 
+  button.style('background-color', 'transparent');
+  button.style('position', 'absolute');
+  button.style('white-space', 'nowrap');
+  button.position(width * 0.9 - 160, height * 0.75 + 110);
+  
+  let initial = getPaletteByTime(); 
+  targetPaletteHex = [...initial.colors];
+  lastPaletteType = initial.type;
+  for (let hex of targetPaletteHex) colorsPalette.push(color('#' + hex));
+  for (let hex of AQUA_SOL_PALETTE) aquaSolColors.push(color(hex));
+
+  for(let i=0; i<18; i++) {
+    backgroundBlobs.push({
+      x: random(width),
+      y: random(height),
+      size: random(width * 0.7, width * 1.6),
+      vx: random(-0.4, 0.4),
+      vy: random(-0.4, 0.4),
+      angle: random(TWO_PI),
+      colIndex: i % colorsPalette.length,
+      currentColor: color(255, 0),
+      solColor: random(aquaSolColors)
+    });
+    backgroundBlobs[i].currentColor = colorsPalette[backgroundBlobs[i].colIndex];
+  }
+
+  for(let i=0; i<30; i++) {
+    solParticles.push({
+      x: random(width),
+      y: random(height),
+      size: random(2, 6),
+      speed: random(0.5, 2),
+      col: random(aquaSolColors)
+    });
+  }
+}
+
+function updatePalette() {
+    let result = getPaletteByTime();
+    if (result.type !== lastPaletteType) {
+        targetPaletteHex = [...result.colors];
+        lastPaletteType = result.type;
+    }
+}
+
+function lerpPalettes() {
+    for (let i = 0; i < targetPaletteHex.length; i++) {
+        let targetColor = color('#' + targetPaletteHex[i]);
+        if (colorsPalette[i]) {
+            colorsPalette[i] = lerpColor(colorsPalette[i], targetColor, paletteLerpRate);
+        } else {
+            colorsPalette[i] = targetColor;
+        }
+    }
+}
+
+function resetModes() {
+  showAlternateView = false;
+  showCompanionView = false;
+  showLinesMode = false;
+  showWavesMode = false;
+  showMountainMode = false;
+  showSoothingMode = false;
+  isDeveloperMode = false;
+}
+
+function mousePressed() {
+  if (!hasStartedAudio) {
+    if (getAudioContext().state !== 'running') getAudioContext().resume();
+    if (audioOpeningIIAbstractia && !audioOpeningIIAbstractia.isPlaying()) {
+      audioOpeningIIAbstractia.loop();
+      hasStartedAudio = true;
+    }
+  }
+}
+
+function keyPressed() {
+  if (key === 'b' || key === 'B') {
+    scene = 0;
+    fadeAlpha = 0;
+    resetModes();
+    waveCount = 5;
+    isQuietMode = false;
+    showControlsMenu = false;
+    videoEarthAccordingToMermaids.pause();
+    videoOpenAbstractia7AquaAlt.loop();
+    if (audioAbstractiaIV && audioAbstractiaIV.isPlaying()) audioAbstractiaIV.stop();
+    if (audioSandsUnderh20 && audioSandsUnderh20.isPlaying()) audioSandsUnderh20.stop();
+    button.show();
+    button.removeAttribute('disabled');
+  } else if (key === 'a' || key === 'A') {
+    if (scene === 2) { showAlternateView = !showAlternateView; isDeveloperMode = false; }
+  } else if (key === 'c' || key === 'C') {
+    if (scene === 2) {
+      showCompanionView = !showCompanionView;
+      if (showCompanionView) { showAlternateView = false; isDeveloperMode = false; }
+    }
+  } else if (key === 'l' || key === 'L') {
+    if (scene === 2) { showLinesMode = !showLinesMode; isDeveloperMode = false; }
+  } else if (key === 'w' || key === 'W') {
+    if (scene === 2) {
+      isDeveloperMode = false;
+      if (!showWavesMode) { 
+        showWavesMode = true; 
+        waveCount = 5; 
+      } else { 
+          waveCount += 25; 
+          if (waveCount > 80) {
+              showWavesMode = false;
+              waveCount = 5;
+          }
+      }
+    }
+  } else if (key === 's' || key === 'S') {
+    if (scene === 2) { showMountainMode = !showMountainMode; isDeveloperMode = false; }
+  } else if (key === 'o' || key === 'O') {
+    if (scene === 2) { showSoothingMode = !showSoothingMode; isDeveloperMode = false; }
+  } else if (key === 'q' || key === 'Q') {
+    if (scene === 2) isQuietMode = !isQuietMode;
+  } else if (key === 'm' || key === 'M') {
+    if (scene === 2) { isDevMuted = !isDevMuted; }
+  } else if (key === 'i' || key === 'I') {
+    if (scene === 2) {
+      showControlsMenu = !showControlsMenu;
+      if (showControlsMenu) { isDeveloperMode = false; showAlternateView = false; }
+    }
+  } else if (key === 'd' || key === 'D') { 
+    if (scene === 2) {
+      isDeveloperMode = !isDeveloperMode;
+      if (isDeveloperMode) { 
+        showControlsMenu = false; 
+        showAlternateView = false;
+        showWavesMode = false;
+        showLinesMode = false;
+        showMountainMode = false;
+        showSoothingMode = false;
+      }
+    }
+  }
+}
+
+function drawSoftBackground() {
+  push();
+  noStroke();
+  blendMode(BLEND);
+  for (let blob of backgroundBlobs) {
+    blob.angle += 0.002;
+    let swoopX = sin(blob.angle) * 300;
+    let swoopY = cos(blob.angle * 0.8) * 250;
+    
+    let actualX = blob.x + swoopX;
+    let actualY = blob.y + swoopY;
+    let d = dist(mouseX, mouseY, actualX, actualY);
+
+    if (scene === 2) {
+      let targetColor = colorsPalette[blob.colIndex % colorsPalette.length];
+      if (d < 500) {
+        targetColor = blob.solColor;
+        if (!showLinesMode && !showWavesMode && !showMountainMode && !showSoothingMode) {
+            let force = map(min(d, 500), 0, 500, 2.5, 0);
+            let ang = atan2(actualY - mouseY, actualX - mouseX);
+            blob.x += cos(ang) * force;
+            blob.y += sin(ang) * force;
+        }
+      }
+      blob.currentColor = lerpColor(blob.currentColor, targetColor, 0.04);
+    }
+
+    blob.x += blob.vx;
+    blob.y += blob.vy;
+    
+    if (blob.x < -blob.size) blob.x = width + blob.size;
+    if (blob.x > width + blob.size) blob.x = -blob.size;
+    if (blob.y < -blob.size) blob.y = height + blob.size;
+    if (blob.y > height + blob.size) blob.y = -blob.size;
+
+    let c = blob.currentColor;
+    for (let r = blob.size; r > 0; r -= 120) {
+      let alpha = map(r, 0, blob.size, 45, 0);
+      fill(red(c), green(c), blue(c), alpha);
+      ellipse(actualX, actualY, r, r);
+    }
+  }
+  pop();
+}
+
+function drawAquaSolAccents() {
+  let h = hour();
+  if (h >= 5 && h < 11) {
+    push();
+    blendMode(ADD);
+    for (let p of solParticles) {
+      p.y -= p.speed;
+      p.x += sin(frameCount * 0.02 + p.y * 0.01) * 0.5;
+      if (p.y < -20) p.y = height + 20;
+      let d = dist(mouseX, mouseY, p.x, p.y);
+      let sizeAdj = map(min(d, 300), 0, 300, 15, 0);
+      noStroke();
+      fill(p.col);
+      drawingContext.shadowBlur = 15;
+      drawingContext.shadowColor = p.col;
+      ellipse(p.x, p.y, p.size + sizeAdj);
+    }
+    pop();
+  }
+}
+
+function drawSoothingUndulation() {
+  push();
+  blendMode(HARD_LIGHT);
+  noStroke();
+  let time = frameCount * 0.015;
+  for (let i = 0; i < 6; i++) {
+    let c = aquaSolColors[i % aquaSolColors.length];
+    fill(red(c), green(c), blue(c), 100);
+    beginShape();
+    for (let x = -50; x <= width + 50; x += 50) {
+      let y = height * 0.5 + sin(x * 0.002 + time + i * 0.7) * 200 + cos(x * 0.001 - time * 0.5) * 100;
+      let waveHeight = 250 + sin(time * 0.3 + i) * 100;
+      vertex(x, y - waveHeight);
+    }
+    for (let x = width + 50; x >= -50; x -= 50) {
+      let y = height * 0.5 + sin(x * 0.002 + time + i * 0.7) * 200 + cos(x * 0.001 - time * 0.5) * 100;
+      let waveHeight = 250 + sin(time * 0.3 + i) * 100;
+      vertex(x, y + waveHeight);
+    }
+    endShape(CLOSE);
+  }
+  pop();
+}
+
+function drawMountainPattern() {
+  push();
+  let layers = 5;
+  let time = frameCount * 0.012;
+
+  for (let i = 0; i < layers; i++) {
+    let c = aquaSolColors[i % aquaSolColors.length];
+    let speed = map(i, 0, layers, 0.4, 0.9);
+    let baseY = height * 1.1 - (i * (height * 0.12)); 
+    
+    push();
+    blendMode(BLEND);
+    noStroke();
+    fill(red(c) * 0.03, green(c) * 0.03, blue(c) * 0.06, 80); 
+    beginShape();
+    vertex(-100, height + 200);
+    for (let x = -100; x <= width + 100; x += 25) {
+      let noiseVal = noise(x * 0.002, i * 15, time * 0.4);
+      let waveMotion = sin(x * 0.0018 + time * speed + i * 0.5) * 65;
+      let depthSwell = noiseVal * 180;
+      let y = baseY - depthSwell + waveMotion;
+      vertex(x, y);
+    }
+    vertex(width + 100, height + 200);
+    endShape(CLOSE);
+    pop();
+
+    push();
+    blendMode(ADD); 
+    noFill();
+    stroke(red(c), green(c), blue(c), 255);
+    strokeWeight(map(i, 0, layers, 3, 6));
+    drawingContext.shadowBlur = 25;
+    drawingContext.shadowColor = c;
+
+    beginShape();
+    for (let x = -100; x <= width + 100; x += 25) {
+      let noiseVal = noise(x * 0.002, i * 15, time * 0.4);
+      let waveMotion = sin(x * 0.0018 + time * speed + i * 0.5) * 65;
+      let depthSwell = noiseVal * 180;
+      let y = baseY - depthSwell + waveMotion;
+      vertex(x, y);
+      
+      if (noiseVal > 0.72 && frameCount % 4 === 0) {
+        push();
+        noStroke();
+        fill(255, 210);
+        ellipse(x + random(-10, 10), y + random(-5, 5), random(1, 4));
+        pop();
+      }
+    }
+    endShape();
+    pop();
+  }
+  pop();
+}
+
+function drawRollingOmbrePattern() {
+  push();
+  blendMode(MULTIPLY); 
+  noStroke();
+  let layers = 8; 
+  let time = frameCount * 0.005;
+  let subsetIndices = [0, floor(colorsPalette.length / 2), colorsPalette.length - 1];
+  for (let i = 0; i < layers; i++) {
+    let colIdx = subsetIndices[i % subsetIndices.length];
+    let c = colorsPalette[colIdx];
+    fill(red(c), green(c), blue(c), 80); 
+    beginShape();
+    let baseY = map(i, 0, layers, height * 0.1, height * 1.2);
+    vertex(-100, height * 2); 
+    for (let x = -100; x <= width + 100; x += 100) {
+      let n = noise(x * 0.001, i * 0.2, time);
+      let gentleWave = sin(x * 0.0005 + time + i * 0.8) * 120;
+      vertex(x, baseY + (n * 300) + gentleWave);
+    }
+    vertex(width + 100, height * 2);
+    endShape(CLOSE);
+  }
+  pop();
+}
+
+function drawWarpedMoirePattern() {
+  push();
+  let h = hour();
+  let bMode = (h >= 6 && h < 18) ? OVERLAY : ADD;
+  blendMode(bMode); 
+  noFill();
+  
+  let time = frameCount * 0.065; 
+  let flow = frameCount * 0.02;  
+  let numRibbons = 40; 
+  
+  for (let i = 0; i < numRibbons; i++) {
+    let c = aquaSolColors[i % aquaSolColors.length];
+    let opacity = (h >= 18 || h < 6) ? 100 : 200;
+    stroke(red(c), green(c), blue(c), opacity);
+    
+    let baseWeight = map(sin(time * 0.4 + i * 0.15), -1, 1, 0.2, 0.8); 
+    if (i % 2 === 0) baseWeight *= 14; 
+    
+    let startY = height * -0.3 + (i * (height * 1.6 / numRibbons));
+    let lastX = -100;
+    let lastY = startY;
+    
+    for (let x = -100; x <= width + 100; x += 15) {
+      let taper = sin(map(x, -100, width + 100, 0, PI)); 
+      strokeWeight(baseWeight * taper);
+      let wave1 = sin(x * 0.004 + time + i * 0.2 + flow) * 200;
+      let wave2 = cos(x * 0.002 - time * 0.3 + i * 0.4) * 130;
+      let liquidShift = noise(x * 0.003, time * 0.08, i * 0.1) * 250;
+      let currY = startY + wave1 + wave2 + liquidShift;
+      line(lastX, lastY, x, currY);
+      lastX = x;
+      lastY = currY;
+    }
+  }
+  pop();
+}
+
+function drawUndulatingWavePattern() {
+  push();
+  let h = hour();
+  let bMode = (waveCount >= 80) ? HARD_LIGHT : ((h >= 19 || h < 5) ? ADD : HARD_LIGHT);
+  blendMode(bMode); 
+  noFill();
+
+  let speedMult = map(waveCount, 5, 80, 0.03, 0.008);
+  let time = frameCount * speedMult;
+  
+  for (let i = 0; i < waveCount; i++) {
+    let baseY = map(i, 0, waveCount, -height * 0.2, height * 1.3);
+    let c = aquaSolColors[i % aquaSolColors.length];
+    
+    let baseOpacity = (waveCount >= 80) ? 65 : ((h >= 18 || h < 6) ? 110 : 160);
+    let waveOpacityPulse = map(sin(time * 0.2 + i * 0.35), -1, 1, 0.4, 1.0);
+    
+    let xStep = (waveCount >= 80) ? 12 : 25;
+    let lastX = -100;
+    let lastY = 0;
+
+    let targetBaseWeight = map(waveCount, 5, 80, 3, 30);
+    
+    for (let x = -100; x <= width + 100; x += xStep) {
+      let thicknessNoise = noise(x * 0.005, i * 0.15, time * 0.4);
+      let sineSwell = map(sin(x * 0.002 + time * 0.5 + i * 0.8), -1, 1, 0.2, 1.8);
+      let thickness = targetBaseWeight * (0.3 + 1.2 * thicknessNoise * sineSwell);
+      
+      let twist = sin(time * 0.25 + i * 0.1 + x * 0.0006) * 160;
+      let roll = sin(x * 0.003 + time * 0.5 + i * 0.25) * 200;
+      let undulating = cos(time * 0.12 + x * 0.0015 + i * 0.35) * 120;
+      let currY = baseY + roll + undulating + twist;
+
+      if (x > -100) {
+        stroke(red(c), green(c), blue(c), baseOpacity * waveOpacityPulse);
+        strokeWeight(thickness);
+        line(lastX, lastY, x, currY);
+        
+        if (waveCount >= 80 && i % 2 === 0) {
+          push();
+          strokeWeight(thickness * 0.2);
+          stroke(20, 20, 35, baseOpacity * 0.8 * waveOpacityPulse);
+          line(lastX, lastY + thickness * 0.1, x, currY + thickness * 0.1);
+          pop();
+        }
+      }
+      lastX = x;
+      lastY = currY;
+    }
+  }
+  pop();
+}
+
+function draw() {
+  updatePalette();
+  lerpPalettes();
+  if (imgAbstractLindiaGif && imgAbstractLindiaGif.width > 0) {
+    push();
+    let ratioGif = max(width / imgAbstractLindiaGif.width, height / imgAbstractLindiaGif.height);
+    image(imgAbstractLindiaGif, width / 2, height / 2, imgAbstractLindiaGif.width * ratioGif, imgAbstractLindiaGif.height * ratioGif);
+    pop();
+  } else {
+    background('#fbdc60'); 
+  }
+  if (scene === 0 || scene === 1) drawWelcomeScreen();
+  if (scene === 2) {
+    drawVideoScreen(); 
+    if (showAlternateView) drawAlternateImageOverlay();
+    if (isDeveloperMode) drawDeveloperGraphic();
+    if (showControlsMenu) drawControlsImageOverlay();
+    if (!showLinesMode && !showWavesMode && !showMountainMode && !showSoothingMode) drawAquaSolAccents();
+  }
+  handleAudioVolume();
+  if (scene === 0) {
+    animateButton();
+    handleHoverEffects();
+    button.show();
+  } else if (scene === 1) {
+    handleFadeOut();
+    button.hide();
+  } else if (scene === 2) handleFadeIn();
+}
+
+function drawControlsImageOverlay() {
+  let img = imgAbstractiaInteractiveControlsCyanDecoDualWindows;
+  if (!img || img.width === 0) return;
+  if (maskBuffer.width !== width || maskBuffer.height !== height) maskBuffer = createGraphics(width, height);
+  maskBuffer.clear();
+  maskBuffer.push();
+  maskBuffer.imageMode(CENTER);
+  let ratio = max(width / img.width, height / img.height);
+  maskBuffer.image(img, width / 2, height / 2, img.width * ratio, img.height * ratio);
+  maskBuffer.erase();
+  maskBuffer.rect(width * 0.35, height * 0.02, width * 0.3, height * 0.12, 10);
+  maskBuffer.triangle(width * 0.02, height * 0.02, width * 0.3, height * 0.02, width * 0.02, height * 0.3);
+  maskBuffer.triangle(width * 0.98, height * 0.02, width * 0.7, height * 0.02, width * 0.98, height * 0.3);
+  maskBuffer.noErase();
+  maskBuffer.pop();
+  push();
+  blendMode(HARD_LIGHT); 
+  image(maskBuffer, width / 2, height / 2);
+  pop();
+}
+
+function drawDeveloperGraphic() {
+  let img = imgAbstractiaCommunityCard;
+  if (img && img.width > 0) {
+    push();
+    blendMode(SCREEN); 
+    tint(255, 240); 
+    let ratio = max(width / img.width, height / img.height);
+    image(img, width / 2, height / 2, img.width * ratio, img.height * ratio);
+    pop();
+  }
+}
+
+function drawAlternateImageOverlay() {
+    let img = imgWifPatronsAbstractia; 
+    if (!img || img.width === 0) return;
+    
+    if (patronMaskBuffer.width !== width || patronMaskBuffer.height !== height) {
+      patronMaskBuffer = createGraphics(width, height);
+    }
+    
+    patronMaskBuffer.clear();
+    patronMaskBuffer.push();
+    patronMaskBuffer.imageMode(CENTER);
+    let ratioImg = max(width / img.width, height / img.height);
+    patronMaskBuffer.image(img, width / 2, height / 2, img.width * ratioImg, img.height * ratioImg);
+    
+    patronMaskBuffer.erase();
+    // Centered screen hole that leaves floor/people opaque at the bottom
+    patronMaskBuffer.rect(width * 0.12, height * 0.1, width * 0.76, height * 0.58, 8); 
+    patronMaskBuffer.noErase();
+    patronMaskBuffer.pop();
+
+    push();
+    blendMode(HARD_LIGHT); 
+    image(patronMaskBuffer, width / 2, height / 2);
+    pop(); 
+}
+
+function handleHoverEffects() {
+  if (isHovering) {
+    let centerX = (width * 0.9) - 160, centerY = height * 0.75 + 110;
+    for (let i = 0; i < 2; i++) bubbles.push(new Bubble(centerX + random(-10, 10), centerY + random(-10, 10)));
+  }
+  for (let i = bubbles.length - 1; i >= 0; i--) {
+    bubbles[i].update();
+    bubbles[i].display();
+    if (bubbles[i].isDead()) bubbles.splice(i, 1);
+  }
+}
+
+function handleAudioVolume() {
+  let targetOpening = 0;
+  if (scene === 0 || scene === 1) targetOpening = 0.65;
+  else targetOpening = 0;
+  openingVol = lerp(openingVol, targetOpening, 0.02);
+  if (audioOpeningIIAbstractia && audioOpeningIIAbstractia.isPlaying()) audioOpeningIIAbstractia.setVolume(openingVol);
+  if (scene === 2) {
+    let wavesFactor = map(waveCount, 5, 80, 0, 1.0);
+    if (!showWavesMode) wavesFactor = 0;
+    if (audioAbstractiaIV && audioAbstractiaIV.isPlaying()) {
+      let baseTarget = isQuietMode ? 0.0 : 0.5; 
+      let crossfadeBG = 1.0 - wavesFactor;
+      audioAbstractiaIV.setVolume(lerp(audioAbstractiaIV.getVolume(), baseTarget * crossfadeBG, LERP_RATE));
+    }
+    if (audioSandsUnderh20 && audioSandsUnderh20.isPlaying()) {
+      let sandsTarget = isQuietMode ? 0.0 : wavesFactor;
+      audioSandsUnderh20.setVolume(lerp(audioSandsUnderh20.getVolume(), sandsTarget, LERP_RATE));
+    }
+  }
+}
+
+function drawWelcomeScreen() {
+  if (!videoOpenAbstractia7AquaAlt || videoOpenAbstractia7AquaAlt.width === 0) return;
+  push();
+  blendMode(BLEND); 
+  tint(255, 217); 
+  let ratio = max(width / videoOpenAbstractia7AquaAlt.width, height / videoOpenAbstractia7AquaAlt.height);
+  image(videoOpenAbstractia7AquaAlt, width / 2, height / 2, videoOpenAbstractia7AquaAlt.width * ratio, videoOpenAbstractia7AquaAlt.height * ratio);
+  pop();
+}
+
+function drawVideoScreen() {
+    drawSoftBackground(); 
+    if (showCompanionView && !showAlternateView) drawRollingOmbrePattern();
+    if (showLinesMode) drawWarpedMoirePattern();
+    if (showWavesMode) drawUndulatingWavePattern();
+    if (showMountainMode) drawMountainPattern(); 
+    if (showSoothingMode) drawSoothingUndulation();
+}
+
+function animateButton() {
+  let sF = map(sin(frameCount * 0.05), -1, 1, 1, 1.05);
+  button.style('transform', `translate(-50%, -55%) scale(${sF})`);
+}
+
+function handleDiveIn() {
+  if (getAudioContext().state !== 'running') getAudioContext().resume();
+  if (audioSandsUnderh20 && !audioSandsUnderh20.isPlaying()) {
+    audioSandsUnderh20.loop();
+    audioSandsUnderh20.setVolume(0);
+  }
+  if (scene === 0) {
+    scene = 1;
+    button.attribute('disabled', '');
+  }
+}
+
+function handleFadeOut() {
+  fadeAlpha += fadeRate;
+  fill(254, 228, 64, fadeAlpha); 
+  rect(0, 0, width, height);
+  if (fadeAlpha >= 255) {
+    fadeAlpha = 255; scene = 2;
+    if (audioAbstractiaIV && !audioAbstractiaIV.isPlaying()) audioAbstractiaIV.play();
+    videoOpenAbstractia7AquaAlt.pause();
+  }
+}
+
+function handleFadeIn() {
+  fadeAlpha -= fadeRate;
+  fill(254, 228, 64, fadeAlpha); 
+  rect(0, 0, width, height);
+  if (fadeAlpha <= 0) fadeAlpha = 0;
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  button.position(width * 0.9 - 160, height * 0.75 + 110);
+}
+
+class Bubble {
+  constructor(x, y) {
+    this.pos = createVector(x, y);
+    this.vel = p5.Vector.fromAngle(random(TWO_PI), random(2, 5));
+    this.lifespan = 255;
+    this.size = random(18, 36);
+  }
+  update() {
+    this.pos.add(this.vel);
+    this.vel.y = lerp(this.vel.y, -2, 0.05); 
+    this.vel.mult(0.98); 
+    this.lifespan -= 2.5; 
+  }
+  display() {
+    push();
+    textSize(this.size); textAlign(CENTER, CENTER);
+    fill(255, this.lifespan); text("🫧", this.pos.x, this.pos.y);
+    pop();
+  }
+  isDead() { return this.lifespan < 0; }
+}
+  </script>
+
+
+</body></html>

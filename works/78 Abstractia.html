@@ -1,0 +1,542 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.11.11/lib/p5.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/p5@0.7.0/lib/addons/p5.sound.min.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "mediabunny": "https://cdn.jsdelivr.net/npm/mediabunny@1.25.8/+esm"
+      }
+    }
+  </script>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
+      overflow: auto;
+      background: transparent;
+    }
+
+    main {
+      height: 100%;
+      display: flex;
+      overflow: auto;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #p5_loading {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      animation-delay: 1s;
+      color: #4e5d7b;
+      font-family: "FK Grotesk Regular", sans-serif;
+      font-size: 30px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 30px;
+      letter-spacing: -1.5px;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .5; }
+    }
+  </style>
+  <title>78 Abstractia | Made on juno.transient.xyz</title>
+</head>
+<body>
+  
+    
+  <script>
+    let cnv;
+let isMobile;
+let imgAbstractia; 
+let imgWifPatronsAbstractia; 
+let imgAbstractLindiaGif; 
+let videoEarthAccordingToMermaids;
+let imgCommunityCard; 
+let imgDevFeathered; 
+let imgGenesisControlPanel; 
+let imgWallSculptures; 
+let imgWallSculpturesProcessed; 
+let audioHarmonicEtherealCoSunlitRays;
+let audioGetAbstractSfx; 
+let button;
+let fontRock3D; 
+
+let scene = 0; 
+let fadeAlpha = 0;
+let fadeRate = 6; 
+let showAlternateView = false; 
+let showCompanionView = false; 
+let showLinesMode = false; 
+let showWavesMode = false; 
+let isQuietMode = false; 
+let showControlsMenu = false; 
+let isDeveloperMode = false; 
+
+let bubbles = []; 
+
+const DAY_PALETTE = ["03045e", "023e8a", "0077b6", "0096c7", "00b4d8", "48cae4", "90e0ef", "ade8f4"];
+const NIGHT_PALETTE = ["10002b", "240046", "3c096c", "5a189a", "7b2cbf", "9d4edd", "c77dff", "e0aaff"];
+const TWILIGHT_PALETTE = ["ae7981", "543d4f", "2d2c34", "62354c", "36222b"];
+const GENESIS_PALETTE = ["61e294", "86e9b7", "dbf5c7", "c6a9ba", "db3cd3", "5435da"];
+const AFTERNOON_PALETTE = ["7FFFD4", "ACE1AF", "00FFBF", "90EE90", "1c9b5c", "13673d"];
+const EVENING_PALETTE = ["150402", "C01E11", "E2B1C0", "0B0505", "6C342A", "8F495F"];
+const LATE_NIGHT_PALETTE = ["f53636", "f6d7c1", "e9a698", "c1121f", "d55c5c"];
+
+let colorsPalette = []; 
+let isHovering = false; 
+
+function preload() {
+  imgAbstractia = loadImage("https://dae.transientusercontent.xyz/uploads/0f0bee4c-0a19-419f-8c8d-3888826eea40"); 
+  imgWifPatronsAbstractia = loadImage("https://dae.transientusercontent.xyz/uploads/4243161e-7be6-4cad-b53c-6300c22dda37");
+  audioHarmonicEtherealCoSunlitRays = loadSound("https://dae.transientusercontent.xyz/uploads/295133e5-d5e2-4d2c-a968-85ea4a5872c1");
+  fontRock3D = loadFont("https://dae.transientusercontent.xyz/uploads/fa827533-05e2-4540-b01f-5b7c3bcdeed4"); 
+  imgCommunityCard = loadImage("https://dae.transientusercontent.xyz/uploads/067b752f-b4bd-41f1-8ab5-3df1f95453b6"); 
+  imgGenesisControlPanel = loadImage("https://dae.transientusercontent.xyz/uploads/e7fed469-a4c5-4006-b4c6-27ea35cb8bb9"); 
+  imgWallSculptures = loadImage("https://dae.transientusercontent.xyz/uploads/5d74eee9-fbd5-4edf-8859-0d9822b81b5f"); 
+  audioGetAbstractSfx = loadSound("https://dae.transientusercontent.xyz/uploads/22da43c0-d4ad-4309-85c4-7d4387d63d50"); 
+}
+
+function setup() {
+  cnv = createCanvas(windowWidth, windowHeight);
+  imageMode(CENTER);
+  isMobile = (('ontouchstart' in window) || navigator.maxTouchPoints > 0) && width < 767;
+  
+  cnv.elt.style.touchAction = 'none';
+  cnv.elt.addEventListener('touchmove', e => { e.preventDefault(); }, { passive: false });
+  
+  let style = document.createElement('style');
+  style.innerHTML = `@font-face { font-family: 'Rock3D-Regular'; src: url('https://dae.transientusercontent.xyz/uploads/fa827533-05e2-4540-b01f-5b7c3bcdeed4') format('truetype'); }`;
+  document.head.appendChild(style);
+
+  videoEarthAccordingToMermaids = createVideo('https://dae.transientusercontent.xyz/uploads/6dffff3a-5ce8-4968-9a74-2c2e940d5a25');
+  videoEarthAccordingToMermaids.elt.muted = true;
+  videoEarthAccordingToMermaids.elt.setAttribute('playsinline', '');
+  videoEarthAccordingToMermaids.loop();
+  videoEarthAccordingToMermaids.hide();
+  videoEarthAccordingToMermaids.pause(); 
+
+  imgAbstractLindiaGif = createVideo('https://dae.transientusercontent.xyz/uploads/ee55ee3a-c3c7-4095-b2dc-7baaef466749');
+  imgAbstractLindiaGif.elt.muted = true;
+  imgAbstractLindiaGif.elt.setAttribute('playsinline', '');
+  imgAbstractLindiaGif.loop();
+  imgAbstractLindiaGif.hide();
+  imgAbstractLindiaGif.pause(); 
+
+  audioHarmonicEtherealCoSunlitRays.setLoop(true); 
+  audioHarmonicEtherealCoSunlitRays.setVolume(0.5);
+  
+  button = createButton('Get Abstract');
+  button.mousePressed(handleDiveIn);
+  button.mouseOver(() => { isHovering = true; }); 
+  button.mouseOut(() => { isHovering = false; }); 
+  
+  button.style('font-family', 'Rock3D-Regular, sans-serif'); 
+  button.style('font-size', '36px');
+  button.style('color', 'white'); 
+  button.style('background-color', 'transparent');
+  button.style('border', 'none');
+  button.style('cursor', 'pointer');
+  button.style('position', 'absolute');
+  button.position(width * 0.9, height * 0.75 + 110);
+
+  shuffle(DAY_PALETTE, true);
+  shuffle(NIGHT_PALETTE, true);
+  shuffle(TWILIGHT_PALETTE, true);
+  shuffle(GENESIS_PALETTE, true);
+  shuffle(AFTERNOON_PALETTE, true);
+  shuffle(EVENING_PALETTE, true);
+  shuffle(LATE_NIGHT_PALETTE, true);
+  
+  updatePalette();
+}
+
+function updatePalette() {
+  let h = hour();
+  let m = minute();
+  let totalMins = h * 60 + m;
+  
+  let genesisStart = 8 * 60 + 8; 
+  let genesisEnd = 16 * 60 + 19; 
+  let afternoonStart = 16 * 60 + 20; 
+  let afternoonEnd = 17 * 60 + 54;   
+  let eveningStart = 17 * 60 + 55;   
+  let eveningEnd = 20 * 60 + 7;      
+  let lateNightStart = 20 * 60 + 8;  // 8:08 PM
+  let lateNightEndMins = 11;         // 12:11 AM (hour 0, minute 11)
+
+  if (totalMins >= lateNightStart || totalMins <= lateNightEndMins) {
+    colorsPalette = LATE_NIGHT_PALETTE;
+  } else if (totalMins >= eveningStart && totalMins <= eveningEnd) {
+    colorsPalette = EVENING_PALETTE;
+  } else if (totalMins >= afternoonStart && totalMins <= afternoonEnd) {
+    colorsPalette = AFTERNOON_PALETTE;
+  } else if (totalMins >= genesisStart && totalMins <= genesisEnd) {
+    colorsPalette = GENESIS_PALETTE;
+  } else if (h >= 18 && h < 21) {
+    colorsPalette = TWILIGHT_PALETTE;
+  } else if (h >= 21 || h < 3) {
+    colorsPalette = NIGHT_PALETTE;
+  } else {
+    colorsPalette = DAY_PALETTE;
+  }
+}
+
+function keyPressed() {
+  if (key === 'b' || key === 'B') {
+    if (scene > 0) {
+      scene = 0; fadeAlpha = 0; showAlternateView = false; showCompanionView = false; 
+      showLinesMode = false; showWavesMode = false; isQuietMode = false; 
+      showControlsMenu = false; isDeveloperMode = false; 
+      videoEarthAccordingToMermaids.pause(); imgAbstractLindiaGif.pause();
+      audioHarmonicEtherealCoSunlitRays.stop(); button.show(); button.removeAttribute('disabled');
+      bubbles = [];
+    }
+  } else if (key === 'a' || key === 'A') {
+    if (scene === 2) { showAlternateView = !showAlternateView; if (showAlternateView) showCompanionView = false; }
+  } else if (key === 'c' || key === 'C') {
+    if (scene === 2) { showCompanionView = !showCompanionView; if (showCompanionView) showAlternateView = false; }
+  } else if (key === 'l' || key === 'L') {
+    if (scene === 2) showLinesMode = !showLinesMode;
+  } else if (key === 'w' || key === 'W') {
+    if (scene === 2) showWavesMode = !showWavesMode;
+  } else if (key === 'q' || key === 'Q') {
+    if (scene === 2) isQuietMode = !isQuietMode;
+  } else if (key === 'i' || key === 'I') {
+    if (scene === 2) { showControlsMenu = !showControlsMenu; if (showControlsMenu) isDeveloperMode = false; }
+  } else if (key === 'd' || key === 'D') { 
+    if (scene === 2) { isDeveloperMode = !isDeveloperMode; if (isDeveloperMode) showControlsMenu = false; }
+  }
+}
+
+function drawOmbreBackground(isStatic = false) {
+  push();
+  colorMode(HSB, 360, 100, 100, 1);
+  let hVal = hour();
+  let satMult = map(hVal, 0, 23, 0.7, 1.8); 
+  
+  const gradientColors = colorsPalette.map(hex => {
+    let c = color('#' + hex);
+    return color(hue(c), constrain(saturation(c) * satMult, 0, 100), brightness(c));
+  });
+  
+  let timeFactor = (hVal + minute() / 60) * 0.1; 
+  noFill();
+  strokeWeight(2); 
+  
+  let numColors = gradientColors.length;
+  let scrollOffset = isStatic ? 0 : frameCount * 0.0075; 
+  
+  let colorSpan = showCompanionView ? 1.5 : 2.5; 
+
+  for (let y = 0; y < height; y += 2) {
+    let baseColorPos = map(y, 0, height, 0, colorSpan); 
+    let normalizedPosition = (baseColorPos + scrollOffset + timeFactor) % numColors;
+    if (normalizedPosition < 0) normalizedPosition += numColors;
+    
+    let index1 = floor(normalizedPosition);
+    let index2 = (index1 + 1) % numColors;
+    let inter = normalizedPosition % 1; 
+    
+    stroke(lerpColor(gradientColors[index1], gradientColors[index2], inter));
+    line(0, y, width, y);
+    line(0, y+1, width, y+1);
+  }
+  pop();
+}
+
+function processChromaKey() {
+  if (imgWallSculpturesProcessed || imgWallSculptures.width <= 0) return;
+  imgWallSculpturesProcessed = createGraphics(imgWallSculptures.width, imgWallSculptures.height);
+  imgWallSculpturesProcessed.image(imgWallSculptures, 0, 0);
+  imgWallSculpturesProcessed.loadPixels();
+  
+  let yStart = imgWallSculpturesProcessed.height * 0.1;
+  let yEnd = imgWallSculpturesProcessed.height * 0.65; 
+  let xStart = imgWallSculpturesProcessed.width * 0.15;
+  let xEnd = imgWallSculpturesProcessed.width * 0.85;
+
+  for (let y = 0; y < imgWallSculpturesProcessed.height; y++) {
+    for (let x = 0; x < imgWallSculpturesProcessed.width; x++) {
+      let i = (x + y * imgWallSculpturesProcessed.width) * 4;
+      if (x > xStart && x < xEnd && y > yStart && y < yEnd) {
+        let r = imgWallSculpturesProcessed.pixels[i];
+        let g = imgWallSculpturesProcessed.pixels[i+1];
+        let b = imgWallSculpturesProcessed.pixels[i+2];
+        if (g > 100 && g > r * 1.35 && g > b * 1.35) {
+          imgWallSculpturesProcessed.pixels[i+3] = 0; 
+        }
+      }
+    }
+  }
+  imgWallSculpturesProcessed.updatePixels();
+}
+
+function drawUndulatingWavePattern() {
+  push();
+  blendMode(SCREEN); // SCREEN avoids washing out as much as ADD on bright backgrounds
+  strokeWeight(3); // Increased for visibility
+  const patternColors = colorsPalette.map(hex => {
+      let c = color('#' + hex);
+      return color(red(c), green(c), blue(c), 220); // Higher opacity to see the colorway
+  });
+  let numLines = 50; 
+  let density = map(sin(frameCount * 0.005), -1, 1, 0.005, 0.015); 
+  for (let i = 0; i < numLines; i++) {
+    let y = map(i, 0, numLines, 0, height);
+    let colorIndex = floor(map(i, 0, numLines, 0, patternColors.length)) % patternColors.length;
+    stroke(patternColors[colorIndex]);
+    for (let x = 0; x < width; x += 10) {
+        let waveOffset = sin(frameCount * 0.025 + y * density) * 50;
+        let y1 = y + waveOffset + sin(frameCount * 0.015 + x * 0.02) * 20;
+        let y2 = y + waveOffset + sin(frameCount * 0.015 + (x+10) * 0.02) * 20;
+        line(x, y1, x + 10, y2);
+    }
+  }
+  pop();
+}
+
+function drawStraightLinePattern() {
+  push();
+  blendMode(SCREEN); // SCREEN mode ensures colors pop against the background
+  const patternColors = colorsPalette.map(hex => {
+      let c = color('#' + hex);
+      return color(red(c), green(c), blue(c), 220); // Vivid opacity
+  });
+
+  let numMacroBands = 8;
+  let linesInBand = 6;
+  let bandSpacing = height / numMacroBands;
+
+  for (let i = 0; i < numMacroBands; i++) {
+    let baseY = (i * bandSpacing + frameCount * 0.2) % height; 
+    let colorIndex = i % patternColors.length;
+    stroke(patternColors[colorIndex]);
+    
+    for (let j = 0; j < linesInBand; j++) {
+      let y = baseY + j * 6; 
+      strokeWeight(j % 2 === 0 ? 2.5 : 1.2); // Thicker lines for color impact
+      
+      for (let x = 0; x < width; x += 30) {
+        let d = dist(mouseX, mouseY, x, y);
+        let influence = map(d, 0, 400, 45, 0, true);
+        
+        let dy = influence * sin(frameCount * 0.05 + d * 0.01);
+        let drift = sin(frameCount * 0.02 + y * 0.01) * 10;
+        
+        line(x, y + drift + dy, x + 30, y + drift + dy);
+      }
+    }
+  }
+  pop();
+}
+
+function draw() {
+  updatePalette(); 
+  background(0); 
+  if (scene === 0 || scene === 1) {
+    drawOmbreBackground();
+    drawAquaphilosScreen();
+  }
+  if (scene === 2) {
+    drawVideoScreen();
+    handleAudioVolume(); 
+    if (isDeveloperMode) drawDeveloperImageGraphic();
+    if (showControlsMenu) drawControlsImageOverlay();
+  }
+  if (scene === 0) {
+    animateButton();
+    handleHoverEffects(); 
+    button.show();
+  } else if (scene === 1) {
+    handleFadeOut();
+    button.hide();
+  } else if (scene === 2) {
+    handleFadeIn();
+  }
+}
+
+function drawControlsImageOverlay() {
+  let img = imgGenesisControlPanel;
+  if (img && img.width > 0) {
+    push();
+    tint(255, 217); 
+    let ratio = max(width / img.width, height / img.height);
+    image(img, width / 2, height / 2, img.width * ratio, img.height * ratio);
+    pop(); 
+  }
+}
+
+function drawDeveloperImageGraphic() {
+  let img = imgCommunityCard; 
+  if (!img || img.width <= 0) return;
+  if (!imgDevFeathered) {
+    let pg = createGraphics(img.width, img.height);
+    let msk = createGraphics(img.width, img.height);
+    msk.noStroke(); msk.fill(255);
+    msk.rect(img.width * 0.02, img.height * 0.02, img.width * 0.96, img.height * 0.96, 60);
+    msk.filter(BLUR, 15);
+    pg.image(img, 0, 0);
+    imgDevFeathered = pg.get();
+    imgDevFeathered.mask(msk);
+  }
+  push();
+  blendMode(SCREEN);
+  tint(255, 245); 
+  let ratio = min(width / imgDevFeathered.width, height / imgDevFeathered.height);
+  image(imgDevFeathered, width / 2, height / 2, imgDevFeathered.width * ratio, imgDevFeathered.height * ratio);
+  pop();
+}
+
+function handleHoverEffects() {
+  if (isHovering) {
+    let centerX = width * 0.9;
+    let centerY = height * 0.75 + 110;
+    for (let i = 0; i < 2; i++) bubbles.push(new Bubble(centerX + random(-10, 10), centerY + random(-10, 10)));
+  }
+  for (let i = bubbles.length - 1; i >= 0; i--) {
+    bubbles[i].update(); bubbles[i].display();
+    if (bubbles[i].isDead()) bubbles.splice(i, 1);
+  }
+}
+
+function handleAudioVolume() {
+  if (audioHarmonicEtherealCoSunlitRays.isPlaying()) {
+    let targetVolume = isQuietMode ? 0.0 : 0.5; 
+    let currentVolume = audioHarmonicEtherealCoSunlitRays.getVolume();
+    audioHarmonicEtherealCoSunlitRays.setVolume(lerp(currentVolume, targetVolume, 0.05));
+  }
+}
+
+function drawAquaphilosScreen() {
+  let img = imgAbstractia; 
+  if (!img) return;
+  push();
+  blendMode(MULTIPLY); 
+  tint(255, 230); // ~90% opacity
+  let ratio = max(width / img.width, height / img.height);
+  image(img, width / 2, height / 2, img.width * ratio, img.height * ratio);
+  pop();
+}
+
+function drawVideoScreen() {
+    drawOmbreBackground(false); 
+    let baseMedia = imgAbstractLindiaGif; 
+    let baseBlendMode = BLEND; 
+    let isMermaidsActive = showAlternateView; 
+    let isLindiaActive = !showAlternateView; 
+    
+    if (isMermaidsActive) {
+        baseMedia = videoEarthAccordingToMermaids;
+        isLindiaActive = false;
+    } else {
+        baseMedia = imgAbstractLindiaGif;
+        isLindiaActive = true; 
+        if (showCompanionView) baseBlendMode = SCREEN; 
+    }
+    
+    if (videoEarthAccordingToMermaids) {
+        if (isMermaidsActive) videoEarthAccordingToMermaids.loop(); else videoEarthAccordingToMermaids.pause();
+    }
+    if (imgAbstractLindiaGif) {
+        if (isLindiaActive) imgAbstractLindiaGif.loop(); else imgAbstractLindiaGif.pause();
+    }
+    
+    if (baseMedia && baseMedia.width > 0 && baseMedia.height > 0) {
+        push();
+        blendMode(baseBlendMode); 
+        let ratioBase = max(width / baseMedia.width, height / baseMedia.height);
+        image(baseMedia, width / 2, height / 2, baseMedia.width * ratioBase, baseMedia.height * ratioBase);
+        pop();
+    }
+
+    if (showCompanionView) {
+        push();
+        blendMode(OVERLAY); 
+        drawOmbreBackground(false); 
+        pop();
+    }
+    
+    // Pattern Layering: Draw patterns AFTER the video but BEFORE the museum graphic
+    if (showLinesMode) drawStraightLinePattern();
+    if (showWavesMode) drawUndulatingWavePattern();
+    
+    if (showAlternateView) {
+        processChromaKey();
+        if (imgWallSculpturesProcessed) {
+            push();
+            blendMode(BLEND); 
+            let ratioImg = max(width / imgWallSculpturesProcessed.width, height / imgWallSculpturesProcessed.height);
+            image(imgWallSculpturesProcessed, width / 2, height / 2, imgWallSculpturesProcessed.width * ratioImg, imgWallSculpturesProcessed.height * ratioImg);
+            pop(); 
+        }
+    }
+}
+
+function animateButton() {
+  let scaleFactor = map(sin(frameCount * 0.05), -1, 1, 1, 1.05);
+  button.style('transform', `translate(-50%, -55%) scale(${scaleFactor})`);
+}
+
+function handleDiveIn() {
+  if (getAudioContext().state !== 'running') getAudioContext().resume();
+  if (audioGetAbstractSfx && audioGetAbstractSfx.isLoaded()) audioGetAbstractSfx.play();
+  if (scene === 0) { scene = 1; button.attribute('disabled', ''); }
+}
+
+function handleFadeOut() {
+  fadeAlpha += fadeRate;
+  fill(0, fadeAlpha);
+  rect(0, 0, width, height);
+  if (fadeAlpha >= 255) {
+    fadeAlpha = 255;
+    scene = 2; 
+    if (!audioHarmonicEtherealCoSunlitRays.isPlaying()) audioHarmonicEtherealCoSunlitRays.play(); 
+  }
+}
+
+function handleFadeIn() {
+  fadeAlpha -= fadeRate;
+  fill(0, fadeAlpha);
+  rect(0, 0, width, height);
+  if (fadeAlpha <= 0) fadeAlpha = 0;
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  if (button) button.position(width * 0.9, height * 0.75 + 110);
+}
+
+class Bubble {
+  constructor(x, y) {
+    this.pos = createVector(x, y);
+    this.vel = p5.Vector.fromAngle(random(TWO_PI), random(2, 5));
+    this.lifespan = 255;
+    this.size = random(18, 36);
+  }
+  update() {
+    this.pos.add(this.vel);
+    this.vel.y = lerp(this.vel.y, -2, 0.05); 
+    this.vel.mult(0.98); 
+    this.lifespan -= 2.5; 
+  }
+  display() {
+    push();
+    textSize(this.size); textAlign(CENTER, CENTER);
+    fill(255, this.lifespan); text("🫧", this.pos.x, this.pos.y);
+    pop();
+  }
+  isDead() { return this.lifespan < 0; }
+}
+  </script>
+
+
+</body></html>

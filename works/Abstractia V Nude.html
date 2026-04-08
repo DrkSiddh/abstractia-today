@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.11.11/lib/p5.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/p5@0.7.0/lib/addons/p5.sound.min.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "mediabunny": "https://cdn.jsdelivr.net/npm/mediabunny@1.25.8/+esm"
+      }
+    }
+  </script>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
+      overflow: auto;
+      background: transparent;
+    }
+
+    main {
+      height: 100%;
+      display: flex;
+      overflow: auto;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #p5_loading {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      animation-delay: 1s;
+      color: #4e5d7b;
+      font-family: "FK Grotesk Regular", sans-serif;
+      font-size: 30px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 30px;
+      letter-spacing: -1.5px;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .5; }
+    }
+  </style>
+  <title>Abstractia V | Made on juno.transient.xyz</title>
+</head>
+<body>
+  
+    
+  <script>
+    let cnv;
+let isMobile;
+let imgAbstractiaV;
+let imgCommunityCard;
+let imgQuantumCorridor;
+let imgControlPanel;
+let imgAbstractLindiaGif;
+let videoBlaqqatDevV;
+let videoEarthAccordingToMermaids;
+let audioVCurious;
+let audioSoftMystical;
+let button;
+let fontRock3D;
+
+let scene = 0; 
+let fadeAlpha = 0;
+let fadeRate = 6;
+let showAlternateView = false;
+let showCompanionView = false; 
+let showLinesMode = false; 
+let showWavesMode = false;
+let showMountainMode = false; 
+const LERP_RATE = 0.05;
+let isQuietMode = false;
+let showControlsMenu = false;
+let isDeveloperMode = false;
+let isDevMuted = false;
+let isHovering = false;
+
+let bubbles = []; 
+
+let currentPaletteHex = [];
+let targetPaletteHex = [];
+let paletteLerpRate = 0.015;
+
+const DAY_PALETTE = ["03045e", "023e8a", "0077b6", "0096c7", "00b4d8", "48cae4", "90e0ef", "ade8f4", "ade8f4", "ade8f4"];
+const NIGHT_PALETTE = ["10002b", "240046", "3c096c", "5a189a", "7b2cbf", "9d4edd", "c77dff", "e0aaff", "e0aaff", "e0aaff"];
+const TWILIGHT_PALETTE = ["ae7981", "543d4f", "2d2c34", "62354c", "36222b", "36222b", "36222b", "36222b", "36222b", "36222b"];
+const LIME_PALETTE = ["004b23", "006400", "007200", "008000", "38b000", "70e000", "9ef01a", "ccff33", "ccff33", "ccff33"];
+const DAWN_PALETTE_BASE = ["dfbbb1", "f56476", "e43f6f", "be3e82", "5e4352", "dfbbb1", "f56476", "e43f6f", "e43f6f", "e43f6f"];
+const BRIGHTS_PALETTE = ["35ff69", "42bfdd", "0a090c", "f5b700", "00a1e4", "e63462", "d138bf", "f2f5ea", "d63230", "f06449"];
+const DESERT_PALETTE = ["9a9a8f", "8f8a7f", "8a8276", "7a6f63", "5f5a52", "3f3a33"];
+const V_PALETTE = ["3a3a36", "b48a2c", "e7dec8", "1f2a36", "2b1f17"];
+
+let colorsPalette = []; 
+let lastPaletteType = ""; 
+
+let fluidShader;
+let shaderBuf;
+
+const vert = `
+  attribute vec3 aPosition;
+  attribute vec2 aTexCoord;
+  varying vec2 vTexCoord;
+  void main() {
+    vTexCoord = aTexCoord;
+    vec4 positionVec4 = vec4(aPosition, 1.0);
+    positionVec4.xy = positionVec4.xy * 2.0 - 1.0;
+    gl_Position = positionVec4;
+  }
+`;
+
+const frag = `
+  precision highp float;
+  varying vec2 vTexCoord;
+  uniform float u_time;
+  uniform vec2 u_resolution;
+  uniform vec2 u_mouse;
+  uniform vec3 u_colors[5];
+
+  float noise(vec2 p) {
+    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+  }
+
+  float smoothNoise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    f = f * f * (3.0 - 2.0 * f);
+    float a = noise(i);
+    float b = noise(i + vec2(1.0, 0.0));
+    float c = noise(i + vec2(0.0, 1.0));
+    float d = noise(i + vec2(1.0, 1.0));
+    return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+  }
+
+  float fbm(vec2 p) {
+    float v = 0.0;
+    float a = 0.5;
+    for (int i = 0; i < 6; i++) {
+      v += a * smoothNoise(p);
+      p *= 2.1;
+      a *= 0.5;
+    }
+    return v;
+  }
+
+  void main() {
+    vec2 uv = vTexCoord;
+    float dist = distance(uv, u_mouse);
+    float interaction = smoothstep(0.5, 0.0, dist) * 0.35;
+    vec2 p = uv * 2.5;
+    p += (uv - u_mouse) * interaction;
+    vec2 q = vec2(0.0);
+    q.x = fbm(p + 0.1 * u_time);
+    q.y = fbm(p + vec2(1.0));
+    vec2 r = vec2(0.0);
+    r.x = fbm(p + 1.0 * q + vec2(1.7, 9.2) + 0.15 * u_time);
+    r.y = fbm(p + 1.0 * q + vec2(8.3, 2.8) + 0.126 * u_time);
+    float f = fbm(p + r);
+    vec3 color = mix(u_colors[0], u_colors[1], clamp(f*2.0, 0.0, 1.0));
+    color = mix(color, u_colors[2], clamp((f-0.3)*3.0, 0.0, 1.0));
+    color = mix(color, u_colors[3], clamp((f-0.6)*4.0, 0.0, 1.0));
+    color = mix(color, u_colors[4], clamp((f-0.8)*5.0, 0.0, 1.0));
+    gl_FragColor = vec4(color, 1.0);
+  }
+`;
+
+function preload() {
+  imgAbstractiaV = loadImage("https://dae.transientusercontent.xyz/uploads/72851641-d4e8-4163-9e27-35fed9437ed2"); 
+  imgCommunityCard = loadImage("https://dae.transientusercontent.xyz/uploads/067b752f-b4bd-41f1-8ab5-3df1f95453b6");
+  imgQuantumCorridor = loadImage("https://dae.transientusercontent.xyz/uploads/c5927594-99c0-4645-886e-916c19fdbce3");
+  imgControlPanel = loadImage("https://dae.transientusercontent.xyz/uploads/77457fdf-7af6-48e2-a543-021968683b78");
+  fontRock3D = loadFont("https://dae.transientusercontent.xyz/uploads/fa827533-05e2-4540-b01f-5b7c3bcdeed4");
+  audioVCurious = loadSound("https://dae.transientusercontent.xyz/uploads/caa54e58-6804-4376-af0d-465427ea0407"); 
+  audioSoftMystical = loadSound("https://dae.transientusercontent.xyz/uploads/09b2ffa5-2290-48e8-8815-eab2430d647e"); 
+}
+
+function setup() {
+  cnv = createCanvas(windowWidth, windowHeight);
+  imageMode(CENTER);
+  isMobile = (('ontouchstart' in window) || navigator.maxTouchPoints > 0) && width < 767;
+  cnv.elt.style.touchAction = 'none';
+  
+  let styleElement = createElement('style');
+  styleElement.html(`
+    @font-face {
+      font-family: 'Rock3DLocal';
+      src: url('https://dae.transientusercontent.xyz/uploads/fa827533-05e2-4540-b01f-5b7c3bcdeed4');
+    }
+  `);
+
+  shaderBuf = createGraphics(width, height, WEBGL);
+  fluidShader = shaderBuf.createShader(vert, frag);
+
+  videoEarthAccordingToMermaids = createVideo('https://dae.transientusercontent.xyz/uploads/6dffff3a-5ce8-4968-9a74-2c2e940d5a25');
+  videoEarthAccordingToMermaids.elt.muted = true;
+  videoEarthAccordingToMermaids.elt.setAttribute('playsinline', '');
+  videoEarthAccordingToMermaids.loop();
+  videoEarthAccordingToMermaids.hide(); 
+  videoEarthAccordingToMermaids.pause();
+
+  imgAbstractLindiaGif = createVideo('https://dae.transientusercontent.xyz/uploads/ee55ee3a-c3c7-4095-b2dc-7baaef466749');
+  imgAbstractLindiaGif.elt.muted = true;
+  imgAbstractLindiaGif.elt.setAttribute('playsinline', '');
+  imgAbstractLindiaGif.loop();
+  imgAbstractLindiaGif.hide();
+  imgAbstractLindiaGif.pause();
+
+  videoBlaqqatDevV = createVideo('https://dae.transientusercontent.xyz/uploads/5b0267d3-f495-4633-8355-90929be15143');
+  videoBlaqqatDevV.elt.muted = false;
+  videoBlaqqatDevV.elt.setAttribute('playsinline', '');
+  videoBlaqqatDevV.loop();
+  videoBlaqqatDevV.hide();
+  videoBlaqqatDevV.pause();
+
+  if (audioVCurious) {
+    audioVCurious.setLoop(true);
+    audioVCurious.setVolume(0.5);
+  }
+  if (audioSoftMystical) {
+    audioSoftMystical.setLoop(false);
+    audioSoftMystical.setVolume(0.8);
+  }
+
+  button = createButton('Get Abstract');
+  button.mousePressed(handleDiveIn);
+  button.mouseOver(() => { isHovering = true; });
+  button.mouseOut(() => { isHovering = false; });
+  
+  button.style('font-family', "'Rock3DLocal', 'Rock 3D', cursive"); 
+  button.style('letter-spacing', '2px');
+  button.style('font-size', '36px');
+  button.style('padding', '15px 30px');
+  button.style('border', 'none');
+  button.style('border-radius', '8px');
+  button.style('cursor', 'pointer');
+  button.style('color', 'white'); 
+  button.style('background-color', 'transparent');
+  button.style('position', 'absolute');
+  button.style('white-space', 'nowrap');
+  
+  button.position(width * 0.9 - 160, height * 0.75 + 110);
+  
+  let initial = getPaletteByTime(); 
+  currentPaletteHex = [...initial.colors];
+  targetPaletteHex = [...initial.colors];
+  lastPaletteType = initial.type;
+
+  for (let hex of currentPaletteHex) {
+      colorsPalette.push(color('#' + hex));
+  }
+}
+
+function getPaletteByTime() {
+    let h = hour();
+    let m = minute();
+    let totalMins = h * 60 + m;
+    if (totalMins >= 1260 || totalMins <= 11) return { colors: V_PALETTE, type: "V_NIGHT" };
+    else if (totalMins >= 213 && totalMins <= 419) return { colors: DAWN_PALETTE_BASE, type: "DAWN" };
+    else if (totalMins >= 660 && totalMins <= 979) return { colors: DESERT_PALETTE, type: "DESERT" };
+    else if (totalMins >= 540 && totalMins < 660) return { colors: BRIGHTS_PALETTE, type: "BRIGHTS" };
+    else if ((h === 16 && m >= 20) || (h === 17)) return { colors: LIME_PALETTE, type: "LIME" };
+    else if (h >= 18 && h < 21) return { colors: TWILIGHT_PALETTE, type: "TWILIGHT" };
+    else if (h >= 21 || h < 3) return { colors: NIGHT_PALETTE, type: "NIGHT" };
+    else return { colors: DAY_PALETTE, type: "DAY" };
+}
+
+function startAudioContext() {
+  if (getAudioContext().state !== 'running') {
+    getAudioContext().resume();
+  }
+}
+
+function updatePalette() {
+    let result = getPaletteByTime();
+    if (result.type !== lastPaletteType) {
+        let newSet = [...result.colors];
+        if (result.type === "DAWN" || result.type === "BRIGHTS") {
+            newSet.sort(() => random() - 0.5); 
+        }
+        targetPaletteHex = newSet;
+        lastPaletteType = result.type;
+    }
+}
+
+function lerpPalettes() {
+    let targetLen = targetPaletteHex.length;
+    for (let i = 0; i < targetLen; i++) {
+        let targetColor = color('#' + targetPaletteHex[i]);
+        if (colorsPalette[i]) {
+            colorsPalette[i] = lerpColor(colorsPalette[i], targetColor, paletteLerpRate);
+        } else {
+            colorsPalette[i] = targetColor;
+        }
+    }
+    if (colorsPalette.length > targetLen) {
+        colorsPalette.splice(targetLen);
+    }
+}
+
+function keyPressed() {
+  if (key === 'b' || key === 'B') {
+    if (scene > 0) {
+      scene = 0; fadeAlpha = 0;
+      showAlternateView = false; showCompanionView = false;
+      showLinesMode = false; showWavesMode = false; showMountainMode = false;
+      isQuietMode = false; showControlsMenu = false; isDeveloperMode = false;
+      videoEarthAccordingToMermaids.pause(); imgAbstractLindiaGif.pause(); videoBlaqqatDevV.pause();
+      if (audioVCurious && audioVCurious.isPlaying()) audioVCurious.stop();
+      if (audioSoftMystical && audioSoftMystical.isPlaying()) audioSoftMystical.stop();
+      button.show(); button.removeAttribute('disabled'); bubbles = [];
+    }
+  } else if (key === 'a' || key === 'A') {
+    if (scene === 2) {
+      showAlternateView = !showAlternateView;
+      if (showAlternateView) { showCompanionView = false; isDeveloperMode = false; showControlsMenu = false; if (audioSoftMystical) audioSoftMystical.play(); }
+    }
+  } else if (key === 'c' || key === 'C') {
+    if (scene === 2) {
+      showCompanionView = !showCompanionView;
+      if (showCompanionView) showAlternateView = false;
+    }
+  } else if (key === 'l' || key === 'L') {
+    if (scene === 2) showLinesMode = !showLinesMode;
+  } else if (key === 'w' || key === 'W') {
+    if (scene === 2) showWavesMode = !showWavesMode;
+  } else if (key === 's' || key === 'S') {
+    if (scene === 2) showMountainMode = !showMountainMode;
+  } else if (key === 'q' || key === 'Q') {
+    if (scene === 2) isQuietMode = !isQuietMode;
+  } else if (key === 'i' || key === 'I') {
+    if (scene === 2) {
+      showControlsMenu = !showControlsMenu;
+      if (showControlsMenu) { isDeveloperMode = false; showAlternateView = false; }
+    }
+  } else if (key === 'd' || key === 'D') { 
+    if (scene === 2) {
+      isDeveloperMode = !isDeveloperMode;
+      if (isDeveloperMode) { showControlsMenu = false; showAlternateView = false; }
+    }
+  } else if (key === 'm' || key === 'M') {
+    if (scene === 2) {
+      isDevMuted = !isDevMuted;
+      videoBlaqqatDevV.elt.muted = isDevMuted;
+    }
+  }
+}
+
+function getActivePalette() {
+  if (showCompanionView) {
+    let h = hour();
+    let m = minute();
+    let totalMins = h * 60 + m;
+
+    // Golden Hour Override: 4:55 PM to 6:00 PM
+    if (totalMins >= 1015 && totalMins <= 1080) {
+      return [
+        color('#e9b7ce'), 
+        color('#e3c6d7'), 
+        color('#ddd5e0'), 
+        color('#d8e4e9'), 
+        color('#d3f3f1')
+      ];
+    }
+
+    // Late Night Override: 8:08 PM to 3:33 AM
+    if (totalMins >= 1208 || totalMins <= 213) {
+      return [
+        color('#634551'), 
+        color('#442736'), 
+        color('#8A606A'), 
+        color('#563B47'), 
+        color('#28191F')
+      ];
+    }
+    return [colorsPalette[0], colorsPalette[colorsPalette.length - 1], colorsPalette[floor(colorsPalette.length/2)], colorsPalette[colorsPalette.length - 1], colorsPalette[0]];
+  }
+  return colorsPalette;
+}
+
+function drawOmbreBackground() {
+  colorMode(RGB, 255);
+  let activePalette = getActivePalette();
+  noFill();
+  strokeWeight(1); 
+  for (let y = 0; y < height; y++) {
+    let palettePos = map(y, 0, height, 0, activePalette.length - 1);
+    let idx = floor(palettePos);
+    let f = palettePos % 1;
+    let finalCol = lerpColor(activePalette[idx], activePalette[(idx + 1) % activePalette.length], f);
+    stroke(finalCol);
+    line(0, y, width, y);
+  }
+}
+
+function drawMountainPattern() {
+  push();
+  blendMode(BLEND); 
+  noStroke();
+  let layers = 5;
+  let activePalette = getActivePalette();
+  let speedMult = showCompanionView ? 0.008 : 0.002;
+  let companionDrift = showCompanionView ? sin(frameCount * 0.01) * 100 : 0;
+  let time = frameCount * speedMult;
+  for (let i = 0; i < layers; i++) {
+    let c = activePalette[i % activePalette.length];
+    fill(red(c), green(c), blue(c), 160); 
+    beginShape();
+    vertex(0, height);
+    let layerBaseY = height * 0.4 + (i * 100);
+    for (let x = -100; x <= width + 100; x += 15) {
+      let noiseVal = noise((x + companionDrift) * 0.003, i * 10, time);
+      let h = map(noiseVal, 0, 1, -200, 200);
+      vertex(x, layerBaseY + h);
+    }
+    vertex(width, height);
+    endShape(CLOSE);
+  }
+  pop();
+}
+
+function drawUndulatingWavePattern() {
+  push();
+  blendMode(BLEND); 
+  strokeWeight(2);
+  noFill();
+  let activePalette = getActivePalette();
+  const patternColors = activePalette.map(c => color(red(c), green(c), blue(c), 180));
+  let numLines = 50; 
+  let speedMult = showCompanionView ? 0.06 : 0.025;
+  let density = map(sin(frameCount * 0.005), -1, 1, 0.005, 0.015);
+  for (let i = 0; i < numLines; i++) {
+    let y = map(i, 0, numLines, 0, height);
+    let c1 = patternColors[i % patternColors.length]; 
+    for (let x = 0; x < width; x += 10) {
+        let finalColor = lerpColor(c1, patternColors[(i + 1) % patternColors.length], x / width);
+        let x1 = x, x2 = x + 10;
+        let waveFactor = showCompanionView ? 100 : 50;
+        let w1 = sin(frameCount * speedMult + y * density) * waveFactor + sin(frameCount * 0.015 + x1 * 0.02) * 20;
+        let w2 = sin(frameCount * speedMult + y * density) * waveFactor + sin(frameCount * 0.015 + x2 * 0.02) * 20;
+        stroke(finalColor);
+        line(x1, y + w1, x2, y + w2);
+    }
+  }
+  pop();
+}
+
+function drawStraightLinePattern() {
+  push();
+  blendMode(BLEND); 
+  let activePalette = getActivePalette();
+  const patternColors = activePalette.map(c => color(red(c), green(c), blue(c), 120));
+  let numRays = showCompanionView ? 6 : 12;
+  let moveSpeed = showCompanionView ? 1.2 : 2.5;
+  for (let i = 0; i < numRays; i++) {
+    let xOffset = (frameCount * moveSpeed + i * (width / numRays)) % (width + 200) - 100;
+    let c = patternColors[i % patternColors.length];
+    let rayWidth = map(sin(frameCount * 0.03 + i), -1, 1, 10, 120);
+    strokeWeight(1);
+    for (let j = 0; j < rayWidth; j += 6) {
+      let alpha = map(abs(j - rayWidth/2), 0, rayWidth/2, 1, 0);
+      stroke(red(c), green(c), blue(c), 200 * alpha);
+      line(xOffset + j, 0, xOffset + j, height);
+    }
+  }
+  pop();
+}
+
+function draw() {
+  updatePalette();
+  lerpPalettes();
+  background(0);
+
+  if (scene === 0 || scene === 1) {
+    drawOmbreBackground();
+    drawWelcomeScreen();
+  }
+  
+  if (scene === 2) {
+    drawVideoScreen(); 
+    handleAudioVolume();
+    if (showControlsMenu) drawControlsImageOverlay();
+    if (isDeveloperMode) drawCommunityCardOverlay();
+    if (showAlternateView) drawAlternateImageOverlay();
+  }
+
+  if (scene === 0) {
+    animateButton();
+    handleHoverEffects();
+    button.show();
+  } else if (scene === 1) {
+    handleFadeOut();
+    button.hide();
+  } else if (scene === 2) {
+    handleFadeIn();
+  }
+}
+
+function drawControlsImageOverlay() {
+  if (imgControlPanel && imgControlPanel.width > 0) {
+    push();
+    blendMode(HARD_LIGHT);
+    tint(255, 255 * 0.9); 
+    let ratio = max(width / imgControlPanel.width, height / imgControlPanel.height);
+    image(imgControlPanel, width / 2, height / 2, imgControlPanel.width * ratio, imgControlPanel.height * ratio);
+    pop(); 
+  }
+}
+
+function drawCommunityCardOverlay() {
+  if (imgCommunityCard && imgCommunityCard.width > 0) {
+    push();
+    blendMode(BLEND); 
+    tint(255, 255 * 0.88); 
+    let ratio = max(width / imgCommunityCard.width, height / imgCommunityCard.height);
+    image(imgCommunityCard, width / 2, height / 2, imgCommunityCard.width * ratio, imgCommunityCard.height * ratio);
+    pop();
+  }
+}
+
+function drawAlternateImageOverlay() {
+    if (imgQuantumCorridor && imgQuantumCorridor.width > 0) {
+        push();
+        blendMode(SCREEN); 
+        let ratioImg = max(width / imgQuantumCorridor.width, height / imgQuantumCorridor.height);
+        image(imgQuantumCorridor, width / 2, height / 2, imgQuantumCorridor.width * ratioImg, imgQuantumCorridor.height * ratioImg);
+        pop(); 
+    }
+}
+
+function handleHoverEffects() {
+  if (isHovering) {
+    let centerX = (width * 0.9) - 160, centerY = height * 0.75 + 110;
+    for (let i = 0; i < 2; i++) bubbles.push(new Bubble(centerX + random(-10, 10), centerY + random(-10, 10)));
+  }
+  for (let i = bubbles.length - 1; i >= 0; i--) {
+    bubbles[i].update();
+    bubbles[i].display();
+    if (bubbles[i].isDead()) bubbles.splice(i, 1);
+  }
+}
+
+function handleAudioVolume() {
+  if (audioVCurious && audioVCurious.isPlaying()) {
+    let targetVolume = isQuietMode ? 0.0 : 0.5; 
+    audioVCurious.setVolume(lerp(audioVCurious.getVolume(), targetVolume, LERP_RATE));
+  }
+}
+
+function drawWelcomeScreen() {
+  if (!imgAbstractiaV) return;
+  let ratio = max(width / imgAbstractiaV.width, height / imgAbstractiaV.height);
+  image(imgAbstractiaV, width / 2, height / 2, imgAbstractiaV.width * ratio, imgAbstractiaV.height * ratio);
+}
+
+function drawVideoScreen() {
+    if (showCompanionView) {
+      let p = getActivePalette();
+      let shaderColors = [];
+      for (let i = 0; i < 5; i++) {
+        let col = p[i % p.length];
+        shaderColors.push(red(col)/255, green(col)/255, blue(col)/255);
+      }
+      shaderBuf.shader(fluidShader);
+      fluidShader.setUniform('u_resolution', [width, height]);
+      fluidShader.setUniform('u_time', millis() / 1000.0);
+      fluidShader.setUniform('u_mouse', [mouseX / width, 1.0 - mouseY / height]);
+      fluidShader.setUniform('u_colors', shaderColors);
+      shaderBuf.rect(-width/2, -height/2, width, height);
+      image(shaderBuf, width / 2, height / 2);
+    } else {
+      drawOmbreBackground(); 
+    }
+
+    let isAModeActive = showAlternateView;
+    let mediaToDraw = null;
+    if (!isAModeActive) {
+        mediaToDraw = imgAbstractLindiaGif;
+        if (imgAbstractLindiaGif) imgAbstractLindiaGif.loop();
+    } else {
+        if (imgAbstractLindiaGif) imgAbstractLindiaGif.pause();
+    }
+    if (mediaToDraw && mediaToDraw.width > 0) {
+        push();
+        blendMode(BLEND); 
+        let ratioBase = max(width / mediaToDraw.width, height / mediaToDraw.height);
+        image(mediaToDraw, width / 2, height / 2, mediaToDraw.width * ratioBase, mediaToDraw.height * ratioBase);
+        pop();
+    }
+    
+    if (showLinesMode) drawStraightLinePattern();
+    if (showWavesMode) drawUndulatingWavePattern();
+    if (showMountainMode) drawMountainPattern(); 
+}
+
+function animateButton() {
+  let scaleFactor = map(sin(frameCount * 0.05), -1, 1, 1, 1.05);
+  button.style('transform', `translate(-50%, -55%) scale(${scaleFactor})`);
+}
+
+function handleDiveIn() {
+  startAudioContext();
+  if (audioSoftMystical && audioSoftMystical.isLoaded()) audioSoftMystical.play();
+  if (scene === 0) {
+    scene = 1;
+    button.attribute('disabled', '');
+  }
+}
+
+function handleFadeOut() {
+  fadeAlpha += fadeRate;
+  fill(0, fadeAlpha);
+  rect(0, 0, width, height);
+  if (fadeAlpha >= 255) {
+    fadeAlpha = 255;
+    scene = 2;
+    if (audioVCurious && !audioVCurious.isPlaying()) audioVCurious.play();
+  }
+}
+
+function handleFadeIn() {
+  fadeAlpha -= fadeRate;
+  fill(0, fadeAlpha);
+  rect(0, 0, width, height);
+  if (fadeAlpha <= 0) fadeAlpha = 0;
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  shaderBuf.resizeCanvas(windowWidth, windowHeight);
+  if (button) button.position(width * 0.9 - 160, height * 0.75 + 110);
+}
+
+class Bubble {
+  constructor(x, y) {
+    this.pos = createVector(x, y);
+    this.vel = p5.Vector.fromAngle(random(TWO_PI), random(2, 5));
+    this.lifespan = 255;
+    this.size = random(18, 36);
+  }
+  update() {
+    this.pos.add(this.vel);
+    this.vel.y = lerp(this.vel.y, -2, 0.05); 
+    this.vel.mult(0.98); 
+    this.lifespan -= 2.5; 
+  }
+  display() {
+    push();
+    textSize(this.size);
+    textAlign(CENTER, CENTER);
+    fill(255, this.lifespan); 
+    text("🫧", this.pos.x, this.pos.y);
+    pop();
+  }
+  isDead() { return this.lifespan < 0; }
+}
+  </script>
+
+
+</body></html>

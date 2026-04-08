@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.11.11/lib/p5.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/p5@0.7.0/lib/addons/p5.sound.min.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "mediabunny": "https://cdn.jsdelivr.net/npm/mediabunny@1.25.8/+esm"
+      }
+    }
+  </script>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
+      overflow: auto;
+      background: transparent;
+    }
+
+    main {
+      height: 100%;
+      display: flex;
+      overflow: auto;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #p5_loading {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      animation-delay: 1s;
+      color: #4e5d7b;
+      font-family: "FK Grotesk Regular", sans-serif;
+      font-size: 30px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 30px;
+      letter-spacing: -1.5px;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .5; }
+    }
+  </style>
+  <title>Remake Abstractia II | Made on juno.transient.xyz</title>
+</head>
+<body>
+  
+    
+  <script>
+    let cnv, isMobile, button, fontRock3D;
+let imgAbstractiaThumbnail, imgWifPatronsAbstractia, imgIsleChillGif, imgAbstractiaControlPanel;
+let imgAbstractiaCommunityCard;
+let audioOpeningIIAbstractia, audioRelaxingLoop;
+
+let scene = 0; 
+let fadeAlpha = 0;
+let fadeRate = 6;
+let showAlternateView = false;
+let showLinesMode = false; 
+let showWavesMode = false;
+let showIntenseMode = false; 
+let isQuietMode = false;
+let showControlsMenu = false;
+let isDeveloperMode = false;
+let isHovering = false;
+
+let bubbles = []; 
+let currentPalette = [];
+let targetPalette = [];
+let currentLinePalette = [];
+let lineTargetPalette = [];
+let paletteLerpRate = 0.02;
+let paletteOffset = 0; 
+
+const DAY_PALETTE = ["#03045e", "#023e8a", "#0077b6", "#0096c7", "#00b4d8", "#48cae4", "#90e0ef", "#ade8f4", "#ade8f4", "#ade8f4"];
+const NIGHT_PALETTE = ["#10002b", "#240046", "#3c096c", "#5a189a", "#7b2cbf", "#9d4edd", "#c77dff", "#e0aaff", "#e0aaff", "#e0aaff"];
+const TWILIGHT_PALETTE = ["#ae7981", "#543d4f", "#2d2c34", "#62354c", "#36222b", "#36222b", "#36222b", "#36222b", "#36222b", "#36222b"];
+
+const DEEP_GREEN_PALETTE = ["#d8f3dc", "#b7e4c7", "#95d5b2", "#74c69d", "#52b788", "#40916c", "#2d6a4f", "#1b4332", "#081c15", "#081c15"];
+const VIBRANT_GREEN_PALETTE = ["#007f5f", "#2b9348", "#55a630", "#80b918", "#aacc00", "#bfd200", "#d4d700", "#dddf00", "#eeef20", "#ffff3f"];
+const PASTEL_PALETTE = ["#ffc1cf", "#e8ffb7", "#e2a0ff", "#c4f5fc", "#b7ffd8", "#ffc1cf", "#e8ffb7", "#e2a0ff", "#c4f5fc", "#b7ffd8"];
+
+let lastPaletteType = "";
+
+function preload() {
+  imgAbstractiaCommunityCard = loadImage("https://dae.transientusercontent.xyz/uploads/067b752f-b4bd-41f1-8ab5-3df1f95453b6");
+  imgAbstractiaControlPanel = loadImage("https://dae.transientusercontent.xyz/uploads/77457fdf-7af6-48e2-a543-021968683b78"); 
+  imgAbstractiaThumbnail = loadImage("https://dae.transientusercontent.xyz/uploads/ed3c437b-159b-4702-a2ee-996a95645d50");
+  imgWifPatronsAbstractia = loadImage("https://dae.transientusercontent.xyz/uploads/01e851eb-76aa-472b-b3ae-3803d37e82dc");
+  fontRock3D = loadFont("https://dae.transientusercontent.xyz/uploads/fa827533-05e2-4540-b01f-5b7c3bcdeed4");
+  audioOpeningIIAbstractia = loadSound("https://dae.transientusercontent.xyz/uploads/bb00503d-13ad-4177-a995-d6d2c6b13b2c"); 
+  audioRelaxingLoop = loadSound("https://dae.transientusercontent.xyz/uploads/39bfff89-214e-4794-b096-c56949ec8967"); 
+}
+
+function getPaletteByTime() {
+  let h = hour();
+  let m = minute();
+  let totalMins = h * 60 + m;
+
+  if (totalMins >= 980 && totalMins <= 1075) {
+    return { bg: DEEP_GREEN_PALETTE, lines: VIBRANT_GREEN_PALETTE, type: "PM_GREEN" };
+  } 
+  else if (totalMins >= 260 && totalMins <= 487) {
+    return { bg: VIBRANT_GREEN_PALETTE, lines: VIBRANT_GREEN_PALETTE, type: "AM_GREEN" };
+  }
+  else if (totalMins >= 488 && totalMins <= 731) {
+    return { bg: PASTEL_PALETTE, lines: PASTEL_PALETTE, type: "MORNING_PASTEL" };
+  }
+  else if (h >= 18 && h < 21) {
+    return { bg: TWILIGHT_PALETTE, lines: TWILIGHT_PALETTE, type: "TWILIGHT" };
+  } else if (h >= 21 || h < 4) {
+    return { bg: NIGHT_PALETTE, lines: NIGHT_PALETTE, type: "NIGHT" };
+  } else {
+    return { bg: DAY_PALETTE, lines: DAY_PALETTE, type: "DAY" };
+  }
+}
+
+function setup() {
+  cnv = createCanvas(windowWidth, windowHeight);
+  imageMode(CENTER);
+  isMobile = (('ontouchstart' in window) || navigator.maxTouchPoints > 0) && width < 767;
+  cnv.elt.style.touchAction = 'none';
+
+  let style = createElement('style', `@font-face { font-family: 'Rock3D'; src: url('https://dae.transientusercontent.xyz/uploads/fa827533-05e2-4540-b01f-5b7c3bcdeed4'); }`);
+  style.parent(document.head);
+
+  // Initializing the Isle Chill GIF for S Mode
+  imgIsleChillGif = createVideo('https://dae.transientusercontent.xyz/uploads/ca95d956-ec63-44e1-8d40-e4aedcda7ced');
+  imgIsleChillGif.elt.muted = true;
+  imgIsleChillGif.elt.setAttribute('playsinline', '');
+  imgIsleChillGif.loop();
+  imgIsleChillGif.hide();
+
+  button = createButton('Get Abstract');
+  button.mousePressed(handleDiveIn);
+  button.mouseOver(() => { isHovering = true; });
+  button.mouseOut(() => { isHovering = false; });
+  button.style('font-family', 'Rock3D'); 
+  button.style('font-size', '42px');
+  button.style('padding', '20px 40px');
+  button.style('border', 'none');
+  button.style('cursor', 'pointer');
+  button.style('color', 'white'); 
+  button.style('background-color', 'transparent');
+  button.style('position', 'absolute');
+  button.position(width * 0.5, height * 0.85);
+  
+  let initial = getPaletteByTime(); 
+  for (let i = 0; i < 10; i++) {
+    currentPalette[i] = color(initial.bg[i]);
+    targetPalette[i] = color(initial.bg[i]);
+    currentLinePalette[i] = color(initial.lines[i]);
+    lineTargetPalette[i] = color(initial.lines[i]);
+  }
+  lastPaletteType = initial.type;
+}
+
+function updatePalette() {
+  let result = getPaletteByTime();
+  if (result.type !== lastPaletteType) {
+    for (let i = 0; i < 10; i++) {
+      targetPalette[i] = color(result.bg[i]);
+      lineTargetPalette[i] = color(result.lines[i]);
+    }
+    lastPaletteType = result.type;
+  }
+}
+
+function lerpPalettes() {
+  for (let i = 0; i < 10; i++) {
+    currentPalette[i] = lerpColor(currentPalette[i], targetPalette[i], paletteLerpRate);
+    currentLinePalette[i] = lerpColor(currentLinePalette[i], lineTargetPalette[i], paletteLerpRate);
+  }
+}
+
+function draw() {
+  updatePalette();
+  lerpPalettes();
+  background(0);
+
+  if (scene === 0 || scene === 1) {
+    drawOmbreBackground();
+    drawThumbnailScreen();
+    animateButton();
+    handleHoverEffects();
+    if (scene === 1) handleFadeOut();
+  }
+  
+  if (scene === 2) {
+    drawVideoScreen(); 
+    handleAudioVolume();
+    handleFadeIn();
+  }
+}
+
+function drawThumbnailScreen() {
+  if (!imgAbstractiaThumbnail) return;
+  push();
+  tint(255, 217); 
+  let ratio = max(width / imgAbstractiaThumbnail.width, height / imgAbstractiaThumbnail.height);
+  image(imgAbstractiaThumbnail, width / 2, height / 2, imgAbstractiaThumbnail.width * ratio, imgAbstractiaThumbnail.height * ratio);
+  pop();
+}
+
+function drawOmbreBackground() {
+  let step = 15; 
+  let scrollSpeed = frameCount * 0.00005; // Extremely slow meditative roll
+  for (let y = 0; y < height; y += step) {
+    let noiseVal = noise(y * 0.001 - scrollSpeed);
+    let palettePos = noiseVal * 9;
+    let idx = (floor(palettePos) + paletteOffset) % 10;
+    let f = palettePos - floor(palettePos);
+    let col = lerpColor(currentPalette[idx], currentPalette[(idx + 1) % 10], f);
+    noStroke();
+    fill(col);
+    rect(0, y, width, step);
+  }
+}
+
+function drawVideoScreen() {
+  drawOmbreBackground(); 
+  
+  if (showIntenseMode) drawMesmerizingIsle(); 
+  if (showLinesMode) drawStraightLinePattern();
+  if (showWavesMode) drawUndulatingWavePattern();
+
+  if (showControlsMenu) {
+    push();
+    tint(255, 217); 
+    let r = max(width / imgAbstractiaControlPanel.width, height / imgAbstractiaControlPanel.height);
+    image(imgAbstractiaControlPanel, width / 2, height / 2, imgAbstractiaControlPanel.width * r, imgAbstractiaControlPanel.height * r);
+    pop();
+  }
+  if (isDeveloperMode) {
+    push();
+    tint(255, 217); 
+    let r = max(width / imgAbstractiaCommunityCard.width, height / imgAbstractiaCommunityCard.height);
+    image(imgAbstractiaCommunityCard, width / 2, height / 2, imgAbstractiaCommunityCard.width * r, imgAbstractiaCommunityCard.height * r);
+    pop();
+  }
+
+  if (showAlternateView) {
+    push();
+    blendMode(SCREEN); 
+    tint(255, 217); 
+    let r = max(width / imgWifPatronsAbstractia.width, height / imgWifPatronsAbstractia.height);
+    image(imgWifPatronsAbstractia, width / 2, height / 2, imgWifPatronsAbstractia.width * r, imgWifPatronsAbstractia.height * r);
+    pop();
+  }
+}
+
+// Re-imagined "S" Mode: A blooming, kaleidoscopic mandala using the Isle Chill GIF
+function drawMesmerizingIsle() {
+  if (!imgIsleChillGif) return;
+  
+  push();
+  blendMode(SCREEN); 
+  let slices = 8;
+  let angleStep = TWO_PI / slices;
+  let baseRatio = max(width / imgIsleChillGif.width, height / imgIsleChillGif.height) * 0.5;
+  
+  translate(width / 2, height / 2);
+  
+  for (let i = 0; i < slices; i++) {
+    push();
+    rotate(i * angleStep + frameCount * 0.001);
+    
+    // Pulsing movement that mimics breathing
+    let breathe = sin(frameCount * 0.01 + i * 0.5) * 80;
+    let drift = cos(frameCount * 0.005 + i) * 30;
+    translate(breathe + drift, 0);
+    
+    // Scaling pulse
+    let s = 1.0 + sin(frameCount * 0.008 + i) * 0.15;
+    scale(s);
+    
+    let c = currentLinePalette[(i + paletteOffset) % 10];
+    tint(red(c), green(c), blue(c), 190); 
+    
+    // Mirror alternate slices for symmetry
+    if (i % 2 === 1) scale(1, -1);
+    
+    image(imgIsleChillGif, 0, 0, imgIsleChillGif.width * baseRatio, imgIsleChillGif.height * baseRatio);
+    pop();
+  }
+
+  // Central atmospheric core
+  push();
+  blendMode(SOFT_LIGHT);
+  rotate(-frameCount * 0.0005);
+  tint(255, 120);
+  image(imgIsleChillGif, 0, 0, imgIsleChillGif.width * baseRatio * 1.5, imgIsleChillGif.height * baseRatio * 1.5);
+  pop();
+
+  pop();
+}
+
+function drawUndulatingWavePattern() {
+  push();
+  blendMode(SCREEN); 
+  strokeWeight(6);
+  noFill();
+  let numLines = 35; 
+  for (let i = 0; i < numLines; i++) {
+    let yBase = map(i, 0, numLines, height * 0.05, height * 0.95);
+    let distMouse = dist(mouseX, mouseY, width/2, yBase);
+    let colorIdx = (i + paletteOffset + floor(distMouse * 0.02)) % 10;
+    stroke(currentLinePalette[colorIdx]);
+    
+    beginShape();
+    for (let x = -50; x <= width + 50; x += 30) {
+      let d = dist(x, yBase, mouseX, mouseY);
+      let mouseInfluence = map(d, 0, 400, 180, 0, true);
+      let drift = sin(frameCount * 0.015 + yBase * 0.01 + x * 0.005) * 60;
+      let waveY = yBase + drift - mouseInfluence * sin(frameCount * 0.05 + d * 0.01);
+      vertex(x, waveY);
+    }
+    endShape();
+  }
+  pop();
+}
+
+function drawStraightLinePattern() {
+  push();
+  blendMode(SCREEN);
+  strokeWeight(3);
+  let numLines = 50; 
+  for (let i = 0; i < numLines; i++) {
+    let y = i * (height / numLines);
+    let colorIdx = (i + paletteOffset) % 10;
+    stroke(currentLinePalette[colorIdx]);
+    let offset = noise(frameCount * 0.01, i * 0.2) * 80;
+    line(0, y + offset, width, y + offset);
+  }
+  pop();
+}
+
+function keyPressed() {
+  let k = key.toLowerCase();
+  if (k === 'b') {
+    scene = 0; fadeAlpha = 0;
+    showAlternateView = showLinesMode = showWavesMode = showIntenseMode = isQuietMode = showControlsMenu = isDeveloperMode = false;
+    if (audioRelaxingLoop) audioRelaxingLoop.stop();
+    button.show();
+  } else if (scene === 2) {
+    if (k === 'a') { showAlternateView = !showAlternateView; if(showAlternateView) { showControlsMenu = false; isDeveloperMode = false; } }
+    if (k === 'c') { paletteOffset = (paletteOffset + 1) % 10; } 
+    if (k === 'l') showLinesMode = !showLinesMode;
+    if (k === 'w') showWavesMode = !showWavesMode;
+    if (k === 's') showIntenseMode = !showIntenseMode;
+    if (k === 'q') isQuietMode = !isQuietMode;
+    if (k === 'i') { showControlsMenu = !showControlsMenu; if(showControlsMenu) { isDeveloperMode = false; showAlternateView = false; } }
+    if (k === 'd') { isDeveloperMode = !isDeveloperMode; if(isDeveloperMode) { showControlsMenu = false; showAlternateView = false; } }
+  }
+}
+
+function handleHoverEffects() {
+  if (isHovering) {
+    let centerX = width * 0.5, centerY = height * 0.85;
+    bubbles.push(new Bubble(centerX + random(-60, 60), centerY + random(-25, 25)));
+  }
+  for (let i = bubbles.length - 1; i >= 0; i--) {
+    bubbles[i].update();
+    bubbles[i].display();
+    if (bubbles[i].isDead()) bubbles.splice(i, 1);
+  }
+}
+
+function handleAudioVolume() {
+  if (audioRelaxingLoop && audioRelaxingLoop.isPlaying()) {
+    let targetVol = isQuietMode ? 0.0 : 0.5; 
+    audioRelaxingLoop.setVolume(lerp(audioRelaxingLoop.getVolume(), targetVol, 0.05));
+  }
+}
+
+function animateButton() {
+  let scaleFactor = 1 + sin(frameCount * 0.04) * 0.05;
+  button.style('transform', `translate(-50%, -50%) scale(${scaleFactor})`);
+}
+
+function handleDiveIn() {
+  if (getAudioContext().state !== 'running') getAudioContext().resume();
+  if (audioOpeningIIAbstractia && audioOpeningIIAbstractia.isLoaded()) audioOpeningIIAbstractia.play();
+  
+  // Guaranteeing the Isle Chill GIF is looping after interaction
+  if (imgIsleChillGif) imgIsleChillGif.loop();
+  
+  scene = 1;
+  button.hide();
+}
+
+function handleFadeOut() {
+  fadeAlpha += fadeRate;
+  fill(0, fadeAlpha);
+  rect(0, 0, width, height);
+  if (fadeAlpha >= 255) {
+    scene = 2;
+    if (audioRelaxingLoop && !audioRelaxingLoop.isPlaying()) {
+      audioRelaxingLoop.loop();
+      audioRelaxingLoop.play();
+    }
+  }
+}
+
+function handleFadeIn() {
+  fadeAlpha -= fadeRate;
+  if (fadeAlpha > 0) {
+    fill(0, fadeAlpha);
+    rect(0, 0, width, height);
+  } else {
+    fadeAlpha = 0;
+  }
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  button.position(width * 0.5, height * 0.85);
+}
+
+class Bubble {
+  constructor(x, y) {
+    this.pos = createVector(x, y);
+    this.vel = p5.Vector.fromAngle(random(-PI, 0), random(1, 4));
+    this.lifespan = 255;
+    this.size = random(25, 55);
+  }
+  update() {
+    this.pos.add(this.vel);
+    this.lifespan -= 5;
+  }
+  display() {
+    push();
+    textSize(this.size);
+    textAlign(CENTER, CENTER);
+    fill(255, this.lifespan); 
+    text("🫧", this.pos.x, this.pos.y);
+    pop();
+  }
+  isDead() { return this.lifespan < 0; }
+}
+  </script>
+
+
+</body></html>

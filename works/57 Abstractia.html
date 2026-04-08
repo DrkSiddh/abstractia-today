@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.11.11/lib/p5.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/p5@0.7.0/lib/addons/p5.sound.min.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "mediabunny": "https://cdn.jsdelivr.net/npm/mediabunny@1.25.8/+esm"
+      }
+    }
+  </script>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
+      overflow: auto;
+      background: transparent;
+    }
+
+    main {
+      height: 100%;
+      display: flex;
+      overflow: auto;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #p5_loading {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      animation-delay: 1s;
+      color: #4e5d7b;
+      font-family: "FK Grotesk Regular", sans-serif;
+      font-size: 30px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 30px;
+      letter-spacing: -1.5px;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .5; }
+    }
+  </style>
+  <title>57 Abstractia | Made on juno.transient.xyz</title>
+</head>
+<body>
+  
+    
+  <script>
+    let cnv;
+let isMobile;
+let imgWifPatronsAbstractia;
+let img12AbstractiaSkelevaggioLovesAbstractiaRed;
+let imgAbstractiaCommunityCard;
+let imgAbstractiaControlPanel; 
+let imgSkelevaggioMuseum;
+let imgPepavaggioAGoodStart;
+let imgAbstractiaViiIsleChill; 
+let imgCredits;
+let video57OpenAbstractia; 
+let audioVCurious;
+let audioSoftMystical;
+let fontRock3D;
+
+let scene = 0; 
+let fadeAlpha = 0;
+let fadeRate = 3;
+let introFade = 0; 
+let showAlternateView = false;
+let showBMode = false;
+let waveMode = 0; 
+let showOnenessMode = false;
+let showLinesMode = false;
+let showDGraphic = false; 
+let showControlsMenu = false;
+let showPMode = false;
+let showSMode = false;
+let showCredits = false;
+
+let colorInversionActive = false; 
+let inversionLerp = 0;
+let colorsPalette = []; 
+let targetPaletteHex = [];
+let paletteLerpRate = 0.005; 
+let bgScrollOffset = 0;
+let globalWavePhase = 0;
+
+let bubbleArray = [];
+let audioUnlocked = false;
+let isMuted = false; 
+
+const DAY_PALETTE = ["0000FF", "007FFF", "0096c7", "00b4d8", "1E90FF", "4169E1", "483D8B", "0000CD", "00008B", "000080"];
+const BORDEAUX_PALETTE = ["800f2f", "a4133c", "c9184a", "ff4d6d", "ff758f", "ff0000", "8B0000", "800000", "590d22", "590d22"];
+const NEON_PALETTE = ["fdc5f5", "f7aef8", "b388eb", "8093f1", "72ddf7"];
+const MIST_PALETTE = ["04a777", "6e9887", "b5bfa1", "8cffda", "d972ff"];
+const GOLDEN_PALETTE = ["642ba0", "ae30f2", "49c6bc", "f4d54b", "f9f25c"];
+
+function preload() {
+  imgWifPatronsAbstractia = loadImage("https://dae.transientusercontent.xyz/uploads/01e851eb-76aa-472b-b3ae-3803d37e82dc");
+  imgPepavaggioAGoodStart = loadImage("https://dae.transientusercontent.xyz/uploads/e006ef6a-212a-47ed-a3af-f44071686aef");
+  imgAbstractiaViiIsleChill = loadImage("https://dae.transientusercontent.xyz/uploads/ca95d956-ec63-44e1-8d40-e4aedcda7ced");
+  imgCredits = loadImage("https://dae.transientusercontent.xyz/uploads/59c8d74a-4321-42e3-bc04-12f8b9a0a50d");
+  
+  imgSkelevaggioMuseum = loadImage("https://dae.transientusercontent.xyz/uploads/f1c77a11-c037-497a-89bc-68f482381ee1", img => {
+    img.loadPixels();
+    let floorThreshold = img.height * 0.72;
+    for (let y = 0; y < img.height; y++) {
+      for (let x = 0; x < img.width; x++) {
+        let i = (x + y * img.width) * 4;
+        let r = img.pixels[i], g = img.pixels[i+1], b = img.pixels[i+2];
+        let isGreen = (g > 90 && g > r * 1.15 && g > b * 1.15);
+        if (isGreen && y < floorThreshold) img.pixels[i+3] = 60;
+      }
+    }
+    img.updatePixels();
+  });
+  
+  img12AbstractiaSkelevaggioLovesAbstractiaRed = loadImage("https://dae.transientusercontent.xyz/uploads/c670dfc9-2295-4e42-9c21-53b40ddafddf", img => {
+    img.loadPixels();
+    let leftBound = img.width * 0.38 - 55; 
+    let rightBound = img.width * 0.62 + 70;
+    let topBound = img.height * 0.25;
+    let bottomBound = img.height * 0.75;
+    for (let y = 0; y < img.height; y++) {
+      for (let x = 0; x < img.width; x++) {
+        let i = (x + y * img.width) * 4;
+        let r = img.pixels[i], g = img.pixels[i+1], b = img.pixels[i+2];
+        let isGreen = (g > 80 && g > r * 1.05 && g > b * 1.05);
+        let inWindow = (x > leftBound && x < rightBound && y > topBound && y < bottomBound);
+        if (isGreen && inWindow) img.pixels[i+3] = 60;
+      }
+    }
+    img.updatePixels();
+  });
+  
+  imgAbstractiaCommunityCard = loadImage("https://dae.transientusercontent.xyz/uploads/067b752f-b4bd-41f1-8ab5-3df1f95453b6");
+  imgAbstractiaControlPanel = loadImage("https://dae.transientusercontent.xyz/uploads/d79154d5-050c-4220-b000-1127c32fd6bc");
+  fontRock3D = loadFont("https://dae.transientusercontent.xyz/uploads/fa827533-05e2-4540-b01f-5b7c3bcdeed4");
+  audioVCurious = loadSound("https://dae.transientusercontent.xyz/uploads/caa54e58-6804-4376-af0d-465427ea0407"); 
+  audioSoftMystical = loadSound("https://dae.transientusercontent.xyz/uploads/09b2ffa5-2290-48e8-8815-eab2430d647e"); 
+}
+
+function getPaletteByTime() {
+    let h = hour(), m = minute();
+    let totalMins = h * 60 + m;
+    if (totalMins >= 610 && totalMins <= 790) return { colors: GOLDEN_PALETTE };
+    if (totalMins >= 980 && totalMins <= 1003) return { colors: MIST_PALETTE };
+    if ((totalMins >= 284 && totalMins <= 487) || (totalMins >= 791 && totalMins <= 1074)) return { colors: NEON_PALETTE };
+    if (totalMins >= 1260 || totalMins <= 141) return { colors: BORDEAUX_PALETTE };
+    return { colors: DAY_PALETTE };
+}
+
+function setup() {
+  cnv = createCanvas(windowWidth, windowHeight);
+  imageMode(CENTER);
+  isMobile = (('ontouchstart' in window) || navigator.maxTouchPoints > 0) && width < 767;
+  cnv.elt.style.touchAction = 'none';
+  cnv.elt.addEventListener('touchmove', e => { e.preventDefault(); }, { passive: false });
+  
+  video57OpenAbstractia = createVideo('https://dae.transientusercontent.xyz/uploads/8a016b4f-6a03-43a8-a825-10aab6d879a6');
+  video57OpenAbstractia.elt.muted = true; 
+  video57OpenAbstractia.elt.setAttribute('playsinline', '');
+  video57OpenAbstractia.loop();
+  video57OpenAbstractia.hide();
+  video57OpenAbstractia.volume(0);
+
+  let initial = getPaletteByTime(); 
+  targetPaletteHex = [...initial.colors];
+  for (let hex of targetPaletteHex) colorsPalette.push(color('#' + hex));
+
+  for (let i = 0; i < 35; i++) {
+    bubbleArray.push({
+      x: random(width),
+      y: random(height, height * 2),
+      speed: random(0.8, 2.5),
+      size: random(15, 40),
+      drift: random(TWO_PI)
+    });
+  }
+}
+
+function lerpPalettes() {
+    for (let i = 0; i < targetPaletteHex.length; i++) {
+        let targetColor = color('#' + targetPaletteHex[i]);
+        colorsPalette[i] = colorsPalette[i] ? lerpColor(colorsPalette[i], targetColor, paletteLerpRate) : targetColor;
+    }
+}
+
+function keyPressed() {
+  if (keyCode === ESCAPE) resetToWelcome();
+  else if (key === 'q' || key === 'Q') {
+    isMuted = !isMuted;
+    if (audioSoftMystical) audioSoftMystical.setVolume(isMuted ? 0 : 0.6);
+    if (audioVCurious) audioVCurious.setVolume(isMuted ? 0 : 0.4);
+    if (video57OpenAbstractia) {
+      video57OpenAbstractia.volume(isMuted ? 0 : (scene === 0 ? introFade / 255 : 0));
+    }
+  }
+  else if (scene === 2 || scene === 0) {
+    if (key === 'a' || key === 'A') showAlternateView = !showAlternateView;
+    else if (key === 'b' || key === 'B') showBMode = !showBMode;
+    else if (key === 'w' || key === 'W') waveMode = (waveMode + 1) % 6;
+    else if (key === 'o' || key === 'O') showOnenessMode = !showOnenessMode;
+    else if (key === 'l' || key === 'L') showLinesMode = !showLinesMode;
+    else if (key === 'i' || key === 'I') showControlsMenu = !showControlsMenu;
+    else if (key === 'd' || key === 'D') showDGraphic = !showDGraphic;
+    else if (key === 'p' || key === 'P') showPMode = !showPMode;
+    else if (key === 's' || key === 'S') showSMode = !showSMode;
+    else if (key === 'f' || key === 'F') showCredits = !showCredits;
+    else if (key === 'c' || key === 'C') {
+        colorInversionActive = !colorInversionActive;
+    }
+  }
+}
+
+function resetToWelcome() {
+  scene = 0; 
+  fadeAlpha = 0;
+  introFade = 0;
+  showAlternateView = showOnenessMode = showLinesMode = showControlsMenu = showBMode = colorInversionActive = showPMode = showSMode = showDGraphic = showCredits = false;
+  waveMode = 0;
+  video57OpenAbstractia.volume(0);
+  if (audioSoftMystical) audioSoftMystical.stop();
+  if (audioVCurious) audioVCurious.stop();
+}
+
+function applySophisticatedColor(c, forceAlpha = 255) {
+  let r = red(c);
+  let g = green(c);
+  let b = blue(c);
+  
+  if (inversionLerp > 0) {
+    r = lerp(r, 255 - r, inversionLerp);
+    g = lerp(g, 255 - g, inversionLerp);
+    b = lerp(b, 255 - b, inversionLerp);
+  }
+  return color(r, g, b, forceAlpha);
+}
+
+function drawVibrantBackground() {
+  bgScrollOffset += 0.005;
+  noStroke();
+  let layers = 15; 
+  
+  inversionLerp = lerp(inversionLerp, colorInversionActive ? 1.0 : 0.0, 0.05);
+
+  push();
+  blendMode(BLEND);
+  for (let i = 0; i < layers; i++) {
+    let baseColor = colorsPalette[i % colorsPalette.length];
+    let sophisticatedColor = applySophisticatedColor(baseColor, 180);
+    
+    fill(sophisticatedColor); 
+    beginShape();
+    for (let x = -50; x <= width + 50; x += 40) {
+      let phase = bgScrollOffset + (i * 1.5);
+      let waveAmp = 120 + (i * 10);
+      let yWave = sin(x * 0.002 + phase) * waveAmp;
+      let yOffset = (i * (height / (layers - 1)) + bgScrollOffset * 60) % (height * 1.6);
+      let yPos = yOffset - (height * 0.3) + yWave;
+      vertex(x, yPos);
+    }
+    vertex(width, height);
+    vertex(0, height);
+    endShape(CLOSE);
+  }
+  pop();
+}
+
+function drawBubbles() {
+  push();
+  textAlign(CENTER, CENTER);
+  for (let b of bubbleArray) {
+    b.y -= b.speed;
+    b.x += sin(frameCount * 0.02 + b.drift) * 0.5;
+    if (b.y < -50) {
+      b.y = height + 50;
+      b.x = random(width);
+    }
+    textSize(b.size);
+    text("🫧", b.x, b.y);
+  }
+  pop();
+}
+
+function drawTransverseLogic() {
+  globalWavePhase += 0.005; 
+  push(); 
+  blendMode(BLEND);
+
+  if (waveMode === 1) { // Sinusoidal
+    for (let i = 0; i < 35; i++) {
+      let c = applySophisticatedColor(colorsPalette[i % colorsPalette.length], 230);
+      stroke(c);
+      strokeWeight(map(i, 0, 35, 15, 6)); noFill();
+      beginShape();
+      curveVertex(-100, height * 0.5);
+      for (let x = -100; x < width + 100; x += 50) {
+        let freq = 0.0008 + i * 0.00004;
+        let amp = 300 * sin(globalWavePhase * 0.4 + i * 0.1);
+        let y = height * 0.5 + sin(x * freq + globalWavePhase + i * 0.2) * amp;
+        curveVertex(x, y + (i * 18 - 250));
+      }
+      curveVertex(width + 100, height * 0.5);
+      endShape();
+    }
+  } else if (waveMode === 2) { // Sawtooth
+    for (let i = 0; i < 20; i++) {
+      let c = applySophisticatedColor(colorsPalette[i % colorsPalette.length], 255);
+      stroke(c);
+      strokeWeight(10); noFill();
+      let period = 600 + i * 40;
+      beginShape();
+      for (let x = -period; x < width + period; x += 25) {
+        let phaseOffset = x + globalWavePhase * 120 + i * 80;
+        let normalized = (phaseOffset % period) / period;
+        let ySaw = (2 * normalized - 1) * 250; 
+        vertex(x, height * 0.5 + ySaw + i * 30 - 300);
+      }
+      endShape();
+    }
+  } else if (waveMode === 3) { // Square
+    for (let i = 0; i < 15; i++) {
+      let c = applySophisticatedColor(colorsPalette[i % colorsPalette.length], 210);
+      fill(c); noStroke();
+      let period = 450 + i * 60;
+      let phaseShift = globalWavePhase * 350;
+      for (let x = -period; x < width; x += period) {
+        let xPos = x + (phaseShift % period);
+        let pulseHeight = 120 + sin(globalWavePhase + i) * 80;
+        if (sin(globalWavePhase * 0.7 + i * 0.4) > 0) {
+          rect(xPos, height * 0.5 + i * 35 - 250, period * 0.5, pulseHeight, 8);
+        }
+      }
+    }
+  } else if (waveMode === 4) { // Pulse
+    for (let i = 0; i < 40; i++) {
+      let c = applySophisticatedColor(colorsPalette[i % colorsPalette.length], 255);
+      stroke(c);
+      strokeWeight(12); noFill();
+      let xBase = (globalWavePhase * 250 + i * 180) % (width + 800);
+      let pulseWidth = 300 + sin(i + globalWavePhase) * 150;
+      line(xBase - pulseWidth, height * 0.5 + i * 22 - 450, xBase, height * 0.5 + i * 22 - 450);
+    }
+  } else if (waveMode === 5) { // Gaussian
+    noStroke();
+    for (let i = 0; i < 12; i++) {
+      let c = applySophisticatedColor(colorsPalette[i % colorsPalette.length], 180);
+      fill(c);
+      let centerX = (width / 12) * i + sin(globalWavePhase * 0.4 + i) * 250;
+      let amp = 700 * abs(sin(globalWavePhase * 0.25 + i));
+      let sigma = 180 + 120 * cos(globalWavePhase * 0.35 + i);
+      beginShape();
+      for (let x = centerX - 600; x < centerX + 600; x += 30) {
+        let exponent = -pow(x - centerX, 2) / (2 * pow(sigma, 2));
+        let yG = amp * exp(exponent);
+        vertex(x, height - yG);
+      }
+      vertex(centerX + 600, height);
+      vertex(centerX - 600, height);
+      endShape(CLOSE);
+    }
+  }
+  pop();
+}
+
+function drawOneness() {
+  let breatheTime = (frameCount * 0.008) % TWO_PI;
+  let expansion = map(sin(breatheTime), -1, 1, 0.9, 2.5);
+  push();
+  translate(width/2, height/2);
+  blendMode(BLEND); 
+  noFill();
+  for(let i = 0; i < 40; i++) {
+    let c = applySophisticatedColor(colorsPalette[i % colorsPalette.length], 255);
+    stroke(c);
+    strokeWeight(8 + i * 0.3);
+    rotate(frameCount * 0.0006 + i * 0.03);
+    beginShape();
+    for(let a = 0; a < TWO_PI; a += PI/12) {
+      let r = (60 + i * 25) * expansion + noise(i, a, frameCount * 0.004) * 150;
+      curveVertex(cos(a) * r, sin(a) * r);
+    }
+    endShape(CLOSE);
+  }
+  pop();
+}
+
+function drawLinesMode() {
+  let breathe = map(sin(frameCount * 0.01), -1, 1, 0.6, 3.2);
+  push();
+  translate(width/2, height/2);
+  blendMode(BLEND);
+  for(let i = 0; i < 120; i++) {
+    let c = applySophisticatedColor(colorsPalette[i % colorsPalette.length], 255);
+    stroke(c);
+    strokeWeight(4);
+    let angle = i * (TWO_PI / 120) + frameCount * 0.0015;
+    line(cos(angle) * (80 * breathe), sin(angle) * (80 * breathe), cos(angle) * (width * 1.6), sin(angle) * (height * 1.6));
+  }
+  pop();
+}
+
+function draw() {
+  lerpPalettes(); 
+  background(0);
+  
+  if (scene === 0) {
+    drawWelcomeScreen();
+  } else {
+    drawVibrantBackground();
+    if (showSMode) drawOverlay(imgAbstractiaViiIsleChill, SCREEN, 240);
+    drawBubbles();
+    if (waveMode > 0) drawTransverseLogic();
+    if (showOnenessMode) drawOneness(); 
+    if (showLinesMode) drawLinesMode();
+    
+    if (showAlternateView) drawOverlay(img12AbstractiaSkelevaggioLovesAbstractiaRed, BLEND, 255);
+    if (showBMode) {
+      drawOverlay(imgSkelevaggioMuseum, BLEND, 255);
+      drawGetAbstractCTA(50); 
+    }
+    
+    if (showControlsMenu) drawOverlay(imgAbstractiaControlPanel, BLEND, 255); 
+    if (showDGraphic) drawOverlay(imgAbstractiaCommunityCard, BLEND, 255);
+
+    if (scene === 1) {
+      fadeAlpha += fadeRate;
+      fill(0, fadeAlpha); rect(0,0,width,height);
+      if (fadeAlpha >= 255) scene = 2;
+    } else {
+      fadeAlpha -= fadeRate;
+      fill(0, max(0, fadeAlpha)); rect(0,0,width,height);
+    }
+  }
+
+  if (showPMode) {
+    push();
+    let r = max(width / imgPepavaggioAGoodStart.width, height / imgPepavaggioAGoodStart.height) * 1.15;
+    image(imgPepavaggioAGoodStart, width / 2, height / 2, imgPepavaggioAGoodStart.width * r, imgPepavaggioAGoodStart.height * r);
+    pop();
+  }
+
+  if (showCredits) {
+    drawFullCredits();
+  }
+}
+
+function drawFullCredits() {
+  if (!imgCredits || imgCredits.width === 0) return;
+  push();
+  let r = max(width / imgCredits.width, height / imgCredits.height);
+  image(imgCredits, width / 2, height / 2, imgCredits.width * r, imgCredits.height * r);
+  pop();
+}
+
+function drawGetAbstractCTA(yOffset) {
+  let pulse = 1.0 + sin(frameCount * 0.08) * 0.05;
+  push();
+  translate(width * 0.82, height * 0.85 + yOffset);
+  scale(pulse);
+  textAlign(CENTER, CENTER);
+  textFont(fontRock3D);
+  textSize(isMobile ? 18 : 30);
+  fill(255);
+  drawingContext.shadowBlur = 15;
+  drawingContext.shadowColor = 'white';
+  text("GET ABSTRACT", 0, 0);
+  pop();
+}
+
+function drawWelcomeScreen() {
+  push();
+  let r = max(width / video57OpenAbstractia.width, height / video57OpenAbstractia.height);
+  tint(255, introFade);
+  image(video57OpenAbstractia, width / 2, height / 2, video57OpenAbstractia.width * r, video57OpenAbstractia.height * r);
+  pop();
+  if (introFade < 255) introFade += 2.5;
+  if (audioUnlocked) video57OpenAbstractia.volume(isMuted ? 0 : introFade / 255);
+  drawGetAbstractCTA(35);
+}
+
+function drawOverlay(media, bMode, alphaVal) {
+  if (!media || media.width === 0) return;
+  push(); 
+  blendMode(bMode); tint(255, alphaVal);
+  let r = max(width / media.width, height / media.height);
+  image(media, width / 2, height / 2, media.width * r, media.height * r);
+  pop();
+}
+
+function handleClick() {
+  if (!audioUnlocked) {
+    if (getAudioContext().state !== 'running') getAudioContext().resume();
+    audioUnlocked = true;
+  }
+  let isCtaVisible = (scene === 0) || (scene === 2 && showBMode);
+  if (isCtaVisible) {
+    let offset = (scene === 0) ? 35 : 50;
+    if (dist(mouseX, mouseY, width * 0.82, height * 0.85 + offset) < 120) handleDiveIn();
+  }
+}
+
+function mouseClicked() { if (!isMobile) handleClick(); }
+function touchEnded() { if (isMobile) { handleClick(); return false; } }
+
+function handleDiveIn() {
+  video57OpenAbstractia.volume(0);
+  scene = 1; fadeAlpha = 0; showBMode = false; 
+  if (audioSoftMystical && !audioSoftMystical.isPlaying()) {
+    audioSoftMystical.setVolume(isMuted ? 0 : 0.6);
+    audioSoftMystical.loop();
+  }
+  if (audioVCurious && !audioVCurious.isPlaying()) {
+    audioVCurious.setVolume(isMuted ? 0 : 0.4);
+    audioVCurious.loop();
+  }
+}
+
+function windowResized() { resizeCanvas(windowWidth, windowHeight); }
+  </script>
+
+
+</body></html>

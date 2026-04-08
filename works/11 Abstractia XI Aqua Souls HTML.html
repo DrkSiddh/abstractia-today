@@ -1,0 +1,753 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.11.11/lib/p5.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/p5@0.7.0/lib/addons/p5.sound.min.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "mediabunny": "https://cdn.jsdelivr.net/npm/mediabunny@1.25.8/+esm"
+      }
+    }
+  </script>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
+      overflow: auto;
+      background: transparent;
+    }
+
+    main {
+      height: 100%;
+      display: flex;
+      overflow: auto;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #p5_loading {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      animation-delay: 1s;
+      color: #4e5d7b;
+      font-family: "FK Grotesk Regular", sans-serif;
+      font-size: 30px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 30px;
+      letter-spacing: -1.5px;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .5; }
+    }
+  </style>
+  <title>11 Abstractia XI | Made on juno.transient.xyz</title>
+</head>
+<body>
+  
+    
+  <script>
+    let cnv;
+let isMobile;
+let video11AbstractiaXIAqua; 
+let img11AbstractiaXIAqua;
+let videoWavesIsleAbstractia; 
+let imgWifPatronsAbstractia;
+let imgAbstractLindiaGif;
+let videoEarthAccordingToMermaids;
+let videoBlaqqatDevV;
+let imgSkelevaggio; 
+let imgHUD;
+let imgTitleCard; 
+let audioHarmonicEtherealCoSunlitRays;
+let audioOpeningIIAbstractia;
+let audioAbstractiaIV;
+let audioWaves27; 
+let audioLines27; 
+let button;
+
+let scene = 0; 
+let fadeAlpha = 0;
+let fadeRate = 6;
+let showCompanionView = false; 
+let showLinesMode = false; 
+let showWavesMode = false;
+let showOnenessMode = false;
+let waveCount = 5;
+let waveScroll = 0; 
+let showMountainMode = false; 
+const LERP_RATE = 0.05;
+let isQuietMode = false;
+let isDevMuted = false;
+let devVolume = 1.0;
+let showControlsMenu = false;
+let isDeveloperMode = false;
+let showTitleCard = false; 
+let isHovering = false;
+
+// Breach Variables
+let isBreaching = false;
+let breachTimer = 0;
+let breachSouls = [];
+let pgBreach; 
+let captureDone = false;
+let breachMessage = "Dedicated to MJW with love from Maxximillian.\nMy message in a bottle, dear friend!\nSee you on the other side!";
+let warnings = ["SIGNAL RECEPTION: UNSTABLE", "DECIPHERING...", "REVEAL IN "];
+let typingChars = "01X/_%&$#!?@<>[]";
+
+let bubbles = []; 
+let backgroundBlobs = [];
+let onenessNodes = [];
+let colorsPalette = []; 
+let targetPaletteHex = [];
+let wavePalette = [];
+let paletteLerpRate = 0.02;
+let lastPaletteType = ""; 
+
+const DAY_PALETTE = ["03045e", "023e8a", "0077b6", "0096c7", "00b4d8", "48cae4"];
+const NIGHT_PALETTE = ["10002b", "240046", "3c096c", "5a189a", "7b2cbf", "9d4edd"];
+const TWILIGHT_PALETTE = ["ae7981", "543d4f", "2d2c34", "62354c", "36222b", "8b5e83"];
+const LIME_PALETTE = ["004b23", "006400", "007200", "008000", "38b000", "70e000"];
+const DAWN_PALETTE_BASE = ["dfbbb1", "f56476", "e43f6f", "be3e82", "5e4352", "7a5c61"];
+const BRIGHTS_PALETTE = ["35ff69", "42bfdd", "0a090c", "f5b700", "00a1e4", "e63462", "d138bf"];
+const SPECIAL_BLUE_PALETTE = ["03045e", "023e8a", "0077b6", "0096c7", "00b4d8", "48cae4", "90e0ef", "ade8f4", "caf0f8"];
+const WAVE_HEXES = ["432371", "714674", "9F6976", "CC8B79", "FAAE7B"];
+
+function preload() {
+  imgWifPatronsAbstractia = loadImage("https://dae.transientusercontent.xyz/uploads/01e851eb-76aa-472b-b3ae-3803d37e82dc");
+  imgHUD = loadImage("https://dae.transientusercontent.xyz/uploads/be77d068-169e-437c-86a6-ccd98f1cde55"); 
+  img11AbstractiaXIAqua = loadImage("https://dae.transientusercontent.xyz/uploads/ebc1172d-0164-40a0-b335-4ec4b6a85fa0");
+  imgSkelevaggio = loadImage("https://dae.transientusercontent.xyz/uploads/4abaab1a-88aa-4a46-a0e4-8e0040254cc8");
+  imgTitleCard = loadImage("https://dae.transientusercontent.xyz/uploads/067b752f-b4bd-41f1-8ab5-3df1f95453b6"); 
+  audioHarmonicEtherealCoSunlitRays = loadSound("https://dae.transientusercontent.xyz/uploads/295133e5-d5e2-4d2c-a968-85ea4a5872c1");
+  audioOpeningIIAbstractia = loadSound("https://dae.transientusercontent.xyz/uploads/bb00503d-13ad-4177-a995-d6d2c6b13b2c"); 
+  audioAbstractiaIV = loadSound("https://dae.transientusercontent.xyz/uploads/b8517588-e48c-4409-8df2-d866f151a537"); 
+  audioWaves27 = loadSound("https://dae.transientusercontent.xyz/uploads/a2ba9ab0-7ca1-4ea7-b7e2-a7d825f53420");
+  audioLines27 = loadSound("https://dae.transientusercontent.xyz/uploads/7e961528-fae4-434b-a011-b54cb8000c0c");
+}
+
+function setup() {
+  cnv = createCanvas(windowWidth, windowHeight);
+  imageMode(CENTER);
+  isMobile = (('ontouchstart' in window) || navigator.maxTouchPoints > 0) && width < 767;
+  cnv.elt.style.touchAction = 'none';
+  cnv.elt.addEventListener('touchmove', e => { e.preventDefault(); }, { passive: false });
+  
+  pgBreach = createGraphics(windowWidth, windowHeight);
+  pgBreach.imageMode(CENTER);
+
+  let style = document.createElement('style');
+  style.innerHTML = `@font-face { font-family: 'Rock3D-Regular'; src: url('https://dae.transientusercontent.xyz/uploads/fa827533-05e2-4540-b01f-5b7c3bcdeed4') format('truetype'); }`;
+  document.head.appendChild(style);
+
+  video11AbstractiaXIAqua = createVideo('https://dae.transientusercontent.xyz/uploads/c2d8b480-17f0-41d3-a88d-e1141775cce4');
+  video11AbstractiaXIAqua.elt.muted = true;
+  video11AbstractiaXIAqua.elt.setAttribute('playsinline', '');
+  video11AbstractiaXIAqua.elt.setAttribute('webkit-playsinline', '');
+  video11AbstractiaXIAqua.play(); 
+  video11AbstractiaXIAqua.hide();
+
+  videoWavesIsleAbstractia = createVideo('https://dae.transientusercontent.xyz/uploads/37864ad3-23e1-418c-863a-02e465fb22c7');
+  videoWavesIsleAbstractia.elt.muted = true;
+  videoWavesIsleAbstractia.elt.setAttribute('playsinline', '');
+  videoWavesIsleAbstractia.elt.setAttribute('webkit-playsinline', '');
+  videoWavesIsleAbstractia.hide();
+
+  videoEarthAccordingToMermaids = createVideo('https://dae.transientusercontent.xyz/uploads/6dffff3a-5ce8-4968-9a74-2c2e940d5a25');
+  videoEarthAccordingToMermaids.elt.muted = true;
+  videoEarthAccordingToMermaids.elt.setAttribute('playsinline', '');
+  videoEarthAccordingToMermaids.elt.setAttribute('webkit-playsinline', '');
+  videoEarthAccordingToMermaids.hide(); 
+
+  imgAbstractLindiaGif = createVideo('https://dae.transientusercontent.xyz/uploads/ee55ee3a-c3c7-4095-b2dc-7baaef466749');
+  imgAbstractLindiaGif.elt.muted = true;
+  imgAbstractLindiaGif.elt.setAttribute('playsinline', '');
+  imgAbstractLindiaGif.elt.setAttribute('webkit-playsinline', '');
+  imgAbstractLindiaGif.hide();
+
+  videoBlaqqatDevV = createVideo('__URL_11__');
+  videoBlaqqatDevV.elt.setAttribute('playsinline', '');
+  videoBlaqqatDevV.elt.setAttribute('webkit-playsinline', '');
+  videoBlaqqatDevV.hide();
+  videoBlaqqatDevV.pause();
+  videoBlaqqatDevV.volume(1);
+
+  if (audioAbstractiaIV) {
+    audioAbstractiaIV.setLoop(true);
+    audioAbstractiaIV.setVolume(0.5);
+  }
+  if (audioWaves27) {
+    audioWaves27.setLoop(true);
+    audioWaves27.setVolume(0);
+  }
+  if (audioLines27) {
+    audioLines27.setLoop(true);
+    audioLines27.setVolume(0);
+  }
+
+  button = createButton('Get Abstract');
+  button.mousePressed(handleDiveIn);
+  button.mouseOver(() => { isHovering = true; });
+  button.mouseOut(() => { isHovering = false; });
+  button.style('font-family', 'Rock3D-Regular, sans-serif'); 
+  button.style('letter-spacing', '2px');
+  button.style('font-size', '36px');
+  button.style('padding', '15px 30px');
+  button.style('border', 'none');
+  button.style('border-radius', '8px');
+  button.style('cursor', 'pointer');
+  button.style('color', 'white'); 
+  button.style('background-color', 'transparent');
+  button.style('position', 'absolute');
+  button.style('white-space', 'nowrap');
+  button.position(width * 0.9 - 160, height * 0.75 + 110);
+  
+  let initial = getPaletteByTime(); 
+  targetPaletteHex = [...initial.colors];
+  lastPaletteType = initial.type;
+  for (let hex of targetPaletteHex) {
+      colorsPalette.push(color('#' + hex));
+  }
+  
+  for (let h of WAVE_HEXES) {
+    wavePalette.push(color('#' + h));
+  }
+
+  for(let i=0; i<12; i++) {
+    backgroundBlobs.push({
+      x: random(width), y: random(height),
+      size: random(width * 0.5, width * 1.2),
+      vx: random(-0.8, 0.8), vy: random(-0.8, 0.8),
+      angle: random(TWO_PI), colIndex: i % 10
+    });
+  }
+
+  for(let i=0; i<40; i++) {
+    onenessNodes.push({
+      x: random(width), y: random(height),
+      phase: random(TWO_PI), size: random(5, 20),
+      driftX: random(-0.5, 0.5), driftY: random(-0.5, 0.5)
+    });
+  }
+
+  imgSkelevaggio.loadPixels();
+  let thresholdY = (imgSkelevaggio.height * 0.6) + 90; 
+  for (let y = 0; y < imgSkelevaggio.height; y++) {
+    for (let x = 0; x < imgSkelevaggio.width; x++) {
+      let index = (x + y * imgSkelevaggio.width) * 4;
+      if (y < thresholdY) {
+        let r = imgSkelevaggio.pixels[index];
+        let g = imgSkelevaggio.pixels[index+1];
+        let b = imgSkelevaggio.pixels[index+2];
+        if (g > 80 && g > r * 1.1 && g > b * 1.1) {
+          imgSkelevaggio.pixels[index+3] = 0; 
+        }
+      }
+    }
+  }
+  imgSkelevaggio.updatePixels();
+}
+
+function getPaletteByTime() {
+    let h = hour(), m = minute(), tm = h * 60 + m;
+    if ((tm >= 600 && tm <= 731) || (tm >= 862 && tm <= 971)) return { colors: SPECIAL_BLUE_PALETTE, type: "SPECIAL_BLUE" };
+    if (tm >= 213 && tm <= 419) return { colors: DAWN_PALETTE_BASE, type: "DAWN" };
+    if (tm >= 540 && tm <= 790) return { colors: BRIGHTS_PALETTE, type: "BRIGHTS" };
+    if ((h === 16 && m >= 20) || (h === 17)) return { colors: LIME_PALETTE, type: "LIME" };
+    if (h >= 18 && h < 21) return { colors: TWILIGHT_PALETTE, type: "TWILIGHT" };
+    if (h >= 21 || h < 3) return { colors: NIGHT_PALETTE, type: "NIGHT" };
+    return { colors: DAY_PALETTE, type: "DAY" };
+}
+
+function updatePalette() {
+    let result = getPaletteByTime();
+    if (result.type !== lastPaletteType) {
+        targetPaletteHex = [...result.colors];
+        lastPaletteType = result.type;
+    }
+}
+
+function lerpPalettes() {
+    for (let i = 0; i < targetPaletteHex.length; i++) {
+        let targetColor = color('#' + targetPaletteHex[i]);
+        if (colorsPalette[i]) colorsPalette[i] = lerpColor(colorsPalette[i], targetColor, paletteLerpRate);
+        else colorsPalette[i] = targetColor;
+    }
+}
+
+function resetModes() {
+  showCompanionView = showLinesMode = showWavesMode = showMountainMode = isDeveloperMode = showTitleCard = showOnenessMode = false;
+  videoBlaqqatDevV.pause();
+  videoWavesIsleAbstractia.pause();
+  if (audioWaves27 && audioWaves27.isPlaying()) audioWaves27.stop();
+  if (audioLines27 && audioLines27.isPlaying()) audioLines27.stop();
+}
+
+function keyPressed() {
+  if (isBreaching) return; 
+
+  if (key === 'b' || key === 'B') {
+    scene = 0; fadeAlpha = 0; resetModes();
+    waveCount = 5; isQuietMode = false; showControlsMenu = false;
+    video11AbstractiaXIAqua.play();
+    if (audioAbstractiaIV && audioAbstractiaIV.isPlaying()) audioAbstractiaIV.stop();
+    button.show(); button.removeAttribute('disabled');
+  } else if (key === 'c' || key === 'C') { if (scene === 2) showCompanionView = !showCompanionView;
+  } else if (key === 'l' || key === 'L') {
+    if (scene === 2) {
+      showLinesMode = !showLinesMode;
+      if (showLinesMode && audioLines27 && !audioLines27.isPlaying()) audioLines27.loop();
+      else if (!showLinesMode && audioLines27) audioLines27.stop();
+    }
+  } else if (key === 'w' || key === 'W') {
+    if (scene === 2) {
+      if (!showWavesMode) { 
+        showWavesMode = true; waveCount = 15; 
+        if (audioWaves27 && !audioWaves27.isPlaying()) audioWaves27.loop();
+      } else { 
+          waveCount += 35; 
+          if (waveCount > 180) { showWavesMode = false; waveCount = 5; if (audioWaves27) audioWaves27.stop(); }
+      }
+    }
+  } else if (key === 'o' || key === 'O') { if (scene === 2) showOnenessMode = !showOnenessMode;
+  } else if (key === 's' || key === 'S') { if (scene === 2) showMountainMode = !showMountainMode;
+  } else if (key === 'q' || key === 'Q') { if (scene === 2) isQuietMode = !isQuietMode;
+  } else if (key === 'm' || key === 'M') { if (scene === 2) isDevMuted = !isDevMuted; 
+  } else if (key === 'i' || key === 'I') { if (scene === 2) showControlsMenu = !showControlsMenu;
+  } else if (key === 'd' || key === 'D') { if (scene === 2) showTitleCard = !showTitleCard; 
+  } else if (key === 'v' || key === 'V') { 
+    if (scene === 2) {
+      isDeveloperMode = !isDeveloperMode;
+      if (isDeveloperMode) videoBlaqqatDevV.play(); else videoBlaqqatDevV.pause();
+    }
+  } else if (key === 't' || key === 'T') {
+    if (scene === 2) {
+      pgBreach.clear();
+      pgBreach.image(cnv, width/2, height/2); 
+      isBreaching = true; breachTimer = 0; breachSouls = []; captureDone = true;
+    }
+  }
+}
+
+function handleVideoLoops() {
+  let videos = [imgAbstractLindiaGif, video11AbstractiaXIAqua, videoBlaqqatDevV, videoWavesIsleAbstractia];
+  for (let v of videos) {
+    if (v && v.elt && v.elt.readyState >= 2 && v.elt.duration > 0) {
+      if (v.elt.currentTime >= v.elt.duration - 0.3) { v.elt.currentTime = 0.1; v.play(); }
+    }
+  }
+}
+
+function drawSoftBackground() {
+  push(); noStroke(); blendMode(BLEND);
+  for (let blob of backgroundBlobs) {
+    blob.angle += 0.003;
+    let swoopX = sin(blob.angle) * 120, swoopY = cos(blob.angle * 0.8) * 120;
+    blob.x += blob.vx; blob.y += blob.vy;
+    if (blob.x < -blob.size) blob.x = width + blob.size;
+    if (blob.x > width + blob.size) blob.x = -blob.size;
+    if (blob.y < -blob.size) blob.y = height + blob.size;
+    if (blob.y > height + blob.size) blob.y = -blob.size;
+    let c = colorsPalette[blob.colIndex % colorsPalette.length];
+    for (let r = blob.size; r > 0; r -= 100) {
+      fill(red(c), green(c), blue(c), map(r, 0, blob.size, 40, 0));
+      ellipse(blob.x + swoopX, blob.y + swoopY, r, r);
+    }
+  }
+  pop();
+}
+
+function drawOnenessField() {
+  push(); blendMode(ADD); noStroke();
+  let time = frameCount * 0.01;
+  let pulse = (sin(time * 0.5) + 1) * 0.5;
+  let c = colorsPalette[1 % colorsPalette.length];
+  for (let node of onenessNodes) {
+    node.x += node.driftX; node.y += node.driftY;
+    if (node.x < 0) node.x = width; if (node.x > width) node.x = 0;
+    if (node.y < 0) node.y = height; if (node.y > height) node.y = 0;
+    let breath = sin(time + node.phase) * 10;
+    let currentSize = node.size + breath + (pulse * 15);
+    for (let r = currentSize * 2; r > 0; r -= 4) {
+      let alpha = map(r, 0, currentSize * 2, 60 * pulse, 0);
+      fill(red(c), green(c), blue(c), alpha);
+      ellipse(node.x, node.y, r, r);
+    }
+    fill(255, 150 * pulse);
+    ellipse(node.x, node.y, 2, 2);
+  }
+  pop();
+}
+
+function drawLiquidTidePattern() {
+  push(); blendMode(DIFFERENCE); noFill(); 
+  let layers = 14, time = frameCount * 0.004;
+  for (let i = 0; i < layers; i++) {
+    let c = colorsPalette[(i + floor(frameCount/60)) % colorsPalette.length];
+    stroke(red(c), green(c), blue(c), 160); 
+    strokeWeight(3);
+    beginShape();
+    let baseX = map(i, 0, layers, width * -0.1, width * 1.1);
+    for (let y = -200; y <= height + 200; y += 40) {
+      let n = noise(y * 0.003, i * 0.2, time * 0.5);
+      let wave = sin(y * 0.002 + time * 1.2 + i) * 100;
+      vertex(baseX + wave + (n * 120), y);
+    }
+    endShape();
+  }
+  pop();
+}
+
+function drawWarpedMoirePattern() {
+  push(); blendMode(ADD); noFill();
+  let time = frameCount * 0.015, orbits = 22;
+  translate(width/2, height/2); rotate(time * 0.2);
+  for (let i = 0; i < orbits; i++) {
+    let c = colorsPalette[i % colorsPalette.length];
+    stroke(red(c), green(c), blue(c), 130); strokeWeight(2.5);
+    beginShape();
+    let orbitScale = 1.3 + sin(time * 0.6 + i * 0.4) * 0.5, swirl = i * 0.2 + time * 0.3;
+    for (let angle = 0; angle < TWO_PI; angle += 0.12) {
+      let rBase = (height * 0.08) + (i * 28), pulse = sin(angle * 4 + time * 2.5) * 45;
+      let r = (rBase + pulse) * orbitScale;
+      curveVertex(cos(angle + swirl) * r * 1.5, sin(angle - swirl * 0.6) * r * 1.2);
+    }
+    endShape(CLOSE);
+  }
+  pop();
+}
+
+function drawUndulatingWavePattern(overrideAlpha, overrideCount) {
+  push(); blendMode(ADD); noFill();
+  let time = frameCount * 0.02;
+  let count = (overrideCount !== undefined) ? overrideCount : waveCount;
+  
+  let isAtBottom = (count >= 120);
+  let loopCount = count;
+  if (count === 120) loopCount = 15; 
+  
+  waveScroll += 6.5; 
+  
+  let startY = isAtBottom ? height * 0.3 : -height * 0.2;
+  let endY = isAtBottom ? height * 1.1 : height * 1.15;
+  
+  for (let i = 0; i < loopCount; i++) {
+    let baseY = map(i, 0, loopCount, startY, endY);
+    let c = wavePalette[i % wavePalette.length];
+    let alpha = overrideAlpha !== undefined ? overrideAlpha : (loopCount > 100 ? 120 : 180);
+    stroke(red(c), green(c), blue(c), alpha); 
+    strokeWeight(loopCount > 100 ? 2 : 4.5);
+    
+    beginShape();
+    for (let x = -50; x < width + 50; x += 35) {
+      let noiseVal = noise((x + waveScroll) * 0.003, i * 0.2, time * 0.1);
+      let roll = sin((x + waveScroll * 0.8) * 0.005 + time + i * 0.3) * (190 * noiseVal);
+      let undulation = cos((x - waveScroll * 0.4) * 0.002 - time * 0.5 + i) * 95;
+      vertex(x, baseY + roll + undulation);
+    }
+    endShape();
+  }
+  pop();
+}
+
+function drawMountainPattern(overrideAlpha) {
+  push(); blendMode(SCREEN); noStroke();
+  let layers = 18, time = frameCount * 0.006;
+  for (let i = 0; i < layers; i++) {
+    let c = colorsPalette[i % colorsPalette.length];
+    let alphaVal = (overrideAlpha !== undefined) ? map(overrideAlpha, 0, 255, 0, 70) : 70;
+    fill(red(c), green(c), blue(c), alphaVal);
+    beginShape(); vertex(-100, height * 1.5); 
+    let layerBaseY = height * 0.4 + (i * 40);
+    for (let x = -100; x <= width + 100; x += 50) {
+      let n = noise(x * 0.002, i * 0.3, time);
+      vertex(x, layerBaseY + map(n, 0, 1, -220, 220));
+    }
+    vertex(width + 100, height * 1.5); endShape(CLOSE);
+  }
+  pop();
+}
+
+function runBreachSequence() {
+  breachTimer++;
+  let cRose = color('#CC8B79'), cGlitch = color(0, 255, 120), cHighlight = color(255, 255, 255); 
+  
+  if (breachTimer < 450) {
+    push();
+    let imgAlpha = map(breachTimer, 350, 450, 255, 0, true);
+    let offX = sin(breachTimer * 0.5) * map(breachTimer, 0, 450, 0, 150);
+    tint(255, imgAlpha); 
+    image(pgBreach, width/2 + offX, height/2);
+    
+    if (breachTimer > 5 && breachTimer < 450) {
+       for (let i = 0; i < 20; i++) {
+         let rx = random(width), rw = random(10, 250), rh = height;
+         let slice = pgBreach.get(rx, 0, rw, rh);
+         push();
+         tint(255, random(50, 200));
+         image(slice, rx + random(-150, 150), height/2 + random(-50, 50), rw, rh);
+         pop();
+       }
+    }
+    pop();
+  } 
+
+  let backgroundFade = map(breachTimer, 320, 480, 0, 255, true);
+  if (backgroundFade > 0) {
+    push(); fill(12, 4, 20, backgroundFade); noStroke(); rect(0, 0, width, height); pop();
+  }
+
+  if (breachTimer >= 250 && breachTimer < 450) {
+    push(); textAlign(CENTER, CENTER); textFont('monospace'); textSize(max(24, width * 0.04));
+    let warnIdx = floor(map(breachTimer, 250, 450, 0, warnings.length));
+    let curWarn = warnings[warnIdx] || warnings[0];
+    
+    if (warnIdx === 2) {
+      let subCount = 3 - floor(map(breachTimer, 383, 450, 0, 3));
+      curWarn += max(1, subCount) + "...";
+    }
+
+    let rx = width/2 + (random(1) > 0.8 ? random(-width*0.3, width*0.3) : 0);
+    let ry = height/2 + (random(1) > 0.8 ? random(-height*0.2, height*0.2) : 0);
+    let typeProgress = floor(map(breachTimer % 60, 0, 50, 0, curWarn.length, true));
+    let dt = curWarn.substring(0, typeProgress);
+    if (typeProgress < curWarn.length) dt += typingChars.charAt(floor(random(typingChars.length)));
+    fill(255, 220);
+    if (random(1) > 0.92) { fill(cGlitch); rect(0, random(height), width, 3); }
+    text(dt, rx, ry);
+    pop();
+  } else if (breachTimer >= 450 && breachTimer < 630) {
+    push(); textAlign(CENTER, CENTER); textFont('monospace'); textSize(max(35, width * 0.08));
+    let rx = width/2 + (random(1) > 0.85 ? random(-width*0.1, width*0.1) : 0);
+    let ry = height/2 + (random(1) > 0.85 ? random(-height*0.05, height*0.05) : 0);
+    fill(cGlitch); 
+    if (random(1) > 0.8) fill(cHighlight);
+    let count = 3 - floor(map(breachTimer, 450, 630, 0, 3));
+    text("REVEAL IN " + max(1, count), rx, ry);
+    pop();
+  } else if (breachTimer >= 630 && breachTimer < 1030) {
+    push(); textFont('sans-serif'); textAlign(CENTER, CENTER);
+    let tSize = max(22, width * 0.035); textSize(tSize);
+    let lines = breachMessage.split('\n'), lineSpacing = tSize * 1.8;
+    for(let i=0; i<lines.length; i++) {
+      let startDelay = 630 + (i * 90); 
+      let revealProgress = map(breachTimer, startDelay, startDelay + 80, 0, lines[i].length, true);
+      let charsToShow = floor(revealProgress);
+      let displayText = lines[i].substring(0, charsToShow);
+      if (charsToShow < lines[i].length && breachTimer > startDelay) {
+         if(random(1) > 0.2) displayText += typingChars.charAt(floor(random(typingChars.length)));
+      }
+      let yPos = height/2 + (i - (lines.length-1)/2) * lineSpacing;
+      fill(red(cRose), green(cRose), blue(cRose), map(breachTimer, startDelay, startDelay + 15, 0, 255, true));
+      text(displayText, width/2, yPos);
+      if (breachTimer === 1029) {
+        for (let j = 0; j < lines[i].length; j++) {
+            let charXOffset = textWidth(lines[i].substring(0, j)) - textWidth(lines[i])/2;
+            breachSouls.push(new Soul(width/2 + charXOffset, yPos, lines[i][j], cRose));
+        }
+      }
+    }
+    pop();
+  } else if (breachTimer >= 1030 && breachTimer < 1200) {
+    push(); textAlign(CENTER, CENTER); textFont('monospace'); textSize(max(30, width * 0.05));
+    let rx = width/2 + (random(1) > 0.9 ? random(-60, 60) : 0);
+    fill(cHighlight);
+    if (random(1) > 0.88) fill(cGlitch);
+    let count = 3 - floor(map(breachTimer, 1030, 1200, 0, 3));
+    text("GOING ABSTRACT IN " + max(1, count), rx, height/2);
+    pop();
+  }
+
+  for (let i = breachSouls.length - 1; i >= 0; i--) {
+    breachSouls[i].update(); breachSouls[i].display();
+    if (breachSouls[i].isDead()) breachSouls.splice(i, 1);
+  }
+
+  if (breachTimer >= 1200) {
+    let mountAlpha = map(breachTimer, 1200, 1500, 0, 255, true);
+    if (mountAlpha > 0) drawMountainPattern(mountAlpha);
+  }
+
+  if (breachTimer > 1500) { 
+    isBreaching = false; breachTimer = 0; 
+    resetModes(); 
+    showMountainMode = true; 
+  }
+}
+
+class Soul {
+  constructor(x, y, char, col) {
+    this.pos = createVector(x, y); this.char = char; this.col = col;
+    this.vel = createVector(random(-2, 2), random(-6, -3)); this.acc = createVector(0, -0.1); 
+    this.alpha = 255; this.rot = random(TWO_PI); this.rotVel = random(-0.1, 0.1);
+    this.noiseOffset = random(1000); this.glowSize = random(30, 70);
+  }
+  update() {
+    this.vel.add(this.acc); this.vel.x += map(noise(frameCount * 0.04, this.noiseOffset), 0, 1, -0.3, 0.3);
+    this.pos.add(this.vel); this.rot += this.rotVel; this.alpha -= 1.8;
+  }
+  display() {
+    push(); translate(this.pos.x, this.pos.y); rotate(this.rot); noStroke();
+    for (let r = this.glowSize; r > 0; r -= 12) {
+      fill(red(this.col), green(this.col), blue(this.col), map(r, 0, this.glowSize, this.alpha * 0.5, 0));
+      circle(0, 0, r);
+    }
+    fill(255, this.alpha); textSize(24); textAlign(CENTER, CENTER); text(this.char, 0, 0); pop();
+  }
+  isDead() { return this.alpha <= 0; }
+}
+
+function draw() {
+  updatePalette(); lerpPalettes(); handleVideoLoops(); background(0);
+  if (scene === 0 || scene === 1) drawWelcomeScreen();
+  if (scene === 2) {
+    if (!isBreaching) {
+      drawVideoScreen(); handleAudioVolume();
+      if (isDeveloperMode) drawDeveloperVideoGraphic();
+      if (showTitleCard) drawTitleCardOverlay(); 
+      if (showControlsMenu) drawHUDOverlay();
+    } else runBreachSequence();
+  }
+  if (scene === 0) { animateButton(); handleHoverEffects(); button.show(); } 
+  else if (scene === 1) { handleFadeOut(); button.hide(); } 
+  else if (scene === 2) handleFadeIn();
+}
+
+function drawHUDOverlay() {
+  if (imgHUD && imgHUD.width > 0) {
+    push(); blendMode(BLEND); tint(255, 230); 
+    let ratio = max(width / imgHUD.width, height / imgHUD.height);
+    image(imgHUD, width / 2, height / 2, imgHUD.width * ratio, imgHUD.height * ratio); pop(); 
+  }
+}
+
+function drawTitleCardOverlay() {
+  if (imgTitleCard && imgTitleCard.width > 0) {
+    push(); blendMode(BLEND); tint(255, isBreaching ? 255 : 204); 
+    image(
+      imgTitleCard,
+      width / 2,
+      height / 2,
+      imgTitleCard.width * min(width / imgTitleCard.width, height / imgTitleCard.height, 1),
+      imgTitleCard.height * min(width / imgTitleCard.width, height / imgTitleCard.height, 1)
+    ); 
+    pop();
+  }
+}
+
+function drawDeveloperVideoGraphic() {
+  let vid = videoBlaqqatDevV;
+  if (vid && vid.width > 0) {
+    push(); blendMode(SCREEN); 
+    let ratio = min(width / vid.width, height / vid.height);
+    image(vid, width / 2, height / 2, vid.width * ratio, vid.height * ratio); pop();
+  }
+}
+
+function handleHoverEffects() {
+  if (isHovering) {
+    let cx = (width * 0.9) - 160, cy = height * 0.75 + 110;
+    for (let i = 0; i < 2; i++) bubbles.push(new Bubble(cx + random(-10, 10), cy + random(-10, 10)));
+  }
+  for (let i = bubbles.length - 1; i >= 0; i--) {
+    bubbles[i].update(); bubbles[i].display();
+    if (bubbles[i].isDead()) bubbles.splice(i, 1);
+  }
+}
+
+function handleAudioVolume() {
+  if (audioAbstractiaIV && audioAbstractiaIV.isPlaying()) {
+    let tv = (isQuietMode || isBreaching) ? 0.0 : 0.5; 
+    audioAbstractiaIV.setVolume(lerp(audioAbstractiaIV.getVolume(), tv, LERP_RATE));
+  }
+  if (videoBlaqqatDevV) {
+    devVolume = lerp(devVolume, (isDevMuted || isBreaching) ? 0 : 1, 0.05); 
+    videoBlaqqatDevV.volume(devVolume);
+  }
+  if (audioWaves27 && audioWaves27.isPlaying()) {
+    let twv = (isQuietMode || !showWavesMode || isBreaching) ? 0.0 : 0.6;
+    audioWaves27.setVolume(lerp(audioWaves27.getVolume(), twv, LERP_RATE));
+  }
+  if (audioLines27 && audioLines27.isPlaying()) {
+    let tlv = (isQuietMode || !showLinesMode || isBreaching) ? 0.0 : 0.6;
+    audioLines27.setVolume(lerp(audioLines27.getVolume(), tlv, LERP_RATE));
+  }
+}
+
+function drawWelcomeScreen() {
+  push();
+  tint(255, 229.5); 
+  if (img11AbstractiaXIAqua && img11AbstractiaXIAqua.width > 0) {
+    let r = max(width / img11AbstractiaXIAqua.width, height / img11AbstractiaXIAqua.height);
+    image(img11AbstractiaXIAqua, width / 2, height / 2, img11AbstractiaXIAqua.width * r, img11AbstractiaXIAqua.height * r);
+  }
+  if (video11AbstractiaXIAqua && video11AbstractiaXIAqua.width > 0) {
+    let r = max(width / video11AbstractiaXIAqua.width, height / video11AbstractiaXIAqua.height);
+    image(video11AbstractiaXIAqua, width / 2, height / 2, video11AbstractiaXIAqua.width * r, video11AbstractiaXIAqua.height * r);
+  }
+  pop();
+}
+
+function drawVideoScreen() {
+    drawSoftBackground(); 
+    if (imgAbstractLindiaGif && imgAbstractLindiaGif.width > 0) {
+        imgAbstractLindiaGif.play(); push();
+        blendMode(showCompanionView ? SCREEN : BLEND); 
+        let r = max(width / imgAbstractLindiaGif.width, height / imgAbstractLindiaGif.height);
+        image(imgAbstractLindiaGif, width / 2, height / 2, imgAbstractLindiaGif.width * r, imgAbstractLindiaGif.height * r); pop();
+    }
+    if (showCompanionView) drawLiquidTidePattern();
+    if (showLinesMode) drawWarpedMoirePattern();
+    if (showWavesMode) drawUndulatingWavePattern();
+    if (showMountainMode) drawMountainPattern(); 
+    if (showOnenessMode) drawOnenessField();
+}
+
+function animateButton() {
+  button.style('transform', `translate(-50%, -55%) scale(${map(sin(frameCount * 0.05), -1, 1, 1, 1.05)})`);
+}
+
+function handleDiveIn() {
+  if (getAudioContext().state !== 'running') getAudioContext().resume();
+  if (audioOpeningIIAbstractia) audioOpeningIIAbstractia.play();
+  if (scene === 0) { scene = 1; button.attribute('disabled', ''); }
+}
+
+function handleFadeOut() {
+  fadeAlpha += fadeRate; fill(0, fadeAlpha); rect(0, 0, width, height);
+  if (fadeAlpha >= 255) {
+    fadeAlpha = 255; scene = 2; video11AbstractiaXIAqua.pause();
+    if (audioAbstractiaIV && !audioAbstractiaIV.isPlaying()) audioAbstractiaIV.play();
+  }
+}
+
+function handleFadeIn() {
+  fadeAlpha -= fadeRate; fill(0, fadeAlpha); rect(0, 0, width, height);
+  if (fadeAlpha <= 0) fadeAlpha = 0;
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  button.position(width * 0.9 - 160, height * 0.75 + 110);
+}
+
+class Bubble {
+  constructor(x, y) {
+    this.pos = createVector(x, y); this.vel = p5.Vector.fromAngle(random(TWO_PI), random(2, 5));
+    this.lifespan = 255; this.size = random(18, 36);
+  }
+  update() { this.pos.add(this.vel); this.vel.y = lerp(this.vel.y, -2, 0.05); this.vel.mult(0.98); this.lifespan -= 2.5; }
+  display() { push(); textSize(this.size); textAlign(CENTER, CENTER); fill(255, this.lifespan); text("🫧", this.pos.x, this.pos.y); pop(); }
+  isDead() { return this.lifespan < 0; }
+}
+  </script>
+
+
+</body></html>
