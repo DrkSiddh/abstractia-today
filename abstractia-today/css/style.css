@@ -78,8 +78,13 @@ section { padding: 100px 40px; max-width: 1400px; margin: 0 auto; }
 .gallery-loading { font-family: var(--fm); font-size: 10px; letter-spacing: 0.2em; color: var(--mut); text-transform: uppercase; padding: 60px; text-align: center; grid-column: 1/-1; }
 .gallery-empty { font-family: var(--fm); font-size: 10px; letter-spacing: 0.2em; color: var(--mut); text-transform: uppercase; padding: 60px; text-align: center; grid-column: 1/-1; }
 .work-card { position: relative; background: var(--surf); cursor: pointer; overflow: hidden; aspect-ratio: 1; }
+.work-iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; pointer-events: none; }
+.work-card-overlay { position: absolute; inset: 0; background: transparent; transition: background 0.3s; }
+.work-card:hover .work-card-overlay { background: rgba(5,5,8,0.15); }
 .work-card-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 16px; background: linear-gradient(to top, rgba(5,5,8,0.97) 0%, transparent 100%); transform: translateY(100%); transition: transform 0.3s ease; }
 .work-card:hover .work-card-info { transform: translateY(0); }
+.badge-open   { background: rgba(99,153,34,0.15); border: 1px solid #639922; color: #8ccf40; }
+.badge-custom { background: rgba(136,135,128,0.15); border: 1px solid #888780; color: #b4b2a9; }
 .work-numeral { font-family: var(--fm); font-size: 9px; color: var(--mag); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 4px; }
 .work-title { font-family: var(--fd); font-size: 22px; letter-spacing: 0.05em; margin-bottom: 8px; }
 .work-meta-row { display: flex; align-items: center; justify-content: space-between; }
@@ -125,7 +130,9 @@ section { padding: 100px 40px; max-width: 1400px; margin: 0 auto; }
 .modal-title { font-family: var(--fd); font-size: 52px; line-height: 0.95; margin-bottom: 8px; }
 .modal-subtitle { font-family: var(--fm); font-size: 11px; color: var(--mut); letter-spacing: 0.15em; margin-bottom: 32px; }
 .modal-canvas-wrap { aspect-ratio: 16/9; background: var(--void); border: 1px solid var(--bdr); margin-bottom: 32px; position: relative; overflow: hidden; }
-#modalCanvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.modal-iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+.modal-fullscreen-btn { position: absolute; bottom: 12px; right: 12px; background: rgba(5,5,8,0.8); border: 1px solid var(--bdr); color: var(--mut); font-size: 18px; width: 36px; height: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: border-color 0.2s, color 0.2s; z-index: 10; }
+.modal-fullscreen-btn:hover { border-color: var(--mag); color: var(--mag); }
 .modal-body { font-size: 14px; color: var(--mut); line-height: 1.8; margin-bottom: 32px; }
 .states-label { font-family: var(--fm); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--mut); margin-bottom: 12px; }
 .states-grid { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
