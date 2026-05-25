@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABSTRACTIA — Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --mag:#FF2D78;--gold:#FFB830;--void:#040407;--surf:#0C0C13;--surf2:#111119;--surf3:#16161F;
+  --bdr:rgba(255,255,255,0.08);--bdr2:rgba(255,255,255,0.14);--txt:#F0EEE8;--mut:rgba(240,238,232,0.42);
+  --grn:#4CAF76;--blue:#378ADD;--fd:'Bebas Neue',sans-serif;--fm:'Space Mono',monospace;--fb:'DM Sans',sans-serif;
+}
+body{background:var(--void);color:var(--txt);font-family:var(--fb);font-size:14px;min-height:100vh}
+
+/* ── GATE ── */
+#gate{position:fixed;inset:0;background:var(--void);z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px}
+.gate-logo{font-family:var(--fd);font-size:64px;letter-spacing:0.05em}
+.gate-logo em{color:var(--mag);font-style:normal}
+.gate-sub{font-family:var(--fm);font-size:9px;letter-spacing:0.3em;color:var(--mut);text-transform:uppercase}
+.gate-form{display:flex;flex-direction:column;gap:10px;width:300px}
+.gate-input{background:var(--surf);border:1px solid var(--bdr);color:var(--txt);font-family:var(--fm);font-size:12px;padding:12px 16px;outline:none;letter-spacing:0.1em;text-align:center;transition:border-color 0.2s}
+.gate-input:focus{border-color:var(--mag)}
+.gate-input::placeholder{color:rgba(240,238,232,0.2)}
+.gate-btn{font-family:var(--fm);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;padding:12px;background:var(--mag);color:#fff;border:none;cursor:pointer;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:opacity 0.2s}
+.gate-btn:hover{opacity:0.85}
+.gate-err{font-family:var(--fm);font-size:9px;letter-spacing:0.2em;color:var(--mag);text-transform:uppercase;opacity:0;transition:opacity 0.3s;text-align:center}
+.gate-err.show{opacity:1}
+
+/* ── STUDIO LAYOUT ── */
+#studio{display:none}
+.studio-nav{background:var(--surf);border-bottom:1px solid var(--bdr);padding:16px 40px;display:flex;align-items:center;justify-content:space-between}
+.studio-logo{font-family:var(--fd);font-size:28px;letter-spacing:0.05em}
+.studio-logo em{color:var(--mag);font-style:normal}
+.studio-tabs{display:flex;gap:2px}
+.tab-btn{font-family:var(--fm);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;padding:8px 18px;background:transparent;color:var(--mut);border:1px solid var(--bdr);cursor:pointer;transition:all 0.2s}
+.tab-btn.active,.tab-btn:hover{background:var(--mag-dim,rgba(255,45,120,0.1));border-color:var(--mag);color:var(--mag)}
+.studio-body{padding:40px;max-width:1400px;margin:0 auto}
+
+/* ── PANELS ── */
+.panel{display:none}
+.panel.active{display:block}
+
+/* ── DROP ZONE ── */
+.drop-zone{border:2px dashed rgba(255,45,120,0.35);background:var(--surf);padding:40px;text-align:center;cursor:pointer;transition:all 0.2s;margin-bottom:20px;position:relative}
+.drop-zone.over{border-color:var(--mag);background:rgba(255,45,120,0.04)}
+.drop-zone input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.drop-zone-icon{font-family:var(--fd);font-size:44px;color:var(--mag);opacity:0.4;margin-bottom:10px}
+.drop-zone h2{font-family:var(--fd);font-size:26px;margin-bottom:6px}
+.drop-zone p{font-size:12px;color:var(--mut);line-height:1.7}
+
+/* ── STATS ── */
+.stats-row{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.stat{background:var(--surf);border:1px solid var(--bdr);padding:12px 16px;flex:1;min-width:100px}
+.stat-num{font-family:var(--fd);font-size:30px;color:var(--mag)}
+.stat-lbl{font-family:var(--fm);font-size:7px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mut);margin-top:2px}
+
+/* ── WORKS TABLE ── */
+.tbl-header,.work-row{display:grid;grid-template-columns:52px 1fr 180px 180px 120px 140px 80px 70px;gap:8px;align-items:start;padding:10px 14px;border:1px solid var(--bdr);margin-bottom:2px}
+.tbl-header{background:var(--surf2);border-color:var(--bdr)}
+.work-row{background:var(--surf);transition:border-color 0.2s}
+.work-row:hover{border-color:rgba(255,45,120,0.2)}
+.col-lbl{font-family:var(--fm);font-size:7px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mut)}
+.wnum{font-family:var(--fd);font-size:20px;color:var(--mag);line-height:1}
+.wnum small{display:block;font-family:var(--fm);font-size:9px;color:var(--mut);margin-top:2px}
+.w-input{background:var(--surf2);border:1px solid var(--bdr);color:var(--txt);font-family:var(--fb);font-size:11px;padding:6px 8px;width:100%;outline:none;transition:border-color 0.2s;margin-bottom:4px}
+.w-input:focus{border-color:var(--mag)}
+.w-input::placeholder{color:rgba(240,238,232,0.2)}
+.w-title-input{font-family:var(--fm);font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase}
+.w-select{background:var(--surf2);border:1px solid var(--bdr);color:var(--txt);font-family:var(--fm);font-size:8px;padding:6px 8px;width:100%;outline:none;-webkit-appearance:none;letter-spacing:0.06em}
+.w-select.tbd{border-color:rgba(255,184,48,0.3);color:var(--gold)}
+.w-select option{background:#111119}
+.w-files{font-size:9px;line-height:1.7}
+.has{color:var(--grn)}.missing{color:rgba(255,45,120,0.5)}
+.status-pill{font-family:var(--fm);font-size:7px;letter-spacing:0.12em;text-transform:uppercase;padding:3px 8px;display:inline-block;border:1px solid}
+.s-ready{background:rgba(76,175,118,0.12);border-color:var(--grn);color:var(--grn)}
+.s-tbd{background:rgba(255,184,48,0.08);border-color:rgba(255,184,48,0.4);color:var(--gold)}
+.s-missing{background:rgba(255,45,120,0.08);border-color:var(--mag);color:var(--mag)}
+
+/* ── ACTION ROW ── */
+.action-row{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}
+.btn{font-family:var(--fm);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;padding:11px 22px;border:none;cursor:pointer;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);transition:opacity 0.2s,transform 0.15s}
+.btn:hover{opacity:0.85;transform:translateY(-1px)}
+.btn-mag{background:var(--mag);color:#fff}
+.btn-gold{background:var(--gold);color:#040407}
+.btn-ghost{background:var(--surf);color:var(--txt);border:1px solid var(--bdr)}
+.btn-danger{background:transparent;border:1px solid rgba(255,45,120,0.25);color:rgba(255,45,120,0.6);font-size:8px;padding:8px 16px;cursor:pointer;transition:all 0.2s}
+.btn-danger:hover{border-color:var(--mag);color:var(--mag)}
+.push-status{display:none;padding:14px 18px;font-family:var(--fm);font-size:10px;letter-spacing:0.1em;border:1px solid var(--bdr);margin-bottom:16px}
+.saved-badge{font-family:var(--fm);font-size:8px;color:var(--grn);letter-spacing:0.1em;margin-left:10px;opacity:0;transition:opacity 0.3s}
+.saved-badge.show{opacity:1}
+
+/* ── LEADS DASHBOARD ── */
+.leads-header{display:grid;grid-template-columns:1fr 120px 120px 130px 140px 100px;gap:8px;padding:8px 14px;background:var(--surf2);border:1px solid var(--bdr);margin-bottom:2px}
+.lead-row{display:grid;grid-template-columns:1fr 120px 120px 130px 140px 100px;gap:8px;padding:12px 14px;background:var(--surf);border:1px solid var(--bdr);margin-bottom:2px;align-items:center;transition:border-color 0.2s}
+.lead-row:hover{border-color:rgba(255,45,120,0.2)}
+.lead-name{font-weight:500;font-size:13px}
+.lead-email{font-size:11px;color:var(--mut);font-family:var(--fm)}
+.lead-type-badge{font-family:var(--fm);font-size:7px;letter-spacing:0.12em;text-transform:uppercase;padding:3px 8px;border:1px solid var(--bdr);color:var(--mut)}
+.lead-budget{font-family:var(--fm);font-size:9px;color:var(--mut);letter-spacing:0.06em}
+.lead-date{font-family:var(--fm);font-size:9px;color:var(--mut2)}
+.lead-status{font-family:var(--fm);font-size:7px;letter-spacing:0.12em;text-transform:uppercase;padding:3px 8px;display:inline-block;border:1px solid;cursor:pointer;transition:all 0.2s}
+.ls-new{background:rgba(55,138,221,0.1);border-color:var(--blue);color:#7ab8f0}
+.ls-reviewing{background:rgba(255,184,48,0.1);border-color:var(--gold);color:var(--gold)}
+.ls-quoted{background:rgba(155,93,229,0.1);border-color:#9B5DE5;color:#9B5DE5}
+.ls-booked{background:rgba(76,175,118,0.1);border-color:var(--grn);color:var(--grn)}
+.ls-declined{background:rgba(136,135,128,0.1);border-color:#888780;color:#b4b2a9}
+.ls-archived{background:rgba(136,135,128,0.06);border-color:var(--bdr);color:var(--mut2)}
+.leads-empty{font-family:var(--fm);font-size:9px;letter-spacing:0.2em;color:var(--mut);text-align:center;padding:48px;text-transform:uppercase}
+.lead-notes-input{width:100%;background:var(--surf2);border:1px solid var(--bdr);color:var(--txt);font-family:var(--fb);font-size:11px;padding:4px 8px;outline:none;margin-top:4px}
+.lead-notes-input:focus{border-color:var(--mag)}
+.leads-filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.lf-btn{font-family:var(--fm);font-size:7px;letter-spacing:0.15em;text-transform:uppercase;padding:4px 12px;background:transparent;border:1px solid var(--bdr);color:var(--mut);cursor:pointer;transition:all 0.2s}
+.lf-btn.active,.lf-btn:hover{background:rgba(255,45,120,0.08);border-color:var(--mag);color:var(--mag)}
+</style>
+</head>
+<body>
+
+<!-- GATE -->
+<div id="gate">
+  <div class="gate-logo">ABSTR<em>A</em>CTIA</div>
+  <div class="gate-sub">Studio — Private Access</div>
+  <div class="gate-form">
+    <input class="gate-input" type="password" id="gateInput" placeholder="Passphrase" onkeydown="if(event.key==='Enter')checkGate()">
+    <button class="gate-btn" onclick="checkGate()">Enter Studio</button>
+    <div class="gate-err" id="gateErr">Access denied</div>
+  </div>
+</div>
+
+<!-- STUDIO -->
+<div id="studio">
+  <div class="studio-nav">
+    <div class="studio-logo">ABSTR<em>A</em>CTIA <span style="font-family:var(--fm);font-size:11px;color:var(--mut);letter-spacing:0.2em">STUDIO</span></div>
+    <div class="studio-tabs">
+      <button class="tab-btn active" onclick="showTab('uploader')">Upload Works</button>
+      <button class="tab-btn" onclick="showTab('leads')">Partnership Leads</button>
+      <button class="tab-btn" onclick="showTab('signals')">Signals</button>
+    </div>
+    <span style="font-family:var(--fm);font-size:8px;color:var(--mut)"><a href="index.html" style="color:var(--mut);text-decoration:none">← Back to site</a></span>
+  </div>
+
+  <div class="studio-body">
+
+    <!-- ── UPLOADER PANEL ── -->
+    <div id="panel-uploader" class="panel active">
+      <h1 style="font-family:var(--fd);font-size:48px;letter-spacing:0.03em;margin-bottom:4px">WORKS <span class="saved-badge" id="savedBadge">✓ Saved</span></h1>
+      <p style="font-family:var(--fm);font-size:9px;letter-spacing:0.25em;color:var(--mag);text-transform:uppercase;margin-bottom:24px">Bulk Uploader v5 — Direct to Supabase</p>
+
+      <div class="drop-zone" id="dropZone">
+        <input type="file" id="fileInput" webkitdirectory multiple>
+        <div class="drop-zone-icon">◈</div>
+        <h2>Drop your abstractia-htmls folder here</h2>
+        <p>HTML files detected by leading number · everything merges · nothing wiped<br>Accepts: .html, .htm — all other files ignored</p>
+      </div>
+
+      <div class="stats-row" id="statsRow" style="display:none">
+        <div class="stat"><div class="stat-num" id="stTotal">0</div><div class="stat-lbl">Works</div></div>
+        <div class="stat"><div class="stat-num" id="stHtml">0</div><div class="stat-lbl">HTML</div></div>
+        <div class="stat"><div class="stat-num" id="stReady">0</div><div class="stat-lbl">Ready</div></div>
+        <div class="stat"><div class="stat-num" id="stTbd">0</div><div class="stat-lbl">TBD</div></div>
+        <div class="stat"><div class="stat-num" id="stUrls">0</div><div class="stat-lbl">Collect URLs</div></div>
+        <div class="stat"><div class="stat-num" id="stArticles">0</div><div class="stat-lbl">Articles</div></div>
+      </div>
+
+      <div id="worksContainer"></div>
+
+      <div class="action-row" id="actionRow" style="display:none">
+        <button class="btn btn-mag" id="pushBtn" onclick="pushToSupabase()">⚡ Push all to Supabase</button>
+        <button class="btn btn-ghost" onclick="generateSQL()">View SQL</button>
+        <button class="btn btn-danger" onclick="confirmClear()">Clear all</button>
+      </div>
+      <div class="push-status" id="pushStatus"></div>
+      <div id="sqlOut" style="display:none;margin-top:20px">
+        <div style="font-family:var(--fd);font-size:22px;margin-bottom:10px">SQL PREVIEW</div>
+        <div id="sqlBox" style="background:var(--surf);border:1px solid var(--bdr);padding:14px;font-family:var(--fm);font-size:9px;color:var(--mut);max-height:240px;overflow-y:auto;white-space:pre-wrap;word-break:break-all;margin-bottom:10px"></div>
+        <button class="btn btn-ghost" onclick="copySql()">Copy SQL</button>
+      </div>
+    </div>
+
+    <!-- ── LEADS PANEL ── -->
+    <div id="panel-leads" class="panel">
+      <h1 style="font-family:var(--fd);font-size:48px;letter-spacing:0.03em;margin-bottom:4px">PARTNERSHIP LEADS</h1>
+      <p style="font-family:var(--fm);font-size:9px;letter-spacing:0.25em;color:var(--mag);text-transform:uppercase;margin-bottom:24px">All inquiries from abstractia.today</p>
+      <div class="leads-filter-row">
+        <button class="lf-btn active" onclick="filterLeads('all',this)">All</button>
+        <button class="lf-btn" onclick="filterLeads('new',this)">New</button>
+        <button class="lf-btn" onclick="filterLeads('reviewing',this)">Reviewing</button>
+        <button class="lf-btn" onclick="filterLeads('quoted',this)">Quoted</button>
+        <button class="lf-btn" onclick="filterLeads('booked',this)">Booked ✓</button>
+        <button class="lf-btn" onclick="filterLeads('declined',this)">Declined</button>
+      </div>
+      <div id="leadsContainer"><div class="leads-empty">Loading leads…</div></div>
+    </div>
+
+    <!-- ── SIGNALS PANEL ── -->
+    <div id="panel-signals" class="panel">
+      <h1 style="font-family:var(--fd);font-size:48px;letter-spacing:0.03em;margin-bottom:4px">SIGNALS</h1>
+      <p style="font-family:var(--fm);font-size:9px;letter-spacing:0.25em;color:var(--mag);text-transform:uppercase;margin-bottom:24px">Community heatmap activity</p>
+      <div id="signalsContainer"><div class="leads-empty">Loading signals…</div></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── CONFIG ──
+const PASS='lagniappe_maxximillian';
+const SESSION_KEY='abstractia_studio_v5';
+const STORAGE_KEY='abstractia_works_v5';
+const SB_URL='https://xtkdnyqjheewsqnvugaj.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0a2RueXFqaGVld3NxbnZ1Z2FqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1MTAyODQsImV4cCI6MjA5MTA4NjI4NH0.T8X7Q1fKjpkD1csafr1F9pD5OULu1DR_eTSeVa-Rhv0';
+
+// ── GATE ──
+function checkGate(){
+  const v=document.getElementById('gateInput').value;
+  if(v===PASS){sessionStorage.setItem(SESSION_KEY,'1');bootStudio();}
+  else{const e=document.getElementById('gateErr');e.classList.add('show');document.getElementById('gateInput').value='';setTimeout(()=>e.classList.remove('show'),2000);}
+}
+function bootStudio(){
+  document.getElementById('gate').style.display='none';
+  document.getElementById('studio').style.display='block';
+  initUploader();
+  loadLeads();
+  loadSignalsPanel();
+}
+if(sessionStorage.getItem(SESSION_KEY)==='1')bootStudio();
+
+// ── TABS ──
+function showTab(name){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ── ROMAN NUMERALS ──
+function toRoman(n){
+  if(!n||n<1)return'?';
+  const v=[1000,900,500,400,100,90,50,40,10,9,5,4,1],s=['M','CM','D','CD','C','XC','L','XL','X','IX','V','IV','I'];
+  let r='';for(let i=0;i<v.length;i++)while(n>=v[i]){r+=s[i];n-=v[i];}return r;
+}
+function fromRoman(s){
+  const m={I:1,V:5,X:10,L:50,C:100,D:500,M:1000};
+  let r=0,prev=0;
+  for(let i=(s||'').length-1;i>=0;i--){const v=m[s[i].toUpperCase()]||0;r+=v<prev?-v:v;prev=v;}
+  return r||null;
+}
+
+// ── FILENAME PARSING ──
+function parseNum(name){
+  const m=name.match(/^(\d+)[\s_]/)||name.match(/^(\d+)\./);
+  if(m)return parseInt(m[1]);
+  const rom=name.match(/abstractia[\s_]+([IVXLCDM]+)/i);
+  if(rom)return fromRoman(rom[1]);
+  const any=name.match(/(\d+)/);
+  return any?parseInt(any[1]):null;
+}
+function parseTitle(name){
+  let t=name.replace(/^\d+[\s_]*/,'').replace(/abstractia[\s_]+[IVXLCDM]+[\s_]*/i,'').replace(/^abstractia[\s_]*/i,'').replace(/\.(html?|mp4|gif|jpg|jpeg|png|webp|txt)$/i,'').replace(/_/g,' ').trim().toUpperCase();
+  return t||null;
+}
+function detectStates(fn){
+  const f=fn.toLowerCase(),s=new Set();
+  if(f.includes('gm')||f.includes('morning'))s.add('gm');
+  if(f.includes('pm')||f.includes('afternoon'))s.add('pm');
+  if(f.includes('evening'))s.add('evening');
+  if(f.includes('night')||f.includes('midnight'))s.add('night');
+  if(f.includes('420')||f.includes('4_20'))s.add('420');
+  if(f.includes('wave'))s.add('waves');
+  if(f.includes('line'))s.add('lines');
+  if(f.includes('wkd')||f.includes('weekend'))s.add('wkd');
+  if(f.includes('sunday')||f.includes('☀'))s.add('sunday');
+  if(f.includes('lagniappe')||f.includes('endodeca')||f.includes('skelevaggio')||f.includes('pepavaggio'))s.add('lagniappe');
+  return s;
+}
+
+// ── WORKS STATE ──
+let works={};
+function loadSaved(){
+  try{
+    const d=localStorage.getItem(STORAGE_KEY);
+    if(d){works=JSON.parse(d);Object.values(works).forEach(w=>{w.states=new Set(w.states||[]);});return true;}
+  }catch(e){}
+  return false;
+}
+function saveWorks(){
+  try{
+    const out={};
+    Object.entries(works).forEach(([k,w])=>{out[k]={...w,states:[...w.states]};});
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(out));
+    const b=document.getElementById('savedBadge');b.classList.add('show');setTimeout(()=>b.classList.remove('show'),1500);
+  }catch(e){}
+}
+
+function processFiles(fileList){
+  const files=Array.from(fileList);
+  let added=0;
+  files.forEach(file=>{
+    const parts=(file.webkitRelativePath||file.name).split('/');
+    const fn=parts[parts.length-1];
+    const ext=fn.split('.').pop().toLowerCase();
+    if(fn.startsWith('.')||!['html','htm'].includes(ext))return;
+    const num=parseNum(fn);
+    if(!num||num<1||num>365)return;
+    if(!works[num]){
+      works[num]={number:num,numeral:toRoman(num),title:'',htmlFile:null,states:new Set(),collectUrl:'',articleUrl:'',socialUrls:{instagram:'',x:'',youtube:''},editionType:'tbd',hasLagniappe:false,description:''};
+      added++;
+    }
+    const w=works[num];
+    w.htmlFile=fn;
+    if(!w.title){const t=parseTitle(fn);if(t&&t.length>1)w.title=t;}
+    const s=detectStates(fn);s.forEach(st=>w.states.add(st));
+    if(s.has('lagniappe'))w.hasLagniappe=true;
+  });
+  saveWorks();renderWorks();
+}
+
+function renderWorks(){
+  const container=document.getElementById('worksContainer');
+  const keys=Object.keys(works).map(Number).sort((a,b)=>a-b);
+  if(!keys.length){container.innerHTML='<div style="text-align:center;padding:40px;font-family:var(--fm);font-size:9px;letter-spacing:0.2em;color:var(--mut);text-transform:uppercase">No works yet — drop your folder above</div>';document.getElementById('statsRow').style.display='none';document.getElementById('actionRow').style.display='none';return;}
+  document.getElementById('statsRow').style.display='flex';
+  document.getElementById('actionRow').style.display='flex';
+  document.getElementById('stTotal').textContent=keys.length;
+  document.getElementById('stHtml').textContent=keys.filter(k=>works[k].htmlFile).length;
+  document.getElementById('stReady').textContent=keys.filter(k=>works[k].htmlFile&&works[k].editionType!=='tbd').length;
+  document.getElementById('stTbd').textContent=keys.filter(k=>works[k].editionType==='tbd').length;
+  document.getElementById('stUrls').textContent=keys.filter(k=>works[k].collectUrl).length;
+  document.getElementById('stArticles').textContent=keys.filter(k=>works[k].articleUrl).length;
+
+  let html=`<div class="tbl-header">
+    <div class="col-lbl">#</div>
+    <div class="col-lbl">Work / HTML file</div>
+    <div class="col-lbl">Collect URL</div>
+    <div class="col-lbl">Article URL</div>
+    <div class="col-lbl">Edition</div>
+    <div class="col-lbl">Social</div>
+    <div class="col-lbl">Lagniappe</div>
+    <div class="col-lbl">Status</div>
+  </div>`;
+
+  keys.forEach(num=>{
+    const w=works[num];
+    const isTbd=w.editionType==='tbd';
+    const sc=!w.htmlFile?'s-missing':isTbd?'s-tbd':'s-ready';
+    const sl=!w.htmlFile?'No HTML':isTbd?'TBD':'Ready';
+    html+=`<div class="work-row">
+      <div class="wnum">${w.numeral}<small>${num}</small></div>
+      <div>
+        <input class="w-input w-title-input" placeholder="TITLE" value="${w.title||''}" onchange="works[${num}].title=this.value;saveWorks()" oninput="works[${num}].title=this.value;saveWorks()">
+        <div class="w-files">${w.htmlFile?`<span class="has">✓ ${w.htmlFile}</span>`:'<span class="missing">✗ No HTML</span>'}</div>
+      </div>
+      <div>
+        <input class="w-input" placeholder="transient.art/…" value="${w.collectUrl||''}" onchange="works[${num}].collectUrl=this.value;saveWorks()" oninput="works[${num}].collectUrl=this.value;saveWorks()">
+      </div>
+      <div>
+        <input class="w-input" placeholder="Article / press URL" value="${w.articleUrl||''}" onchange="works[${num}].articleUrl=this.value;saveWorks()" oninput="works[${num}].articleUrl=this.value;saveWorks()">
+      </div>
+      <div>
+        <select class="w-select ${isTbd?'tbd':''}" onchange="works[${num}].editionType=this.value;this.className='w-select'+(this.value==='tbd'?' tbd':'');saveWorks();renderWorks()">
+          <option value="tbd" ${w.editionType==='tbd'?'selected':''}>TBD</option>
+          <option value="unique" ${w.editionType==='unique'?'selected':''}>Unique 1/1</option>
+          <option value="editions" ${w.editionType==='editions'?'selected':''}>Editions</option>
+          <option value="limited" ${w.editionType==='limited'?'selected':''}>Limited 420</option>
+          <option value="open" ${w.editionType==='open'?'selected':''}>Open</option>
+          <option value="monthly" ${w.editionType==='monthly'?'selected':''}>Monthly</option>
+          <option value="commemorative" ${w.editionType==='commemorative'?'selected':''}>Commemorative</option>
+        </select>
+      </div>
+      <div>
+        <input class="w-input" placeholder="IG handle" value="${w.socialUrls?.instagram||''}" style="margin-bottom:3px" onchange="works[${num}].socialUrls.instagram=this.value;saveWorks()">
+        <input class="w-input" placeholder="𝕏 handle" value="${w.socialUrls?.x||''}" onchange="works[${num}].socialUrls.x=this.value;saveWorks()">
+      </div>
+      <div style="text-align:center;padding-top:6px">
+        <input type="checkbox" id="lag-${num}" ${w.hasLagniappe?'checked':''} style="accent-color:var(--mag);width:16px;height:16px;cursor:pointer" onchange="works[${num}].hasLagniappe=this.checked;saveWorks()">
+        <label for="lag-${num}" style="font-family:var(--fm);font-size:7px;color:var(--mut);display:block;cursor:pointer;margin-top:2px">Lagniappe</label>
+      </div>
+      <div><span class="status-pill ${sc}">${sl}</span></div>
+    </div>`;
+  });
+  container.innerHTML=html;
+}
+
+// ── SUPABASE PUSH ──
+const BASE_URL='https://abstractia-today.vercel.app/works/';
+
+async function sbPost(table,data){
+  const res=await fetch(`${SB_URL}/rest/v1/${table}?on_conflict=number`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`,'Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(data)});
+  if(!res.ok){const txt=await res.text();console.error('Supabase error',res.status,txt);}
+  return res;
+}
+
+function buildRow(num){
+  const w=works[num];
+  const t=w.title||'TBA';
+  const numeral=w.numeral;
+  const slug=`${numeral.toLowerCase()}-${t.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}`;
+  const et=w.editionType==='tbd'?'editions':w.editionType;
+  const states=[...w.states];if(!states.length)states.push('waves','lines');
+  return{
+    number:num,numeral,title:t,slug,edition_type:et,
+    edition_size:{unique:1,limited:420}[et]||null,
+    series_type:'waves',
+    html_github_url:w.htmlFile?`${BASE_URL}${encodeURIComponent(w.htmlFile)}`:null,
+    collect_url:w.collectUrl||null,
+    article_url:w.articleUrl||null,
+    social_urls:w.socialUrls||{},
+    states,
+    time_palette:w.states.has('gm')||w.states.has('pm')||w.states.has('420'),
+    has_lagniappe:w.hasLagniappe||w.states.has('lagniappe'),
+    published:true
+  };
+}
+
+async function pushToSupabase(){
+  const keys=Object.keys(works).map(Number).sort((a,b)=>a-b);
+  if(!keys.length){alert('No works to push.');return;}
+  const btn=document.getElementById('pushBtn');
+  const st=document.getElementById('pushStatus');
+  btn.textContent='Pushing…';btn.disabled=true;
+  st.style.display='block';st.style.borderColor='rgba(255,184,48,0.4)';st.style.color='var(--gold)';st.textContent='Connecting…';
+  const rows=keys.map(buildRow);
+  const chunks=[];for(let i=0;i<rows.length;i+=20)chunks.push(rows.slice(i,i+20));
+  let ok=0,err=0;
+  for(let i=0;i<chunks.length;i++){
+    st.textContent=`Sending batch ${i+1}/${chunks.length}…`;
+    try{const r=await sbPost('works',chunks[i]);if(r.ok)ok+=chunks[i].length;else err+=chunks[i].length;}
+    catch(e){err+=chunks[i].length;}
+  }
+  if(!err){
+    st.style.borderColor='rgba(76,175,118,0.5)';st.style.color='var(--grn)';st.textContent=`✓ ${ok} works live on Supabase.`;
+    btn.textContent='✓ Pushed';
+  }else{
+    st.style.borderColor='rgba(255,45,120,0.5)';st.style.color='var(--mag)';st.textContent=`${ok} saved, ${err} errors.`;
+    btn.textContent='⚡ Push all to Supabase';btn.disabled=false;
+  }
+}
+
+function generateSQL(){
+  const keys=Object.keys(works).map(Number).sort((a,b)=>a-b);
+  const rows=keys.map(buildRow).map(r=>`(${r.number},'${r.numeral}','${(r.title||'').replace(/'/g,"''")}','${r.slug}','${r.edition_type}',${r.edition_size||'NULL'},'waves',${r.html_github_url?`'${r.html_github_url}'`:'NULL'},${r.collect_url?`'${r.collect_url}'`:'NULL'},${r.article_url?`'${r.article_url}'`:'NULL'},'${JSON.stringify(r.states)}'::jsonb,'${JSON.stringify(r.social_urls)}'::jsonb,${r.time_palette},${r.has_lagniappe},true)`);
+  const sql=`INSERT INTO works(number,numeral,title,slug,edition_type,edition_size,series_type,html_github_url,collect_url,article_url,states,social_urls,time_palette,has_lagniappe,published)\nVALUES\n${rows.join(',\n')}\nON CONFLICT(number) DO UPDATE SET title=EXCLUDED.title,slug=EXCLUDED.slug,edition_type=EXCLUDED.edition_type,html_github_url=EXCLUDED.html_github_url,collect_url=EXCLUDED.collect_url,article_url=EXCLUDED.article_url,states=EXCLUDED.states,social_urls=EXCLUDED.social_urls,time_palette=EXCLUDED.time_palette,has_lagniappe=EXCLUDED.has_lagniappe,updated_at=now();`;
+  document.getElementById('sqlBox').textContent=sql;
+  document.getElementById('sqlOut').style.display='block';
+}
+function copySql(){navigator.clipboard.writeText(document.getElementById('sqlBox').textContent).then(()=>{const b=event.target;b.textContent='Copied ✓';setTimeout(()=>b.textContent='Copy SQL',2000);});}
+
+function confirmClear(){if(confirm('Clear all works? Cannot be undone.')){works={};localStorage.removeItem(STORAGE_KEY);renderWorks();}}
+
+function initUploader(){
+  loadSaved();
+  if(Object.keys(works).length)renderWorks();
+  const dz=document.getElementById('dropZone');
+  dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('over');});
+  dz.addEventListener('dragleave',()=>dz.classList.remove('over'));
+  dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('over');processFiles(e.dataTransfer.files);});
+  document.getElementById('fileInput').addEventListener('change',e=>processFiles(e.target.files));
+}
+
+// ── LEADS DASHBOARD ──
+let allLeads=[];
+const STATUS_ORDER=['new','reviewing','quoted','booked','declined','archived'];
+const STATUS_CLS={new:'ls-new',reviewing:'ls-reviewing',quoted:'ls-quoted',booked:'ls-booked',declined:'ls-declined',archived:'ls-archived'};
+
+async function loadLeads(){
+  try{
+    const r=await fetch(`${SB_URL}/rest/v1/inquiries?select=*&order=submitted_at.desc`,{headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`}});
+    allLeads=await r.json();
+    renderLeads(allLeads);
+  }catch(e){document.getElementById('leadsContainer').innerHTML='<div class="leads-empty">Error loading leads.</div>';}
+}
+
+function filterLeads(status,btn){
+  document.querySelectorAll('.lf-btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  renderLeads(status==='all'?allLeads:allLeads.filter(l=>l.status===status));
+}
+
+function renderLeads(leads){
+  const c=document.getElementById('leadsContainer');
+  if(!leads.length){c.innerHTML='<div class="leads-empty">No leads yet.</div>';return;}
+  c.innerHTML=`<div class="leads-header">
+    <div class="col-lbl">Contact</div>
+    <div class="col-lbl">Type</div>
+    <div class="col-lbl">Budget</div>
+    <div class="col-lbl">Notes</div>
+    <div class="col-lbl">Date</div>
+    <div class="col-lbl">Status</div>
+  </div>`+leads.map(l=>{
+    const d=new Date(l.submitted_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'2-digit'});
+    const sc=STATUS_CLS[l.status]||'ls-new';
+    const nextStatus=STATUS_ORDER[(STATUS_ORDER.indexOf(l.status)+1)%STATUS_ORDER.length];
+    return`<div class="lead-row">
+      <div>
+        <div class="lead-name">${l.name||'—'}</div>
+        <div class="lead-email">${l.email||''}</div>
+        ${l.organization?`<div style="font-size:10px;color:var(--mut);margin-top:2px">${l.organization}</div>`:''}
+      </div>
+      <div><span class="lead-type-badge">${l.inquiry_type||'general'}</span></div>
+      <div class="lead-budget">${l.budget_range||'—'}</div>
+      <div>
+        ${l.notes?`<div style="font-size:11px;color:var(--mut);line-height:1.5;margin-bottom:4px">${l.notes.slice(0,80)}${l.notes.length>80?'…':''}</div>`:''}
+        <input class="lead-notes-input" placeholder="Internal notes…" value="${(l.internal_notes||'').replace(/"/g,'&quot;')}" onchange="updateLeadNotes('${l.id}',this.value)">
+      </div>
+      <div class="lead-date">${d}</div>
+      <div>
+        <span class="lead-status ${sc}" onclick="advanceLeadStatus('${l.id}','${nextStatus}',this,'${l.status}')" title="Click to advance status">${l.status}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function advanceLeadStatus(id,next,el,current){
+  const opts=['new','reviewing','quoted','booked','declined','archived','pass'];
+  // cycle or show dropdown
+  const choice=prompt(`Set status for this lead:\n${STATUS_ORDER.join(' → ')}\n\nCurrent: ${current}\nType new status:`,next);
+  if(!choice)return;
+  const s=choice.toLowerCase().trim();
+  if(!STATUS_ORDER.includes(s)){alert('Invalid status.');return;}
+  await fetch(`${SB_URL}/rest/v1/inquiries?id=eq.${id}`,{method:'PATCH',headers:{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`},body:JSON.stringify({status:s,updated_at:new Date().toISOString()})});
+  loadLeads();
+}
+async function updateLeadNotes(id,notes){
+  await fetch(`${SB_URL}/rest/v1/inquiries?id=eq.${id}`,{method:'PATCH',headers:{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`},body:JSON.stringify({internal_notes:notes,updated_at:new Date().toISOString()})});
+}
+
+// ── SIGNALS PANEL ──
+async function loadSignalsPanel(){
+  try{
+    const r=await fetch(`${SB_URL}/rest/v1/signals?select=*&order=signaled_at.desc&limit=100`,{headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`}});
+    const sigs=await r.json();
+    const c=document.getElementById('signalsContainer');
+    if(!Array.isArray(sigs)||!sigs.length){c.innerHTML='<div class="leads-empty">No signals yet.</div>';return;}
+    c.innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px">
+    ${sigs.map(s=>`<div style="background:var(--surf);border:1px solid var(--bdr);padding:14px;font-size:12px">
+      <div style="font-family:var(--fm);font-size:9px;color:var(--mag);margin-bottom:6px">${s.platform||'anon'} · Hour ${s.hour_of_day??'?'}</div>
+      <div style="font-weight:500">${s.handle?`@${s.handle}`:'anonymous'}</div>
+      ${s.city||s.country?`<div style="font-size:10px;color:var(--mut);margin-top:2px">${[s.city,s.country].filter(Boolean).join(', ')}</div>`:''}
+      <div style="font-size:9px;color:var(--mut2);margin-top:4px;font-family:var(--fm)">${new Date(s.signaled_at).toLocaleString()}</div>
+      ${s.screenshot_url?`<div style="margin-top:8px;font-family:var(--fm);font-size:8px;color:var(--blue)">📸 Has screenshot</div>`:''}
+    </div>`).join('')}
+    </div>`;
+  }catch(e){}
+}
+</script>
+</body>
+</html>

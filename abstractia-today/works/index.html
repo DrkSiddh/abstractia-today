@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABSTRACTIA TODAY</title>
+<meta name="description" content="A daily ritual of never-ending interactive art by Maxximillian. 365 works. Live now.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --mag:#FF2D78;--mag-dim:rgba(255,45,120,0.12);--gold:#FFB830;
+  --void:#040407;--surf:#0C0C13;--surf2:#111119;--surf3:#16161F;
+  --bdr:rgba(255,255,255,0.07);--bdr2:rgba(255,255,255,0.12);
+  --txt:#F0EEE8;--mut:rgba(240,238,232,0.42);--mut2:rgba(240,238,232,0.22);
+  --grn:#4CAF76;--blue:#378ADD;
+  --fd:'Bebas Neue',sans-serif;--fm:'Space Mono',monospace;--fb:'DM Sans',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--txt);font-family:var(--fb);font-size:15px;line-height:1.6;overflow-x:hidden}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:18px 40px;transition:background 0.3s,border-color 0.3s;border-bottom:1px solid transparent}
+nav.scrolled{background:rgba(4,4,7,0.96);border-bottom-color:var(--bdr);backdrop-filter:blur(12px)}
+.nav-logo{font-family:var(--fd);font-size:24px;letter-spacing:0.06em;color:var(--txt);text-decoration:none}
+.nav-logo em{color:var(--mag);font-style:normal}
+.nav-links{display:flex;gap:28px;list-style:none}
+.nav-links a{font-family:var(--fm);font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:var(--mut);text-decoration:none;transition:color 0.2s}
+.nav-links a:hover{color:var(--mag)}
+.nav-day{font-family:var(--fm);font-size:9px;letter-spacing:0.18em;color:var(--mag);text-transform:uppercase;padding:5px 14px;border:1px solid rgba(255,45,120,0.35);background:rgba(255,45,120,0.06)}
+@media(max-width:768px){nav{padding:16px 20px}.nav-links{display:none}}
+
+/* ── DAILY GREETING ── */
+#greeting-bar{padding:100px 0 0;text-align:center;position:relative;z-index:2}
+.greeting-day{font-family:var(--fm);font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--mag);margin-bottom:12px;opacity:0;animation:fadeUp 0.7s 0.2s forwards}
+.greeting-headline{font-family:var(--fd);font-size:clamp(52px,9vw,110px);letter-spacing:0.02em;line-height:0.92;opacity:0;animation:fadeUp 0.7s 0.4s forwards}
+.greeting-headline em{color:var(--mag);font-style:normal}
+.greeting-copy{font-family:var(--fm);font-size:11px;letter-spacing:0.15em;color:var(--mut);margin-top:16px;opacity:0;animation:fadeUp 0.7s 0.6s forwards;max-width:520px;margin-left:auto;margin-right:auto;padding:0 20px}
+
+/* ── FEATURED WORK — FULL SCREEN ── */
+#featured-work{margin-top:40px;position:relative;width:100%;background:var(--void)}
+.work-frame-outer{position:relative;width:100%;max-width:100%;overflow:hidden}
+/* iframe fills its natural aspect ratio, no crop */
+.work-iframe-wrap{position:relative;width:100%;padding-top:56.25%}
+.work-iframe-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none;display:block}
+.work-iframe-wrap canvas{position:absolute;top:0;left:0;width:100%;height:100%;display:block}
+/* info badge */
+.info-circle{position:absolute;top:20px;right:20px;z-index:10;width:36px;height:36px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.35);background:rgba(4,4,7,0.6);display:flex;align-items:center;justify-content:center;cursor:pointer;font-family:var(--fm);font-size:13px;color:rgba(255,255,255,0.7);transition:border-color 0.2s,color 0.2s;backdrop-filter:blur(6px)}
+.info-circle:hover{border-color:var(--mag);color:var(--mag)}
+/* work meta below frame */
+.work-meta-strip{padding:20px 40px 0;display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.work-id{font-family:var(--fm);font-size:9px;letter-spacing:0.22em;color:var(--mag);text-transform:uppercase;margin-bottom:4px}
+.work-name{font-family:var(--fd);font-size:clamp(28px,4vw,48px);letter-spacing:0.04em;line-height:1}
+.work-desc{font-size:13px;color:var(--mut);margin-top:8px;max-width:560px;line-height:1.7}
+.work-actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+@media(max-width:768px){.work-meta-strip{padding:16px 20px 0}}
+
+/* ── SCREENSHOT + SIGNAL ── */
+.signal-row{display:flex;gap:12px;align-items:center;margin-top:12px;flex-wrap:wrap}
+.btn-screenshot{font-family:var(--fm);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;padding:10px 20px;background:var(--surf2);border:1px solid var(--bdr2);color:var(--txt);cursor:pointer;transition:border-color 0.2s,background 0.2s;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%)}
+.btn-screenshot:hover{border-color:var(--mag);background:var(--mag-dim)}
+.btn-signal{font-family:var(--fm);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;padding:10px 24px;background:var(--mag);color:#fff;border:none;cursor:pointer;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);transition:opacity 0.2s}
+.btn-signal:hover{opacity:0.85}
+.signal-hint{font-family:var(--fm);font-size:9px;color:var(--mut2);letter-spacing:0.1em}
+
+/* ── COMMUNITY TICKER ── */
+.ticker-bar{background:rgba(255,45,120,0.06);border-top:1px solid rgba(255,45,120,0.15);border-bottom:1px solid rgba(255,45,120,0.15);padding:10px 0;overflow:hidden;white-space:nowrap;margin-top:48px}
+.ticker-track{display:inline-flex;gap:0;animation:ticker 35s linear infinite}
+.ticker-item{font-family:var(--fm);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--mut);padding:0 32px;border-right:1px solid var(--bdr)}
+.ticker-item span{color:var(--mag)}
+.ticker-item em{font-style:normal;color:var(--txt)}
+
+/* ── GALLERY GRID ── */
+#gallery{padding:80px 40px}
+.section-row{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:48px;border-bottom:1px solid var(--bdr);padding-bottom:20px;flex-wrap:wrap;gap:16px}
+.section-title{font-family:var(--fd);font-size:clamp(36px,5vw,60px);letter-spacing:0.04em}
+.section-meta{font-family:var(--fm);font-size:9px;letter-spacing:0.2em;color:var(--mag);text-transform:uppercase}
+.filter-strip{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:36px}
+.filter-btn{font-family:var(--fm);font-size:8px;letter-spacing:0.18em;text-transform:uppercase;padding:5px 14px;background:transparent;color:var(--mut);border:1px solid var(--bdr);cursor:pointer;transition:all 0.2s}
+.filter-btn:hover,.filter-btn.active{background:var(--mag-dim);border-color:var(--mag);color:var(--mag)}
+
+/* Gallery cards — no cropping, natural ratio */
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:2px}
+.g-card{position:relative;background:var(--surf);cursor:pointer;overflow:hidden}
+/* iframe at natural 16:9 — no crop */
+.g-card-frame{position:relative;width:100%;padding-top:56.25%;overflow:hidden}
+.g-card-frame iframe,.g-card-frame canvas{position:absolute;top:0;left:0;width:100%;height:100%;border:none;pointer-events:none}
+.g-card-info{position:absolute;bottom:0;left:0;right:0;padding:14px 16px;background:linear-gradient(to top,rgba(4,4,7,0.97) 0%,transparent 100%);transform:translateY(100%);transition:transform 0.28s ease}
+.g-card:hover .g-card-info{transform:translateY(0)}
+.g-card-num{font-family:var(--fm);font-size:8px;color:var(--mag);letter-spacing:0.2em;margin-bottom:3px}
+.g-card-title{font-family:var(--fd);font-size:20px;letter-spacing:0.04em;margin-bottom:6px}
+.g-card-badges{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px}
+.badge{font-family:var(--fm);font-size:7px;letter-spacing:0.12em;text-transform:uppercase;padding:3px 7px;border:1px solid}
+.badge-unique{background:rgba(255,184,48,0.12);border-color:var(--gold);color:var(--gold)}
+.badge-editions{background:rgba(136,135,128,0.12);border-color:#888780;color:#b4b2a9}
+.badge-limited{background:rgba(99,153,34,0.12);border-color:#639922;color:#8ccf40}
+.badge-open{background:rgba(55,138,221,0.12);border-color:var(--blue);color:#7ab8f0}
+.badge-monthly{background:rgba(83,74,183,0.12);border-color:#534AB7;color:#9b95e8}
+.badge-gm{background:rgba(255,184,48,0.1);border-color:var(--gold);color:var(--gold)}
+.badge-night{background:rgba(83,74,183,0.1);border-color:#534AB7;color:#9b95e8}
+.badge-evening{background:rgba(155,93,229,0.1);border-color:#9B5DE5;color:#9B5DE5}
+.badge-waves{background:rgba(55,138,221,0.1);border-color:var(--blue);color:#7ab8f0}
+.badge-lagniappe{background:rgba(255,45,120,0.12);border-color:var(--mag);color:var(--mag)}
+.g-card-cta{font-family:var(--fm);font-size:8px;color:var(--mut);letter-spacing:0.1em;text-transform:uppercase}
+@media(max-width:768px){#gallery{padding:60px 20px}.gallery-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:500px){.gallery-grid{grid-template-columns:1fr}}
+
+/* ── HEATMAP ── */
+#heatmap-section{padding:60px 40px;background:var(--surf)}
+.heatmap-title{font-family:var(--fd);font-size:clamp(28px,4vw,48px);letter-spacing:0.04em;margin-bottom:8px}
+.heatmap-sub{font-family:var(--fm);font-size:9px;letter-spacing:0.2em;color:var(--mut);text-transform:uppercase;margin-bottom:32px}
+#heatmap-canvas{width:100%;height:280px;background:var(--surf2);border:1px solid var(--bdr);border-radius:2px;display:block}
+.heatmap-dots-live{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px;max-height:80px;overflow:hidden}
+.dot-pill{font-family:var(--fm);font-size:8px;letter-spacing:0.1em;padding:4px 10px;background:var(--surf2);border:1px solid var(--bdr);color:var(--mut);display:flex;align-items:center;gap:6px}
+.dot-pill span{color:var(--mag)}
+@media(max-width:768px){#heatmap-section{padding:40px 20px}}
+
+/* ── SUBSCRIBE ── */
+#subscribe{padding:80px 40px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.sub-headline{font-family:var(--fd);font-size:clamp(36px,5vw,64px);letter-spacing:0.03em;line-height:0.95;margin-bottom:20px}
+.sub-headline em{color:var(--mag);font-style:normal}
+.sub-body{font-size:14px;color:var(--mut);line-height:1.8;max-width:380px}
+.sub-form{background:var(--surf);border:1px solid var(--bdr);padding:36px}
+.sub-label{font-family:var(--fm);font-size:8px;letter-spacing:0.22em;text-transform:uppercase;color:var(--mag);margin-bottom:10px;display:block}
+.sub-input{width:100%;background:var(--surf2);border:1px solid var(--bdr);color:var(--txt);font-family:var(--fm);font-size:12px;padding:12px 16px;outline:none;margin-bottom:12px;letter-spacing:0.06em;transition:border-color 0.2s}
+.sub-input:focus{border-color:var(--mag)}
+.sub-input::placeholder{color:var(--mut2);letter-spacing:0.06em}
+.sub-toggle{display:flex;gap:10px;margin-bottom:20px}
+.sub-toggle-btn{font-family:var(--fm);font-size:8px;letter-spacing:0.15em;text-transform:uppercase;padding:7px 16px;border:1px solid var(--bdr);background:transparent;color:var(--mut);cursor:pointer;flex:1;transition:all 0.2s}
+.sub-toggle-btn.active{border-color:var(--mag);color:var(--mag);background:var(--mag-dim)}
+.btn-submit{font-family:var(--fm);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;padding:14px 32px;background:var(--mag);color:#fff;border:none;cursor:pointer;width:100%;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:opacity 0.2s}
+.btn-submit:hover{opacity:0.85}
+.sub-success{display:none;font-family:var(--fm);font-size:9px;letter-spacing:0.18em;color:var(--grn);text-transform:uppercase;margin-top:12px;text-align:center}
+@media(max-width:900px){#subscribe{grid-template-columns:1fr;gap:40px;padding:60px 20px}}
+
+/* ── PARTNERSHIPS ── */
+#partnerships{padding:80px 40px;background:var(--surf)}
+.partner-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+.partner-left{max-width:480px}
+.partner-headline{font-family:var(--fd);font-size:clamp(32px,5vw,60px);letter-spacing:0.03em;line-height:0.95;margin-bottom:20px}
+.partner-body{font-size:14px;color:var(--mut);line-height:1.8;margin-bottom:24px}
+.partner-tags{display:flex;gap:8px;flex-wrap:wrap}
+.ptag{font-family:var(--fm);font-size:8px;letter-spacing:0.12em;padding:5px 12px;border:1px solid var(--bdr);color:var(--mut)}
+.partner-form{background:var(--surf2);border:1px solid var(--bdr);padding:36px}
+.p-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.p-field{margin-bottom:12px}
+.p-label{font-family:var(--fm);font-size:8px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mut);margin-bottom:6px;display:block}
+.p-input,.p-select,.p-textarea{width:100%;background:var(--surf);border:1px solid var(--bdr);color:var(--txt);font-family:var(--fb);font-size:13px;padding:10px 14px;outline:none;transition:border-color 0.2s;-webkit-appearance:none}
+.p-input:focus,.p-select:focus,.p-textarea:focus{border-color:var(--mag)}
+.p-input::placeholder,.p-textarea::placeholder{color:var(--mut2)}
+.p-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+.p-select option{background:#0C0C13}
+.p-textarea{resize:vertical;min-height:80px;line-height:1.6}
+.p-submit-row{display:flex;align-items:center;gap:16px;margin-top:20px}
+.partner-success{display:none;font-family:var(--fm);font-size:9px;letter-spacing:0.18em;color:var(--grn);text-transform:uppercase}
+@media(max-width:900px){#partnerships{padding:60px 20px}.partner-grid{grid-template-columns:1fr;gap:40px}.p-row{grid-template-columns:1fr}}
+
+/* ── FOOTER ── */
+footer{background:var(--surf2);border-top:1px solid var(--bdr);padding:60px 40px 0}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:60px;margin-bottom:48px}
+.footer-brand-name{font-family:var(--fd);font-size:52px;letter-spacing:0.05em;margin-bottom:12px}
+.footer-brand-desc{font-size:13px;color:var(--mut);line-height:1.8;max-width:280px}
+.footer-col-label{font-family:var(--fm);font-size:8px;letter-spacing:0.3em;text-transform:uppercase;color:var(--mag);margin-bottom:20px}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:12px}
+.footer-links a{font-size:13px;color:var(--mut);text-decoration:none;transition:color 0.2s}
+.footer-links a:hover{color:var(--txt)}
+.footer-bottom{border-top:1px solid var(--bdr);padding:20px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.footer-bottom span{font-family:var(--fm);font-size:8px;letter-spacing:0.15em;color:var(--mut2);text-transform:uppercase}
+.footer-bottom a{color:var(--mut2);text-decoration:none;transition:color 0.2s}
+.footer-bottom a:hover{color:var(--mag)}
+@media(max-width:900px){footer{padding:40px 20px 0}.footer-grid{grid-template-columns:1fr 1fr;gap:40px}}
+@media(max-width:500px){.footer-grid{grid-template-columns:1fr}}
+
+/* ── MODALS ── */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(4,4,7,0.92);z-index:500;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.modal-bg.open{display:flex}
+.modal-box{background:var(--surf);border:1px solid var(--bdr2);padding:40px;width:min(92vw,560px);position:relative;max-height:88vh;overflow-y:auto}
+.modal-close{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--mut);font-size:22px;cursor:pointer;line-height:1;transition:color 0.2s}
+.modal-close:hover{color:var(--mag)}
+.modal-title{font-family:var(--fd);font-size:36px;letter-spacing:0.04em;margin-bottom:8px}
+.modal-sub{font-family:var(--fm);font-size:9px;letter-spacing:0.2em;color:var(--mag);text-transform:uppercase;margin-bottom:24px}
+.modal-body{font-size:14px;color:var(--mut);line-height:1.8}
+.key-grid{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0}
+.key-item{display:flex;align-items:center;gap:10px;font-family:var(--fm);font-size:10px;color:var(--mut)}
+.key-chip{background:var(--surf2);border:1px solid var(--bdr2);padding:4px 10px;font-size:12px;color:var(--txt);letter-spacing:0.05em}
+
+/* Signal modal */
+#signal-modal .modal-box{padding:36px}
+.signal-preview{width:100%;aspect-ratio:16/9;background:var(--surf2);border:1px solid var(--bdr);margin-bottom:20px;overflow:hidden;position:relative}
+.signal-preview canvas{width:100%;height:100%;display:block}
+.signal-handle-wrap{display:flex;gap:8px;margin-bottom:12px}
+.signal-platform-btn{font-family:var(--fm);font-size:8px;letter-spacing:0.12em;padding:8px 14px;border:1px solid var(--bdr);background:transparent;color:var(--mut);cursor:pointer;transition:all 0.2s;text-transform:uppercase}
+.signal-platform-btn.active{border-color:var(--mag);color:var(--mag);background:var(--mag-dim)}
+
+/* ── BUTTONS shared ── */
+.btn-primary{font-family:var(--fm);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;padding:13px 30px;background:var(--mag);color:#fff;border:none;cursor:pointer;text-decoration:none;display:inline-block;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:opacity 0.2s,transform 0.15s}
+.btn-primary:hover{opacity:0.85;transform:translateY(-1px)}
+.btn-ghost{font-family:var(--fm);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;padding:13px 30px;background:transparent;color:var(--txt);border:1px solid var(--bdr2);cursor:pointer;text-decoration:none;display:inline-block;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:border-color 0.2s,color 0.2s,transform 0.15s}
+.btn-ghost:hover{border-color:var(--mag);color:var(--mag);transform:translateY(-1px)}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a href="/" class="nav-logo">ABSTR<em>A</em>CTIA</a>
+  <ul class="nav-links">
+    <li><a href="#gallery">Works</a></li>
+    <li><a href="#heatmap-section">Signals</a></li>
+    <li><a href="#subscribe">Stay Connected</a></li>
+    <li><a href="#partnerships">Collaborate</a></li>
+  </ul>
+  <div class="nav-day" id="navDay">Day 1</div>
+</nav>
+
+<!-- DAILY GREETING -->
+<div id="greeting-bar">
+  <p class="greeting-day" id="greetDay">Day 1 of 365</p>
+  <h1 class="greeting-headline" id="greetLine">Welcome,<br><em>Abstractian</em></h1>
+  <p class="greeting-copy" id="greetCopy">A living work of art is waiting for you.</p>
+</div>
+
+<!-- FEATURED WORK: FULL NATURAL ASPECT RATIO -->
+<div id="featured-work">
+  <div class="work-frame-outer">
+    <div class="work-iframe-wrap" id="featuredFrame">
+      <canvas id="featuredCanvas"></canvas>
+    </div>
+    <!-- ⓘ info trigger -->
+    <button class="info-circle" onclick="openModal('info-modal')" title="How to interact" aria-label="Interaction guide">ⓘ</button>
+  </div>
+
+  <div class="work-meta-strip">
+    <div>
+      <p class="work-id" id="featuredId">Loading…</p>
+      <h2 class="work-name" id="featuredName"></h2>
+      <p class="work-desc" id="featuredDesc"></p>
+      <div class="work-actions">
+        <a class="btn-primary" id="featuredCollect" href="#" target="_blank" style="display:none">Collect this work ↗</a>
+        <a class="btn-ghost" id="featuredArticle" href="#" target="_blank" style="display:none">Read article ↗</a>
+      </div>
+    </div>
+    <div>
+      <div class="signal-row">
+        <button class="btn-screenshot" id="screenshotBtn" onclick="takeScreenshot()">📸 Capture moment</button>
+        <button class="btn-signal" onclick="openSignalModal()">Send signal ↗</button>
+        <span class="signal-hint">Your view is unique · share it</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- COMMUNITY TICKER -->
+<div class="ticker-bar">
+  <div class="ticker-track" id="tickerTrack">
+    <!-- populated by JS -->
+    <span class="ticker-item">ABSTRACTIA TODAY · <em>Sending signals from everywhere</em></span>
+    <span class="ticker-item">BY <span>MAXXIMILLIAN</span></span>
+    <span class="ticker-item">365 WORKS · NEVER-ENDING · INTERACTIVE</span>
+    <span class="ticker-item">ABSTRACTIA TODAY · <em>Sending signals from everywhere</em></span>
+    <span class="ticker-item">BY <span>MAXXIMILLIAN</span></span>
+    <span class="ticker-item">365 WORKS · NEVER-ENDING · INTERACTIVE</span>
+  </div>
+</div>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="section-row">
+    <h2 class="section-title">THE WORKS</h2>
+    <span class="section-meta" id="workCount">Loading…</span>
+  </div>
+  <div class="filter-strip">
+    <button class="filter-btn active" onclick="filterWorks('all',this)">All</button>
+    <button class="filter-btn" onclick="filterWorks('unique',this)">Unique</button>
+    <button class="filter-btn" onclick="filterWorks('editions',this)">Editions</button>
+    <button class="filter-btn" onclick="filterWorks('lagniappe',this)">Lagniappe</button>
+    <button class="filter-btn" onclick="filterWorks('wkd',this)">WKD</button>
+    <button class="filter-btn" onclick="filterWorks('420',this)">420</button>
+    <button class="filter-btn" onclick="filterWorks('untitled',this)">Untitled</button>
+  </div>
+  <div class="gallery-grid" id="galleryGrid">
+    <div style="font-family:var(--fm);font-size:9px;letter-spacing:0.2em;color:var(--mut);padding:40px;grid-column:1/-1;text-align:center">Loading works…</div>
+  </div>
+</section>
+
+<!-- HEATMAP -->
+<section id="heatmap-section">
+  <h2 class="heatmap-title">SIGNAL MAP</h2>
+  <p class="heatmap-sub">24 hours · every signal · one globe</p>
+  <canvas id="heatmap-canvas"></canvas>
+  <div class="heatmap-dots-live" id="heatmapDots"></div>
+</section>
+
+<!-- SUBSCRIBE -->
+<section id="subscribe">
+  <div>
+    <h2 class="sub-headline">The daily<br><em>Abstractia</em><br>is live.</h2>
+    <p class="sub-body">Get notified the moment each day's work drops — by email or text. Join the Abstractians who start every morning here.</p>
+  </div>
+  <div class="sub-form">
+    <label class="sub-label">How should we reach you?</label>
+    <div class="sub-toggle">
+      <button class="sub-toggle-btn active" id="toggleEmail" onclick="setNotifyMode('email')">Email</button>
+      <button class="sub-toggle-btn" id="toggleSMS" onclick="setNotifyMode('sms')">SMS / Text</button>
+      <button class="sub-toggle-btn" id="toggleBoth" onclick="setNotifyMode('both')">Both</button>
+    </div>
+    <input class="sub-input" type="email" id="subEmail" placeholder="your@email.com">
+    <input class="sub-input" type="tel" id="subPhone" placeholder="+1 555 000 0000" style="display:none">
+    <input class="sub-input" type="text" id="subHandle" placeholder="@yourusername (optional)">
+    <button class="btn-submit" onclick="submitSubscribe()">Join the Abstractians ↗</button>
+    <p class="sub-success" id="subSuccess">✓ You're in. See you tomorrow, Abstractian.</p>
+  </div>
+</section>
+
+<!-- PARTNERSHIPS -->
+<section id="partnerships">
+  <div class="partner-grid">
+    <div class="partner-left">
+      <h2 class="partner-headline">Bring ABSTRACTIA<br>to your space.</h2>
+      <p class="partner-body">Permanent installations. Temporary exhibitions. Residencies. Branded collaborations. ABSTRACTIA has lived in food courts, art fairs, and architectural spaces. Let's make something.</p>
+      <div class="partner-tags">
+        <span class="ptag">Installations</span>
+        <span class="ptag">Exhibitions</span>
+        <span class="ptag">Residencies</span>
+        <span class="ptag">Branded Collab</span>
+        <span class="ptag">Public Art</span>
+      </div>
+    </div>
+    <div class="partner-form">
+      <div class="p-row">
+        <div class="p-field">
+          <label class="p-label">Name</label>
+          <input class="p-input" type="text" id="pName" placeholder="Your name">
+        </div>
+        <div class="p-field">
+          <label class="p-label">Organization</label>
+          <input class="p-input" type="text" id="pOrg" placeholder="Optional">
+        </div>
+      </div>
+      <div class="p-field">
+        <label class="p-label">Email</label>
+        <input class="p-input" type="email" id="pEmail" placeholder="contact@yourspace.com">
+      </div>
+      <div class="p-row">
+        <div class="p-field">
+          <label class="p-label">Type of opportunity</label>
+          <select class="p-select" id="pType">
+            <option value="">Select…</option>
+            <option value="install">Permanent Installation</option>
+            <option value="screen">Screen / Digital Display</option>
+            <option value="curated_show">Curated Exhibition</option>
+            <option value="machine">Claw Machine Placement</option>
+            <option value="general">Other / General</option>
+          </select>
+        </div>
+        <div class="p-field">
+          <label class="p-label">Budget range</label>
+          <select class="p-select" id="pBudget">
+            <option value="">Select…</option>
+            <option value="under_5k">Under $5K</option>
+            <option value="5k_15k">$5K–$15K</option>
+            <option value="15k_50k">$15K–$50K</option>
+            <option value="50k_plus">$50K+</option>
+            <option value="tbd">TBD / Let's talk</option>
+          </select>
+        </div>
+      </div>
+      <div class="p-row">
+        <div class="p-field">
+          <label class="p-label">Start date</label>
+          <input class="p-input" type="date" id="pStart">
+        </div>
+        <div class="p-field">
+          <label class="p-label">End date (if applicable)</label>
+          <input class="p-input" type="date" id="pEnd">
+        </div>
+      </div>
+      <div class="p-field">
+        <label class="p-label">Tell us about the space</label>
+        <textarea class="p-textarea" id="pNotes" placeholder="Location, context, what you're imagining…"></textarea>
+      </div>
+      <div class="p-submit-row">
+        <button class="btn-primary" onclick="submitPartnership()">Send inquiry ↗</button>
+        <span class="partner-success" id="partnerSuccess">✓ Received. We'll be in touch.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand-name">ABSTRACTIA</div>
+      <p class="footer-brand-desc">Never-ending Interactive Art You Own &amp; Control. By Maxximillian. 365 works. I–CCCLXV.</p>
+    </div>
+    <div>
+      <p class="footer-col-label">Collect</p>
+      <ul class="footer-links">
+        <li><a href="#gallery" onclick="filterWorks('unique')">Unique (1/1)</a></li>
+        <li><a href="#gallery" onclick="filterWorks('editions')">Editions</a></li>
+        <li><a href="https://abstractia.today/buy" target="_blank">Buy ABSTRACTIA ↗</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-col-label">Artist</p>
+      <ul class="footer-links">
+        <li><a href="https://instagram.com/imaxximillian" target="_blank">Instagram ↗</a></li>
+        <li><a href="https://youtube.com/@maxximillian" target="_blank">YouTube ↗</a></li>
+        <li><a href="https://maxximillian.art" target="_blank">maxximillian.art ↗</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-col-label">Site</p>
+      <ul class="footer-links">
+        <li><a href="#subscribe">Get notified</a></li>
+        <li><a href="#partnerships">Collaborate</a></li>
+        <li><a href="https://youtube.com/@blaqqatbuilds" target="_blank">Dev: @blaqqatbuilds ↗</a></li>
+        <li><a href="studio.html">Studio ↗</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© Maxximillian — ABSTRACTIA — abstractia.today</span>
+    <span>Never-ending Interactive Art You Own &amp; Control</span>
+    <span>Built by <a href="https://youtube.com/@blaqqatbuilds" target="_blank">@blaqqatbuilds</a></span>
+  </div>
+</footer>
+
+<!-- INFO MODAL -->
+<div class="modal-bg" id="info-modal" onclick="if(event.target===this)closeModal('info-modal')">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('info-modal')">×</button>
+    <h2 class="modal-title">How to interact</h2>
+    <p class="modal-sub">ABSTRACTIA is alive — here's how to explore it</p>
+    <div class="modal-body">
+      <p>Each work responds to time, touch, and your presence. The art you see right now looks different from what anyone else is seeing.</p>
+      <div class="key-grid">
+        <div class="key-item"><span class="key-chip">Tap canvas</span><span>Wake the work</span></div>
+        <div class="key-item"><span class="key-chip">I</span><span>Interactive menu</span></div>
+        <div class="key-item"><span class="key-chip">W</span><span>Waves mode</span></div>
+        <div class="key-item"><span class="key-chip">L</span><span>Lines mode</span></div>
+        <div class="key-item"><span class="key-chip">C</span><span>Companion mode</span></div>
+        <div class="key-item"><span class="key-chip">↑ ↓</span><span>Speed control</span></div>
+        <div class="key-item"><span class="key-chip">F</span><span>Fullscreen</span></div>
+      </div>
+      <p style="margin-top:12px;font-size:13px">Time of day shifts the palette automatically. Come back at midnight. Come back at sunrise. It's always different.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SIGNAL MODAL -->
+<div class="modal-bg" id="signal-modal" onclick="if(event.target===this)closeModal('signal-modal')">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('signal-modal')">×</button>
+    <h2 class="modal-title">Send a signal</h2>
+    <p class="modal-sub">Your moment · your view · the globe</p>
+    <div class="signal-preview" id="signalPreview">
+      <canvas id="signalCanvas"></canvas>
+    </div>
+    <p style="font-size:13px;color:var(--mut);margin-bottom:16px;line-height:1.7">Your snapshot is unique. Share it and your dot appears on the Signal Map — a rolling 24-hour record of everyone who paused here today.</p>
+    <label class="p-label">Your handle (optional)</label>
+    <div class="signal-handle-wrap">
+      <button class="signal-platform-btn active" id="platX" onclick="setPlatform('x')">𝕏</button>
+      <button class="signal-platform-btn" id="platIG" onclick="setPlatform('instagram')">IG</button>
+      <button class="signal-platform-btn" id="platAnon" onclick="setPlatform('anonymous')">Anon</button>
+    </div>
+    <input class="sub-input" type="text" id="signalHandle" placeholder="@yourhandle">
+    <input class="sub-input" type="text" id="signalWallet" placeholder="Wallet address? (optional — shown if you collect)" style="margin-top:4px">
+    <button class="btn-submit" style="margin-top:16px" onclick="submitSignal()">Drop my dot on the map ↗</button>
+    <p class="sub-success" id="signalSuccess">✓ Signal received. You're on the map.</p>
+  </div>
+</div>
+
+<!-- WORK MODAL -->
+<div class="modal-bg" id="work-modal" onclick="if(event.target===this)closeModal('work-modal')">
+  <div class="modal-box" style="width:min(94vw,720px);padding:36px">
+    <button class="modal-close" onclick="closeModal('work-modal')">×</button>
+    <p class="modal-sub" id="wModalId"></p>
+    <h2 class="modal-title" id="wModalTitle"></h2>
+    <div style="position:relative;width:100%;padding-top:56.25%;margin:20px 0;background:var(--void);border:1px solid var(--bdr)">
+      <div id="wModalFrame" style="position:absolute;inset:0;width:100%;height:100%"></div>
+    </div>
+    <div id="wModalBadges" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px"></div>
+    <p id="wModalDesc" style="font-size:13px;color:var(--mut);line-height:1.8;margin-bottom:20px"></p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap" id="wModalActions"></div>
+  </div>
+</div>
+
+<script>
+// ── SUPABASE ──
+const SB_URL='https://xtkdnyqjheewsqnvugaj.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0a2RueXFqaGVld3NxbnZ1Z2FqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1MTAyODQsImV4cCI6MjA5MTA4NjI4NH0.T8X7Q1fKjpkD1csafr1F9pD5OULu1DR_eTSeVa-Rhv0';
+
+async function sbFetch(table,params=''){
+  const r=await fetch(`${SB_URL}/rest/v1/${table}?${params}`,{headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`}});
+  return r.json();
+}
+async function sbInsert(table,data){
+  return fetch(`${SB_URL}/rest/v1/${table}`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`,'Prefer':'return=minimal'},body:JSON.stringify(data)});
+}
+
+// ── DAY OF YEAR ──
+function getDayOfYear(){
+  const now=new Date(), start=new Date(now.getFullYear(),0,0);
+  return Math.floor((now-start)/86400000);
+}
+function getHour(){ return new Date().getHours(); }
+
+// ── TIME-AWARE COPY ──
+const GM_COPIES=[
+  'Good morning, Abstractian. The world is painting itself for you.',
+  'GM. A new work is alive. Come see what today looks like.',
+  'Rise and see. ABSTRACTIA opened its eyes before you did.',
+  'Morning light, new palette. Today's work is waiting.',
+];
+const PM_COPIES=[
+  'The afternoon shift hits different. Come through.',
+  'Good afternoon. The work has been running since sunrise.',
+  'PM energy. The palette shifted an hour ago. Did you notice?',
+];
+const EVENING_COPIES=[
+  'Golden hour in the art. Come see what evening looks like.',
+  'The work goes quiet at night. Catch it now.',
+  'Evening, Abstractian. The palette is doing something beautiful right now.',
+];
+const GRASS_COPIES=[
+  'Hey. Get out and touch grass. ABSTRACTIA will be here when you get back.',
+  '4:20 somewhere. Go outside. The art will wait.',
+  'Touch grass. Breathe. Then come back and we'll both be better for it.',
+];
+const NIGHT_COPIES=[
+  'Late night ABSTRACTIA is something else entirely.',
+  'Midnight palette is live. The rest of the world is asleep.',
+  'GN soon. But first — look at what the night looks like here.',
+];
+const GENERIC_COPIES=[
+  'A living work of art is waiting for you.',
+  'Hello from ABSTRACTIA.',
+  'A relaxing moment with ABSTRACTIA.',
+  'Come see what today looks like.',
+];
+
+function getDailyCopy(day){
+  const h=getHour();
+  let pool;
+  if(h>=4&&h<10)pool=GM_COPIES;
+  else if(h>=16&&h<17)pool=GRASS_COPIES; // 4–5PM "touch grass"
+  else if(h>=10&&h<16)pool=PM_COPIES;
+  else if(h>=17&&h<20)pool=EVENING_COPIES;
+  else if(h>=20||h<4)pool=NIGHT_COPIES;
+  else pool=GENERIC_COPIES;
+  return pool[day % pool.length];
+}
+
+function getGreeting(){
+  const h=getHour();
+  if(h>=4&&h<12)return'Good Morning,';
+  if(h>=12&&h<17)return'Good Afternoon,';
+  if(h>=17&&h<21)return'Good Evening,';
+  return'Good Night,';
+}
+
+// ── INIT GREETING ──
+(function(){
+  const day=getDayOfYear();
+  document.getElementById('navDay').textContent=`Day ${day}`;
+  document.getElementById('greetDay').textContent=`Day ${day} of 365`;
+  const g=getGreeting();
+  document.getElementById('greetLine').innerHTML=`${g}<br><em>Abstractian</em>`;
+  document.getElementById('greetCopy').textContent=getDailyCopy(day);
+})();
+
+// ── NAV SCROLL ──
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>60));
+
+// ── WORKS DATA ──
+let allWorks=[];
+
+async function loadWorks(){
+  try{
+    const data=await sbFetch('works','select=*&published=eq.true&order=number.asc');
+    if(Array.isArray(data)&&data.length){allWorks=data;renderFeatured();renderGallery(allWorks);loadSignals();}
+    else fallback();
+  }catch(e){fallback();}
+}
+
+function fallback(){
+  allWorks=[
+    {number:1,numeral:'I',title:'GENESIS',edition_type:'unique',states:['waves','lines'],has_lagniappe:false,html_github_url:null,description:'The first work.'},
+  ];
+  renderFeatured();renderGallery(allWorks);
+}
+
+// ── FEATURED WORK ──
+function renderFeatured(){
+  if(!allWorks.length)return;
+  // pick today's work by day-of-year mod
+  const idx=getDayOfYear()%allWorks.length;
+  const w=allWorks[idx];
+  const frame=document.getElementById('featuredFrame');
+  document.getElementById('featuredId').textContent=`${w.numeral} · No. ${w.number}`;
+  const t=w.title&&w.title!=='TBA'?w.title:'';
+  document.getElementById('featuredName').textContent=t?`${w.number} ABSTRACTIA ${w.numeral} — ${t}`:`ABSTRACTIA ${w.numeral}`;
+  const desc=w.description?w.description:'';
+  const descEl=document.getElementById('featuredDesc');
+  if(desc){descEl.textContent=desc;descEl.style.display='';}else{descEl.style.display='none';}
+  if(w.html_github_url){
+    frame.innerHTML=`<iframe src="${w.html_github_url}" scrolling="no" frameborder="0" allowfullscreen></iframe>`;
+  } else {
+    frame.innerHTML=`<canvas id="featuredCanvas"></canvas>`;
+    animateCanvas(frame.querySelector('canvas'),w);
+  }
+  const cb=document.getElementById('featuredCollect');
+  if(w.collect_url){cb.href=w.collect_url;cb.style.display='';}else cb.style.display='none';
+  const ab=document.getElementById('featuredArticle');
+  if(w.article_url){ab.href=w.article_url;ab.style.display='';}else ab.style.display='none';
+  window._featuredWork=w;
+}
+
+// ── ANIMATED CANVAS FALLBACK ──
+const PALETTES={
+  morning:['#FF8C69','#FFB347','#FFA07A','#FF6347','#98D1B0'],
+  day:['#64B5F6','#4FC3F7','#80DEEA','#FF8C69','#FFB347'],
+  evening:['#FF6B35','#F7C948','#E84855','#FF2D78','#9B5DE5'],
+  night:['#9B5DE5','#845EC2','#534AB7','#FF2D78','#C8A2C8'],
+};
+function getCurrentPalette(){
+  const h=getHour();
+  if(h>=5&&h<10)return PALETTES.morning;
+  if(h>=10&&h<17)return PALETTES.day;
+  if(h>=17&&h<20)return PALETTES.evening;
+  return PALETTES.night;
+}
+function animateCanvas(canvas,work){
+  if(!canvas)return;
+  const pal=work?getCurrentPalette():getCurrentPalette();
+  let t=(work?work.number*1.7:0);
+  function draw(){
+    if(!canvas.offsetWidth){requestAnimationFrame(draw);return;}
+    const ctx=canvas.getContext('2d');
+    const W=canvas.width=canvas.offsetWidth,H=canvas.height=canvas.offsetHeight;
+    ctx.fillStyle='#040407';ctx.fillRect(0,0,W,H);
+    for(let i=0;i<9;i++){
+      const prog=i/9;
+      ctx.beginPath();ctx.strokeStyle=pal[i%pal.length];ctx.lineWidth=1.5+prog*2;ctx.globalAlpha=0.3+prog*0.5;
+      const y=H*0.1+prog*H*0.8,amp=12+prog*30+Math.sin(t*0.25+i)*6;
+      ctx.moveTo(0,y);
+      for(let x=0;x<=W;x+=3)ctx.lineTo(x,y+Math.sin(x*0.007+t*(0.3+prog*0.25)+i*1.1)*amp+Math.sin(x*0.013+t*0.15+i)*amp*0.3);
+      ctx.stroke();
+    }
+    ctx.globalAlpha=1;t+=0.013;requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// ── GALLERY ──
+const ED_BADGE={unique:'badge-unique',editions:'badge-editions',limited:'badge-limited',open:'badge-open',monthly:'badge-monthly',tbd:'badge-editions',custom:'badge-editions',partner:'badge-editions'};
+const ED_LABEL={unique:'Unique 1/1',editions:'Editions',limited:'Limited 420',open:'Open',monthly:'Monthly',tbd:'Editions',custom:'Editions',partner:'Partner'};
+const STATE_MAP={gm:'badge-gm',pm:'badge-gm',evening:'badge-evening',night:'badge-night',waves:'badge-waves',lines:'badge-editions',wkd:'badge-lagniappe',lagniappe:'badge-lagniappe','420':'badge-editions'};
+
+function stateBadges(w){
+  const s=Array.isArray(w.states)?w.states:[];
+  const badges=[];
+  if(w.has_lagniappe)badges.push({cls:'badge-lagniappe',lbl:'Lagniappe'});
+  s.forEach(st=>{
+    if(STATE_MAP[st]&&!badges.find(b=>b.lbl===st))badges.push({cls:STATE_MAP[st],lbl:st.toUpperCase()});
+  });
+  return badges.slice(0,4).map(b=>`<span class="badge ${b.cls}">${b.lbl}</span>`).join('');
+}
+
+function renderGallery(works){
+  const g=document.getElementById('galleryGrid');
+  const c=document.getElementById('workCount');
+  if(!works.length){g.innerHTML='<div style="font-family:var(--fm);font-size:9px;letter-spacing:0.2em;color:var(--mut);padding:40px;text-align:center;grid-column:1/-1">No works found.</div>';return;}
+  c.textContent=`${works.length} works`;
+  g.innerHTML='';
+  works.forEach(w=>{
+    const card=document.createElement('div');
+    card.className='g-card';
+    const ebc=ED_BADGE[w.edition_type]||'badge-editions';
+    const ebl=ED_LABEL[w.edition_type]||'Editions';
+    const t=w.title&&w.title!=='TBA'?w.title:'—';
+    card.innerHTML=`
+      <div class="g-card-frame">
+        ${w.html_github_url?`<iframe src="${w.html_github_url}" scrolling="no" frameborder="0" tabindex="-1"></iframe>`:`<canvas></canvas>`}
+      </div>
+      <div class="g-card-info">
+        <p class="g-card-num">${w.numeral} · ${w.number}</p>
+        <p class="g-card-title">${t}</p>
+        <div class="g-card-badges"><span class="badge ${ebc}">${ebl}</span>${stateBadges(w)}</div>
+        <p class="g-card-cta">View work ↗</p>
+      </div>`;
+    if(!w.html_github_url)animateCanvas(card.querySelector('canvas'),w);
+    card.addEventListener('click',()=>openWorkModal(w));
+    g.appendChild(card);
+  });
+}
+
+function filterWorks(f,btn){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  const filters={
+    all:()=>allWorks,
+    unique:()=>allWorks.filter(w=>w.edition_type==='unique'),
+    editions:()=>allWorks.filter(w=>w.edition_type!=='unique'),
+    lagniappe:()=>allWorks.filter(w=>w.has_lagniappe),
+    wkd:()=>allWorks.filter(w=>Array.isArray(w.states)&&w.states.includes('wkd')),
+    '420':()=>allWorks.filter(w=>Array.isArray(w.states)&&w.states.includes('420')),
+    untitled:()=>allWorks.filter(w=>!w.title||w.title==='TBA'),
+  };
+  renderGallery((filters[f]||filters.all)());
+}
+
+// ── HEATMAP ──
+let signals=[];
+async function loadSignals(){
+  try{
+    const data=await sbFetch('signals','select=handle,platform,lat,lng,city,country,hour_of_day,signaled_at&order=signaled_at.desc&limit=200');
+    if(Array.isArray(data))signals=data;
+    drawHeatmap();renderTickerSignals();renderDots();
+  }catch(e){}
+}
+
+function drawHeatmap(){
+  const canvas=document.getElementById('heatmap-canvas');
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width=canvas.offsetWidth,H=canvas.height=canvas.offsetHeight||280;
+  ctx.fillStyle='#111119';ctx.fillRect(0,0,W,H);
+  // Grid lines: 24 hour columns
+  for(let h=0;h<=24;h++){
+    const x=Math.round((h/24)*W);
+    ctx.strokeStyle='rgba(255,255,255,0.04)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();
+    if(h%6===0){
+      ctx.fillStyle='rgba(240,238,232,0.2)';ctx.font='9px Space Mono,monospace';
+      const labels=['12AM','6AM','12PM','6PM','12AM'];
+      ctx.fillText(labels[h/6]||'',x+3,H-6);
+    }
+  }
+  // Highlight current hour
+  const ch=getHour();
+  const cx=(ch/24)*W;
+  ctx.strokeStyle='rgba(255,45,120,0.3)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(cx,0);ctx.lineTo(cx,H);ctx.stroke();
+  // Plot dots
+  signals.forEach(s=>{
+    if(s.lat==null)return;
+    const hv=s.hour_of_day!=null?s.hour_of_day:12;
+    const x=(hv/24)*W+(Math.random()*16-8);
+    // lat: 90 to -90 → top to bottom
+    const y=((90-s.lat)/180)*H;
+    ctx.beginPath();ctx.arc(Math.max(4,Math.min(W-4,x)),Math.max(4,Math.min(H-4,y)),3,0,Math.PI*2);
+    ctx.fillStyle='rgba(255,45,120,0.7)';ctx.fill();
+  });
+  // Current time cursor label
+  ctx.fillStyle='var(--mag,#FF2D78)';ctx.font='bold 9px Space Mono,monospace';
+  ctx.fillText('NOW',cx+4,16);
+}
+
+function renderDots(){
+  const el=document.getElementById('heatmapDots');
+  if(!el)return;
+  el.innerHTML=signals.slice(0,30).map(s=>{
+    const h=s.handle?`@${s.handle}`:'anonymous';
+    const loc=s.city||s.country||'';
+    return`<div class="dot-pill"><span>◉</span><em style="color:var(--txt)">${h}</em>${loc?` · ${loc}`:''}</div>`;
+  }).join('');
+}
+
+function renderTickerSignals(){
+  if(!signals.length)return;
+  const track=document.getElementById('tickerTrack');
+  const items=signals.slice(0,20).map(s=>{
+    const h=s.handle?`@${s.handle}`:'someone';
+    return`<span class="ticker-item"><span>${h}</span> just sent a signal</span>`;
+  });
+  // double for infinite scroll
+  track.innerHTML=[...items,...items].join('');
+}
+
+// ── SUBSCRIBE ──
+let notifyMode='email';
+function setNotifyMode(m){
+  notifyMode=m;
+  ['email','sms','both'].forEach(k=>document.getElementById('toggle'+k.charAt(0).toUpperCase()+k.slice(1)).classList.remove('active'));
+  document.getElementById('toggle'+m.charAt(0).toUpperCase()+m.slice(1)).classList.add('active');
+  document.getElementById('subEmail').style.display=(m==='sms')?'none':'';
+  document.getElementById('subPhone').style.display=(m==='email')?'none':'';
+}
+async function submitSubscribe(){
+  const email=document.getElementById('subEmail').value.trim();
+  const phone=document.getElementById('subPhone').value.trim();
+  const handle=document.getElementById('subHandle').value.trim();
+  if(notifyMode!=='sms'&&!email){alert('Email required.');return;}
+  if(notifyMode!=='email'&&!phone){alert('Phone required.');return;}
+  const payload={email:email||null,phone:phone||null,handle:handle||null,notify_via:[notifyMode==='both'?'email':notifyMode,...(notifyMode==='both'?['sms']:[])],active:true};
+  await sbInsert('subscribers',payload);
+  document.getElementById('subSuccess').style.display='block';
+}
+
+// ── PARTNERSHIPS ──
+async function submitPartnership(){
+  const name=document.getElementById('pName').value.trim();
+  const email=document.getElementById('pEmail').value.trim();
+  const type=document.getElementById('pType').value;
+  if(!name||!email){alert('Name and email required.');return;}
+  const payload={
+    name,email,
+    organization:document.getElementById('pOrg').value.trim()||null,
+    inquiry_type:type||'general',
+    budget_range:document.getElementById('pBudget').value||null,
+    notes:document.getElementById('pNotes').value.trim()||null,
+    status:'new',
+  };
+  await sbInsert('inquiries',payload);
+  document.getElementById('partnerSuccess').style.display='inline';
+}
+
+// ── SCREENSHOT ──
+function takeScreenshot(){
+  const frame=document.getElementById('featuredFrame');
+  const canv=frame.querySelector('canvas');
+  if(!canv){alert('Open the fullscreen work to capture your unique moment.');return;}
+  const url=canv.toDataURL('image/png');
+  window._lastScreenshot=url;
+  // show in signal modal preview
+  const pc=document.getElementById('signalCanvas');
+  const pctx=pc.getContext('2d');
+  const img=new Image();img.onload=()=>{pc.width=img.width;pc.height=img.height;pctx.drawImage(img,0,0);};img.src=url;
+  openModal('signal-modal');
+}
+function openSignalModal(){ openModal('signal-modal'); }
+
+// ── SIGNALS ──
+let currentPlatform='x';
+function setPlatform(p){
+  currentPlatform=p;
+  ['x','ig','anon'].forEach(k=>document.getElementById('plat'+k.charAt(0).toUpperCase()+k.slice(1)).classList.remove('active'));
+  const map={x:'platX',instagram:'platIG',anonymous:'platAnon'};
+  if(map[p])document.getElementById(map[p]).classList.add('active');
+}
+async function submitSignal(){
+  const handle=document.getElementById('signalHandle').value.trim().replace(/^@/,'');
+  const wallet=document.getElementById('signalWallet').value.trim();
+  const work=window._featuredWork;
+  // Geo: request if available
+  const payload={
+    work_id:work?work.id:null,
+    work_number:work?work.number:null,
+    handle:handle||null,
+    platform:currentPlatform,
+    screenshot_url:window._lastScreenshot||null,
+    hour_of_day:getHour(),
+  };
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(pos=>{
+      payload.lat=pos.coords.latitude;payload.lng=pos.coords.longitude;
+      sbInsert('signals',payload);
+    },()=>{sbInsert('signals',payload);},{timeout:3000});
+  }else{await sbInsert('signals',payload);}
+  document.getElementById('signalSuccess').style.display='block';
+  setTimeout(()=>closeModal('signal-modal'),1800);
+  if(wallet){
+    // prompt wallet upsell gently
+    setTimeout(()=>alert('Want to share your wallet address with us? Drop it in the subscriber form and we\'ll keep you in the loop when your signal earns something.'),2000);
+  }
+}
+
+// ── WORK MODAL ──
+function openWorkModal(w){
+  document.getElementById('wModalId').textContent=`${w.numeral} · No. ${w.number}`;
+  const t=w.title&&w.title!=='TBA'?w.title:'Untitled';
+  document.getElementById('wModalTitle').textContent=t;
+  const frame=document.getElementById('wModalFrame');
+  if(w.html_github_url)frame.innerHTML=`<iframe src="${w.html_github_url}" style="position:absolute;inset:0;width:100%;height:100%;border:none" scrolling="no"></iframe>`;
+  else{frame.innerHTML='<canvas style="position:absolute;inset:0;width:100%;height:100%"></canvas>';animateCanvas(frame.querySelector('canvas'),w);}
+  document.getElementById('wModalBadges').innerHTML=`<span class="badge ${ED_BADGE[w.edition_type]||'badge-editions'}">${ED_LABEL[w.edition_type]||'Editions'}</span>${stateBadges(w)}`;
+  const d=w.description||'';
+  const dd=document.getElementById('wModalDesc');
+  if(d){dd.textContent=d;dd.style.display='';}else dd.style.display='none';
+  const acts=[];
+  if(w.collect_url)acts.push(`<a class="btn-primary" href="${w.collect_url}" target="_blank">Collect ↗</a>`);
+  if(w.article_url)acts.push(`<a class="btn-ghost" href="${w.article_url}" target="_blank">Article ↗</a>`);
+  if(w.html_github_url)acts.push(`<a class="btn-ghost" href="${w.html_github_url}" target="_blank">Fullscreen ↗</a>`);
+  document.getElementById('wModalActions').innerHTML=acts.join('');
+  openModal('work-modal');
+}
+
+// ── MODAL HELPERS ──
+function openModal(id){document.getElementById(id).classList.add('open');document.body.style.overflow='hidden';}
+function closeModal(id){
+  document.getElementById(id).classList.remove('open');
+  document.body.style.overflow='';
+  const f=document.getElementById('wModalFrame');
+  if(f&&id==='work-modal')f.innerHTML='';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal-bg.open').forEach(m=>{m.classList.remove('open');document.body.style.overflow='';});});
+
+// ── BOOT ──
+loadWorks();
+window.addEventListener('resize',drawHeatmap);
+</script>
+</body>
+</html>

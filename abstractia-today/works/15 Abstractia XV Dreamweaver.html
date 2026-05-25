@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.11.11/lib/p5.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/p5@0.7.0/lib/addons/p5.sound.min.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "mediabunny": "https://cdn.jsdelivr.net/npm/mediabunny@1.25.8/+esm"
+      }
+    }
+  </script>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
+      overflow: auto;
+      background: transparent;
+    }
+
+    main {
+      height: 100%;
+      display: flex;
+      overflow: auto;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #p5_loading {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      animation-delay: 1s;
+      color: #4e5d7b;
+      font-family: "FK Grotesk Regular", sans-serif;
+      font-size: 30px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 30px;
+      letter-spacing: -1.5px;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .5; }
+    }
+  </style>
+  <title>15 Abstractia XV Dreamweaver | Made on juno.transient.xyz</title>
+</head>
+<body>
+  
+    
+  <script>
+    let cnv;
+let isMobile;
+let imgAbstractLindia;
+let imgWifPatronsAbstractia;
+let img12AbstractiaSkelevaggioLovesAbstractiaRed;
+let imgBlaqqatTitle;
+let imgAbstractPanel; 
+let videoIXOpen;
+let fontRock3D;
+let audioVCurious;
+let audioSoftMystical;
+let button;
+
+let scene = 0; 
+let fadeAlpha = 0;
+let fadeRate = 3;
+let showAlternateView = false;
+let waveMode = 0; 
+let showOnenessMode = false;
+let showLinesMode = false;
+let showDGraphic = false; 
+let showControlsMenu = false;
+let showBgGif = true; 
+let bgBlendMode; 
+
+let colorsPalette = []; 
+let targetPaletteHex = [];
+let paletteLerpRate = 0.002; 
+let lastPaletteChangeTime = 0;
+let nextPaletteChangeDelay = 12000; 
+let bgScrollOffset = 0;
+let globalWavePhase = 0;
+
+let bubbles = [];
+
+const DAY_PALETTE = ["0000FF", "007FFF", "0096c7", "00b4d8", "1E90FF", "4169E1", "483D8B", "0000CD", "00008B", "000080"];
+const BORDEAUX_PALETTE = ["ff0054", "ff5400", "ffbd00", "e36414", "9a031e", "fb8b24", "ff0000", "800000", "590d22", "590d22"];
+const NEON_PALETTE = ["fdc5f5", "f7aef8", "b388eb", "8093f1", "72ddf7", "00f5d4", "00bbf9", "fee440"];
+const MIST_PALETTE = ["04a777", "6e9887", "b5bfa1", "8cffda", "d972ff", "3d348b", "7678ed", "f7b801"];
+
+const TRANSCENDENT_PALETTE = ["d7c0d0", "f7c7db", "f79ad3", "c86fc9", "8e518d"];
+const KINETIC_PALETTE = ["00272b", "e0ff4f", "ff6663", "ff2ecc", "a51080"];
+
+function preload() {
+  imgAbstractLindia = loadImage("https://dae.transientusercontent.xyz/uploads/ee55ee3a-c3c7-4095-b2dc-7baaef466749");
+  imgWifPatronsAbstractia = loadImage("https://dae.transientusercontent.xyz/uploads/01e851eb-76aa-472b-b3ae-3803d37e82dc");
+  fontRock3D = loadFont("https://dae.transientusercontent.xyz/uploads/fa827533-05e2-4540-b01f-5b7c3bcdeed4");
+  
+  img12AbstractiaSkelevaggioLovesAbstractiaRed = loadImage("https://dae.transientusercontent.xyz/uploads/c670dfc9-2295-4e42-9c21-53b40ddafddf", img => {
+    img.loadPixels();
+    let leftBound = img.width * 0.38 - 130; 
+    let rightBound = img.width * 0.62 + 190;
+    for (let y = 0; y < img.height; y++) {
+      for (let x = 0; x < img.width; x++) {
+        let i = (x + y * img.width) * 4;
+        let r = img.pixels[i], g = img.pixels[i+1], b = img.pixels[i+2];
+        let isGreen = (g > 70 && g > r * 1.05 && g > b * 1.05);
+        let inCenter = (x > leftBound && x < rightBound && y > img.height * 0.2 && y < img.height * 0.8);
+        
+        if (inCenter) {
+          if (isGreen) img.pixels[i+3] = 51; 
+        } else {
+          if (isGreen) {
+            let gray = (r + g + b) / 3;
+            img.pixels[i] = lerp(r, gray, 0.4);
+            img.pixels[i+1] = lerp(g, gray, 0.85); 
+            img.pixels[i+2] = lerp(b, gray, 0.4);
+          }
+        }
+      }
+    }
+    img.updatePixels();
+  });
+  
+  imgBlaqqatTitle = loadImage("https://dae.transientusercontent.xyz/uploads/b4357bf3-68c3-4ed4-a50b-01d254b3d6c3");
+  imgAbstractPanel = loadImage("https://dae.transientusercontent.xyz/uploads/b4036afe-6473-4439-9362-fd0d39f1923d");
+  audioVCurious = loadSound("https://dae.transientusercontent.xyz/uploads/caa54e58-6804-4376-af0d-465427ea0407"); 
+  audioSoftMystical = loadSound("https://dae.transientusercontent.xyz/uploads/09b2ffa5-2290-48e8-8815-eab2430d647e"); 
+}
+
+function getPaletteByTime() {
+    let h = hour(), m = minute();
+    let totalMins = h * 60 + m;
+
+    if (totalMins >= 1391 || totalMins <= 284) return { colors: KINETIC_PALETTE };
+    if ((totalMins >= 427 && totalMins <= 670) || (totalMins >= 1147 && totalMins <= 1390)) return { colors: TRANSCENDENT_PALETTE };
+
+    if (totalMins >= 980 && totalMins <= 1003) return { colors: MIST_PALETTE };
+    if ((totalMins >= 284 && totalMins <= 487) || (totalMins >= 791 && totalMins <= 1074)) return { colors: NEON_PALETTE };
+    if (totalMins >= 1260 || totalMins <= 141) return { colors: BORDEAUX_PALETTE };
+    
+    return { colors: DAY_PALETTE };
+}
+
+function setup() {
+  cnv = createCanvas(windowWidth, windowHeight);
+  imageMode(CENTER);
+  isMobile = (('ontouchstart' in window) || navigator.maxTouchPoints > 0) && width < 767;
+  cnv.elt.style.touchAction = 'none';
+  cnv.elt.addEventListener('touchmove', e => { e.preventDefault(); }, { passive: false });
+  
+  bgBlendMode = BLEND;
+
+  videoIXOpen = createVideo('https://dae.transientusercontent.xyz/uploads/6dff880b-c440-44d4-bf07-9df178237008');
+  videoIXOpen.elt.muted = true;
+  videoIXOpen.elt.setAttribute('playsinline', '');
+  videoIXOpen.elt.setAttribute('webkit-playsinline', '');
+  videoIXOpen.loop();
+  videoIXOpen.hide();
+
+  if (audioVCurious) { audioVCurious.setLoop(true); audioVCurious.setVolume(0.5); }
+  
+  button = createButton('GET ABSTRACT');
+  button.mousePressed(handleDiveIn);
+  
+  let style = createElement('style', `
+    @font-face {
+      font-family: 'Rock3D-Regular';
+      src: url('https://dae.transientusercontent.xyz/uploads/fa827533-05e2-4540-b01f-5b7c3bcdeed4');
+    }
+    @keyframes pulseGlow {
+      from { text-shadow: 0 0 10px #E0FFFF, 0 0 20px #E0FFFF; transform: scale(1) translate(-50%, -50%); }
+      to { text-shadow: 0 0 30px #E0FFFF, 0 0 50px #fff; transform: scale(1.05) translate(-50%, -50%); }
+    }
+  `);
+  
+  styleButton();
+  
+  let initial = getPaletteByTime(); 
+  targetPaletteHex = [...initial.colors];
+  for (let hex of targetPaletteHex) colorsPalette.push(color('#' + hex));
+}
+
+function styleButton() {
+  button.style('font-family', "'Rock3D-Regular', cursive"); 
+  button.style('font-size', '60px'); 
+  button.style('padding', '5px 15px');
+  button.style('border', 'none');
+  button.style('background-color', 'transparent');
+  button.style('color', '#E0FFFF'); 
+  button.style('cursor', 'pointer');
+  button.style('white-space', 'nowrap');
+  button.style('opacity', '0.9');
+  button.style('animation', 'pulseGlow 1.8s infinite alternate ease-in-out');
+  button.position(width * 0.5, height * 0.7);
+  button.style('transform', 'translate(-50%, -50%)');
+}
+
+function updatePalette() {
+  let now = millis();
+  if (now - lastPaletteChangeTime > nextPaletteChangeDelay) {
+    let result = getPaletteByTime();
+    targetPaletteHex = [...result.colors];
+    lastPaletteChangeTime = now;
+  }
+}
+
+function lerpPalettes() {
+    for (let i = 0; i < targetPaletteHex.length; i++) {
+        let targetColor = color('#' + targetPaletteHex[i]);
+        colorsPalette[i] = colorsPalette[i] ? lerpColor(colorsPalette[i], targetColor, paletteLerpRate) : targetColor;
+    }
+}
+
+function keyPressed() {
+  if (key === 'b' || key === 'B') resetToWelcome();
+  else if (scene === 2) {
+    if (key === 'a' || key === 'A') {
+        showAlternateView = !showAlternateView;
+        if (showAlternateView) showControlsMenu = false;
+    }
+    else if (key === 'w' || key === 'W') waveMode = (waveMode + 1) % 4;
+    else if (key === 'o' || key === 'O') showOnenessMode = !showOnenessMode;
+    else if (key === 'l' || key === 'L') showLinesMode = !showLinesMode;
+    else if (key === 'i' || key === 'I') {
+        showControlsMenu = !showControlsMenu;
+        if (showControlsMenu) showAlternateView = false; 
+    }
+    else if (key === 'd' || key === 'D') showDGraphic = !showDGraphic;
+    else if (key === 's' || key === 'S') showBgGif = !showBgGif;
+    else if (key === 'c' || key === 'C') {
+        bgBlendMode = (bgBlendMode === BLEND) ? SCREEN : (bgBlendMode === SCREEN ? HARD_LIGHT : BLEND);
+    }
+  }
+}
+
+function resetToWelcome() {
+  scene = 0; 
+  fadeAlpha = 0;
+  showAlternateView = showOnenessMode = showLinesMode = showControlsMenu = false;
+  showBgGif = true; waveMode = 0; bgBlendMode = BLEND;
+  videoIXOpen.loop();
+  button.show();
+}
+
+function drawVibrantBackground() {
+  if (showBgGif) {
+    push();
+    let r = max(width / imgAbstractLindia.width, height / imgAbstractLindia.height);
+    image(imgAbstractLindia, width / 2, height / 2, imgAbstractLindia.width * r, imgAbstractLindia.height * r);
+    pop();
+  }
+
+  bgScrollOffset += 0.0012; 
+  push();
+  blendMode(bgBlendMode);
+  noStroke();
+  translate(width/2, height/2);
+  
+  let layers = 15;
+  let maxDim = max(width, height) * 1.8;
+
+  for (let i = 0; i < layers; i++) {
+    let c = colorsPalette[i % colorsPalette.length];
+    if (!c) continue; 
+    let finalAlpha = showBgGif ? 85 : 185;
+    fill(red(c), green(c), blue(c), finalAlpha);
+    
+    beginShape();
+    let ringRadius = (i * (maxDim / layers) + (bgScrollOffset * 100)) % maxDim;
+    for (let a = 0; a < TWO_PI; a += TWO_PI / 15) {
+      let noiseVal = noise(cos(a) * 0.3, sin(a) * 0.3, bgScrollOffset * 0.5 + i * 0.05);
+      let r = ringRadius + noiseVal * 40; 
+      vertex(cos(a) * r, sin(a) * r);
+    }
+    beginContour();
+    for (let a = TWO_PI; a > 0; a -= TWO_PI / 15) {
+       let r = ringRadius * 0.88;
+       vertex(cos(a) * r, sin(a) * r);
+    }
+    endContour();
+    endShape(CLOSE);
+  }
+  pop();
+}
+
+function handleBubbles() {
+  let bPos = button.position();
+  let bSize = button.size();
+  
+  if (mouseX > bPos.x - bSize.width/2 && mouseX < bPos.x + bSize.width/2 && mouseY > bPos.y - bSize.height/2 && mouseY < bPos.y + bSize.height/2) {
+    if (frameCount % 3 === 0) {
+      bubbles.push({
+        x: mouseX + random(-25, 25),
+        y: mouseY + random(-10, 10),
+        vx: random(-1, 1),
+        vy: random(-1.5, -4),
+        s: random(4, 12),
+        a: 200
+      });
+    }
+  }
+
+  for (let i = bubbles.length - 1; i >= 0; i--) {
+    let b = bubbles[i];
+    b.x += b.vx;
+    b.y += b.vy;
+    b.a -= 2.5;
+    noStroke();
+    fill(224, 255, 255, b.a); 
+    ellipse(b.x, b.y, b.s);
+    if (b.a <= 0) bubbles.splice(i, 1);
+  }
+}
+
+function draw() {
+  updatePalette(); 
+  lerpPalettes(); 
+  background(0);
+  
+  if (scene <= 1) {
+    drawVibrantBackground();
+    drawWelcomeScreen();
+    handleBubbles();
+  } else {
+    drawVibrantBackground();
+    if (waveMode > 0) drawTransverseLogic();
+    if (showOnenessMode) drawOneness();
+    if (showLinesMode) drawLinesMode();
+    if (showDGraphic) drawOverlay(imgBlaqqatTitle, BLEND, 240);
+    
+    // hierarchy check: "i" graphic (ControlsMenu) sits on top
+    if (showAlternateView) drawOverlay(img12AbstractiaSkelevaggioLovesAbstractiaRed, BLEND, 255);
+    if (showControlsMenu) drawOverlay(imgAbstractPanel, BLEND, 217); 
+  }
+  handleSceneTransitions();
+}
+
+function drawTransverseLogic() {
+  globalWavePhase += 0.005; 
+  push(); 
+  translate(width/2, height/2);
+  if (waveMode === 1) {
+    blendMode(ADD);
+    noFill();
+    for (let i = 0; i < 15; i++) {
+      let c = colorsPalette[i % colorsPalette.length];
+      if (!c) continue;
+      let r = (i * 60 + frameCount * 1.5) % (max(width, height));
+      stroke(red(c), green(c), blue(c), map(r, 0, width, 255, 0));
+      strokeWeight(4);
+      ellipse(0, 0, r, r);
+    }
+  } else if (waveMode === 2) {
+    blendMode(SCREEN);
+    for (let i = 0; i < 8; i++) {
+      let c = colorsPalette[i % colorsPalette.length];
+      if (!c) continue;
+      let r = (i * 100 + frameCount * 1.2) % (max(width, height));
+      fill(red(c), green(c), blue(c), map(r, 0, width, 160, 0));
+      noStroke();
+      beginShape();
+      for(let a = 0; a < TWO_PI; a += PI/3) {
+        let x = cos(a) * r;
+        let y = sin(a) * r;
+        vertex(x, y);
+      }
+      beginContour();
+      for(let a = TWO_PI; a > 0; a -= PI/3) {
+        let x = cos(a) * (r * 0.92);
+        let y = sin(a) * (r * 0.92);
+        vertex(x, y);
+      }
+      endContour();
+      endShape(CLOSE);
+    }
+  } else if (waveMode === 3) {
+    blendMode(ADD);
+    for (let i = 0; i < 20; i++) {
+      let c = colorsPalette[i % colorsPalette.length];
+      if (!c) continue;
+      let pulse = sin(frameCount * 0.01 + i) * 60;
+      let r = (i * 50 + frameCount * 2) % (width);
+      stroke(red(c), green(c), blue(c), map(r, 0, width, 220, 0));
+      strokeWeight(2);
+      noFill();
+      ellipse(0, 0, r + pulse, r - pulse);
+    }
+  }
+  pop();
+}
+
+function drawOneness() {
+  let breathe = map(sin(frameCount * 0.012), -1, 1, 0.7, 1.9);
+  push();
+  translate(width/2, height/2);
+  noFill();
+  for(let i = 0; i < 22; i++) {
+    let c = colorsPalette[i % colorsPalette.length];
+    if (!c) continue;
+    stroke(red(c), green(c), blue(c), 190);
+    strokeWeight(2 + i * 0.15);
+    rotate(frameCount * 0.0004 + i * 0.015);
+    let r = (120 + i * 15) * breathe;
+    beginShape();
+    for(let a = 0; a < TWO_PI; a += PI/12) {
+      let offset = noise(i * 0.6, a, frameCount * 0.004) * 160;
+      vertex(cos(a) * (r + offset), sin(a) * (r + offset));
+    }
+    endShape(CLOSE);
+  }
+  pop();
+}
+
+function drawLinesMode() {
+  let breathe = map(sin(frameCount * 0.012), -1, 1, 0.4, 3.2);
+  let pulseInten = map(sin(frameCount * 0.02), -1, 1, 0.8, 1.2);
+  push();
+  translate(width/2, height/2);
+  blendMode(ADD);
+  for(let i = 0; i < 90; i++) {
+    let c = colorsPalette[i % colorsPalette.length];
+    if (!c) continue;
+    stroke(red(c), green(c), blue(c), 140 * pulseInten);
+    strokeWeight(1.4);
+    let angle = i * (TWO_PI / 90) + frameCount * 0.002;
+    let x1 = cos(angle) * (20 * breathe);
+    let y1 = sin(angle) * (20 * breathe);
+    let x2 = cos(angle) * (width * 0.75 * breathe * pulseInten);
+    let y2 = sin(angle) * (height * 0.75 * breathe * pulseInten);
+    line(x1, y1, x2, y2);
+    noStroke();
+    fill(red(c), green(c), blue(c), 200);
+    ellipse(x2, y2, 5, 5);
+  }
+  pop();
+}
+
+function handleSceneTransitions() {
+  if (scene === 0) {
+    button.show();
+  } else if (scene === 1) {
+    fadeAlpha += fadeRate; 
+    fill(0, fadeAlpha); 
+    rect(0, 0, width, height);
+    if (fadeAlpha >= 255) { 
+      scene = 2; 
+      videoIXOpen.pause(); 
+    }
+    button.hide();
+  } else {
+    fadeAlpha -= fadeRate; 
+    fill(0, max(0, fadeAlpha)); 
+    rect(0, 0, width, height);
+  }
+}
+
+function drawWelcomeScreen() {
+  if (!videoIXOpen) return;
+  push(); 
+  tint(255, 204); 
+  let r = max(width / videoIXOpen.width, height / videoIXOpen.height);
+  image(videoIXOpen, width / 2, height / 2, videoIXOpen.width * r, videoIXOpen.height * r);
+  pop();
+}
+
+function drawOverlay(media, bMode, alphaVal) {
+  if (!media || media.width === 0) return;
+  push(); 
+  blendMode(bMode); 
+  tint(255, alphaVal);
+  let r = max(width / media.width, height / media.height);
+  image(media, width / 2, height / 2, media.width * r, media.height * r);
+  pop();
+}
+
+function handleDiveIn() {
+  if (getAudioContext().state !== 'running') getAudioContext().resume();
+  scene = 1; 
+  button.attribute('disabled', '');
+  if (audioSoftMystical) audioSoftMystical.play();
+}
+
+function windowResized() { 
+  resizeCanvas(windowWidth, windowHeight); 
+  styleButton();
+}
+  </script>
+
+
+</body></html>

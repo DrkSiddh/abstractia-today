@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.11.11/lib/p5.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/p5@0.7.0/lib/addons/p5.sound.min.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "mediabunny": "https://cdn.jsdelivr.net/npm/mediabunny@1.25.8/+esm"
+      }
+    }
+  </script>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
+      overflow: auto;
+      background: transparent;
+    }
+
+    main {
+      height: 100%;
+      display: flex;
+      overflow: auto;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #p5_loading {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      animation-delay: 1s;
+      color: #4e5d7b;
+      font-family: "FK Grotesk Regular", sans-serif;
+      font-size: 30px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 30px;
+      letter-spacing: -1.5px;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .5; }
+    }
+  </style>
+  <title>40 Abstractia XXXX Hindsight | Made on juno.transient.xyz</title>
+</head>
+<body>
+  
+    
+  <script>
+    let cnv;
+let isMobile;
+let imgAbstractLindia, imgWifPatronsAbstractia, img16AbstractiaXVIDuo, imgBlaqqatTitle;
+let imgAbstractiaInteractivePanelHUD, video40AbstractiaOpening;
+let fontRock3D;
+let audio40AbstractiaHarmonicKissing, audioHarmonicSmooch, audio40LinesAbstractia, audio40WavesAbstractia;
+let audio40WWWModeAbstractia, audio40WWModeAbstractia, audio40SauceMode;
+let button;
+
+let scene = 0; 
+let fadeAlpha = 0;
+let fadeRate = 3;
+let showAlternateView = false;
+let waveMode = 0; 
+let showOnenessMode = false;
+let showLinesMode = false;
+let showDGraphic = false; 
+let showControlsMenu = false;
+let showBgGif = false; 
+let bgBlendMode; 
+let isQuiet = false;
+
+let colorsPalette = []; 
+let targetPaletteHex = [];
+let paletteLerpRate = 0.002; 
+let lastPaletteChangeTime = 0;
+let nextPaletteChangeDelay = 12000; 
+let bgScrollOffset = 0;
+let globalAnchorX, globalAnchorY;
+
+let bubbles = [];
+
+const DAY_PALETTE = ["0000FF", "007FFF", "0096c7", "00b4d8", "1E90FF", "4169E1", "483D8B", "0000CD", "00008B", "000080"];
+const BORDEAUX_PALETTE = ["ff0054", "ff5400", "ffbd00", "e36414", "9a031e", "fb8b24", "ff0000", "800000", "590d22", "590d22"];
+const NEON_PALETTE = ["fdc5f5", "f7aef8", "b388eb", "8093f1", "72ddf7", "00f5d4", "00bbf9", "fee440"];
+const MIST_PALETTE = ["04a777", "6e9887", "b5bfa1", "8cffda", "d972ff", "3d348b", "7678ed", "f7b801"];
+const TRANSCENDENT_PALETTE = ["d7c0d0", "f7c7db", "f79ad3", "c86fc9", "8e518d"];
+const KINETIC_PALETTE = ["00272b", "e0ff4f", "ff6663", "ff2ecc", "a51080"];
+const SCSS_GRADIENT_PALETTE = ["af2bbf", "a14ebf", "6c91bf", "5fb0b7", "5bc8af"];
+
+function preload() {
+  imgAbstractLindia = loadImage("https://dae.transientusercontent.xyz/uploads/ee55ee3a-c3c7-4095-b2dc-7baaef466749");
+  imgWifPatronsAbstractia = loadImage("https://dae.transientusercontent.xyz/uploads/01e851eb-76aa-472b-b3ae-3803d37e82dc");
+  fontRock3D = loadFont("https://dae.transientusercontent.xyz/uploads/fa827533-05e2-4540-b01f-5b7c3bcdeed4");
+  
+  img16AbstractiaXVIDuo = loadImage("https://dae.transientusercontent.xyz/uploads/080ca4ed-a8fa-4c30-81f8-9487ba195264", img => {
+    img.loadPixels();
+    for (let i = 0; i < img.pixels.length; i += 4) {
+      let r = img.pixels[i], g = img.pixels[i+1], b = img.pixels[i+2];
+      let y = floor((i / 4) / img.width);
+      if (y < img.height - 280) {
+        if (g > 190 && g > r * 1.8 && g > b * 1.8) img.pixels[i+3] = 0; 
+      }
+    }
+    img.updatePixels();
+  });
+  
+  imgBlaqqatTitle = loadImage("https://dae.transientusercontent.xyz/uploads/b4357bf3-68c3-4ed4-a50b-01d254b3d6c3");
+  imgAbstractiaInteractivePanelHUD = loadImage("https://dae.transientusercontent.xyz/uploads/c5927594-99c0-4645-886e-916c19fdbce3");
+  
+  audio40AbstractiaHarmonicKissing = loadSound("https://dae.transientusercontent.xyz/uploads/78096725-6f55-4a29-975a-e6502bff85ac");
+  audioHarmonicSmooch = loadSound("https://dae.transientusercontent.xyz/uploads/dc7f37c7-0e27-460e-9cea-984bb311b7ac");
+  audio40LinesAbstractia = loadSound("https://dae.transientusercontent.xyz/uploads/286a86a5-e509-4adf-a40d-483f26c8b894");
+  audio40WavesAbstractia = loadSound("https://dae.transientusercontent.xyz/uploads/ea05e69c-233e-4796-9c75-ea11c53d1b3f");
+  
+  audio40WWWModeAbstractia = loadSound("https://dae.transientusercontent.xyz/uploads/f38e5bcf-cf65-47d6-a8b0-cd2420fc8401");
+  audio40WWModeAbstractia = loadSound("https://dae.transientusercontent.xyz/uploads/eaf6b706-bb1f-4847-8ef2-8c9fcca3424b");
+  audio40SauceMode = loadSound("https://dae.transientusercontent.xyz/uploads/ffae97e7-1f2a-489a-9ecc-1b5f7631ebb3");
+}
+
+function getPaletteByTime() {
+    let h = hour(), m = minute();
+    let totalMins = h * 60 + m;
+    if (totalMins >= 1020 && totalMins <= 1329) return { colors: SCSS_GRADIENT_PALETTE };
+    if (totalMins >= 671 && totalMins <= 932) return { colors: SCSS_GRADIENT_PALETTE };
+    if ((totalMins >= 791 && totalMins <= 979) || (totalMins >= 71 && totalMins <= 283)) return { colors: KINETIC_PALETTE };
+    if (totalMins >= 1391 || totalMins <= 284) return { colors: KINETIC_PALETTE };
+    if ((totalMins >= 427 && totalMins <= 670) || (totalMins >= 1147 && totalMins <= 1390)) return { colors: TRANSCENDENT_PALETTE };
+    if (totalMins >= 980 && totalMins <= 1003) return { colors: MIST_PALETTE };
+    if (totalMins >= 284 && totalMins <= 487) return { colors: NEON_PALETTE };
+    if (totalMins >= 1260 || totalMins <= 141) return { colors: BORDEAUX_PALETTE };
+    return { colors: DAY_PALETTE };
+}
+
+function setup() {
+  cnv = createCanvas(windowWidth, windowHeight);
+  imageMode(CENTER);
+  isMobile = (('ontouchstart' in window) || navigator.maxTouchPoints > 0) && width < 767;
+  cnv.elt.style.touchAction = 'none';
+  cnv.elt.addEventListener('touchmove', e => { e.preventDefault(); }, { passive: false });
+  
+  bgBlendMode = BLEND;
+
+  video40AbstractiaOpening = createVideo('https://dae.transientusercontent.xyz/uploads/a9b28bcd-450d-4c10-b9bb-9b1493bc1055');
+  video40AbstractiaOpening.elt.muted = true;
+  video40AbstractiaOpening.elt.setAttribute('playsinline', '');
+  video40AbstractiaOpening.elt.setAttribute('webkit-playsinline', '');
+  video40AbstractiaOpening.loop();
+  video40AbstractiaOpening.hide();
+
+  audio40AbstractiaHarmonicKissing.setLoop(true);
+  audioHarmonicSmooch.setLoop(true);
+  audio40LinesAbstractia.setLoop(true);
+  audio40WavesAbstractia.setLoop(true);
+  audio40WWWModeAbstractia.setLoop(true);
+  audio40WWModeAbstractia.setLoop(true);
+  audio40SauceMode.setLoop(true);
+  
+  button = createButton('GET ABSTRACT');
+  button.mousePressed(handleDiveIn);
+  
+  let style = createElement('style', `
+    @font-face { font-family: 'Rock3D-Regular'; src: url('https://dae.transientusercontent.xyz/uploads/fa827533-05e2-4540-b01f-5b7c3bcdeed4'); }
+    @keyframes pulseGlow {
+      from { text-shadow: 0 0 15px #E0FFFF, 0 0 30px #E0FFFF; transform: scale(1) translate(-50%, -50%); }
+      to { text-shadow: 0 0 45px #E0FFFF, 0 0 75px #fff; transform: scale(1.08) translate(-50%, -50%); }
+    }
+  `);
+  
+  styleButton();
+  
+  let initial = getPaletteByTime(); 
+  targetPaletteHex = [...initial.colors];
+  for (let hex of targetPaletteHex) colorsPalette.push(color('#' + hex));
+}
+
+function styleButton() {
+  button.style('font-family', "'Rock3D-Regular', cursive"); 
+  button.style('font-size', '72px'); 
+  button.style('padding', '20px 40px');
+  button.style('border', 'none');
+  button.style('background-color', 'transparent');
+  button.style('color', '#E0FFFF'); 
+  button.style('cursor', 'pointer');
+  button.style('white-space', 'nowrap');
+  button.style('animation', 'pulseGlow 1.8s infinite alternate ease-in-out');
+  button.position(width * 0.5, height * 0.7 + 100);
+  button.style('transform', 'translate(-50%, -50%)');
+}
+
+function syncAudio() {
+  if (getAudioContext().state !== 'running') getAudioContext().resume();
+
+  if (scene < 2) return;
+
+  let allAudio = [
+    audio40AbstractiaHarmonicKissing, audioHarmonicSmooch, 
+    audio40LinesAbstractia, audio40WavesAbstractia, 
+    audio40WWWModeAbstractia, audio40WWModeAbstractia, 
+    audio40SauceMode
+  ];
+
+  if (isQuiet) {
+    allAudio.forEach(a => a.setVolume(0, 1.5));
+    return;
+  }
+
+  // Base background layer
+  if (!audio40AbstractiaHarmonicKissing.isPlaying()) audio40AbstractiaHarmonicKissing.loop();
+  audio40AbstractiaHarmonicKissing.setVolume(0.4, 1.5);
+
+  // L Mode - 40 Lines Abstractia
+  if (showLinesMode) {
+    if (!audio40LinesAbstractia.isPlaying()) audio40LinesAbstractia.loop();
+    audio40LinesAbstractia.setVolume(0.7, 1.5);
+  } else {
+    audio40LinesAbstractia.setVolume(0, 1.5);
+  }
+
+  // Wave Modes Logic
+  if (waveMode === 1) { // "w"
+    if (!audio40WavesAbstractia.isPlaying()) audio40WavesAbstractia.loop();
+    audio40WavesAbstractia.setVolume(0.8, 1.5);
+    audio40WWModeAbstractia.setVolume(0, 1.5);
+    audio40WWWModeAbstractia.setVolume(0, 1.5);
+  } else if (waveMode === 2) { // "ww"
+    if (!audio40WWModeAbstractia.isPlaying()) audio40WWModeAbstractia.loop();
+    audio40WWModeAbstractia.setVolume(0.8, 1.5);
+    audio40WavesAbstractia.setVolume(0, 1.5);
+    audio40WWWModeAbstractia.setVolume(0, 1.5);
+  } else if (waveMode === 3) { // "www"
+    if (!audio40WWWModeAbstractia.isPlaying()) audio40WWWModeAbstractia.loop();
+    audio40WWWModeAbstractia.setVolume(0.8, 1.5);
+    audio40WavesAbstractia.setVolume(0, 1.5);
+    audio40WWModeAbstractia.setVolume(0, 1.5);
+  } else {
+    audio40WavesAbstractia.setVolume(0, 1.5);
+    audio40WWModeAbstractia.setVolume(0, 1.5);
+    audio40WWWModeAbstractia.setVolume(0, 1.5);
+  }
+
+  // S Mode - 40 Sauce Mode
+  if (showBgGif) {
+    if (!audio40SauceMode.isPlaying()) audio40SauceMode.loop();
+    audio40SauceMode.setVolume(0.75, 1.5);
+  } else {
+    audio40SauceMode.setVolume(0, 1.5);
+  }
+}
+
+function keyPressed() {
+  if (getAudioContext().state !== 'running') getAudioContext().resume();
+
+  if (key === 'b' || key === 'B') {
+    resetToWelcome();
+  } else if (scene === 2) {
+    if (key === 'a' || key === 'A') {
+      showAlternateView = !showAlternateView;
+      if (showAlternateView) showControlsMenu = false;
+    }
+    else if (key === 'w' || key === 'W') {
+      waveMode = (waveMode + 1) % 4;
+      syncAudio();
+    }
+    else if (key === 'o' || key === 'O') showOnenessMode = !showOnenessMode;
+    else if (key === 'l' || key === 'L') {
+      showLinesMode = !showLinesMode;
+      syncAudio();
+    }
+    else if (key === 'i' || key === 'I') {
+      showControlsMenu = !showControlsMenu;
+      if (showControlsMenu) showAlternateView = false; 
+    }
+    else if (key === 'd' || key === 'D') showDGraphic = !showDGraphic;
+    else if (key === 's' || key === 'S') {
+      showBgGif = !showBgGif;
+      syncAudio();
+    }
+    else if (key === 'c' || key === 'C') {
+      bgBlendMode = (bgBlendMode === BLEND) ? SCREEN : (bgBlendMode === SCREEN ? HARD_LIGHT : BLEND);
+    }
+    else if (key === 'q' || key === 'Q') {
+      isQuiet = !isQuiet;
+      syncAudio();
+    }
+  }
+}
+
+function resetToWelcome() {
+  scene = 0; 
+  fadeAlpha = 0;
+  showAlternateView = showOnenessMode = showLinesMode = showControlsMenu = false;
+  showBgGif = false; waveMode = 0; bgBlendMode = BLEND; isQuiet = false;
+  [
+    audio40AbstractiaHarmonicKissing, audioHarmonicSmooch, audio40LinesAbstractia, 
+    audio40WavesAbstractia, audio40WWWModeAbstractia, audio40WWModeAbstractia, audio40SauceMode
+  ].forEach(a => a.setVolume(0, 1.5));
+  video40AbstractiaOpening.loop();
+  button.show();
+}
+
+function drawVibrantBackground() {
+  if (showBgGif) {
+    push();
+    blendMode(SCREEN); 
+    tint(255, 180);
+    let r = max(width / imgAbstractLindia.width, height / imgAbstractLindia.height);
+    image(imgAbstractLindia, width / 2, height / 2, imgAbstractLindia.width * r, imgAbstractLindia.height * r);
+    pop();
+  }
+  bgScrollOffset += 0.0012; 
+  globalAnchorX = width / 2 + (noise(bgScrollOffset * 0.4, 0) - 0.5) * width * 0.45;
+  globalAnchorY = height / 2 + (noise(bgScrollOffset * 0.4, 500) - 0.5) * height * 0.45;
+  push();
+  blendMode(bgBlendMode);
+  let grad = drawingContext.createRadialGradient(globalAnchorX, globalAnchorY, 0, globalAnchorX, globalAnchorY, max(width, height) * 1.5);
+  let alphaVal = showBgGif ? 0.35 : 0.95;
+  for (let i = 0; i < colorsPalette.length; i++) {
+    let c = colorsPalette[i];
+    grad.addColorStop(i / (colorsPalette.length - 1), `rgba(${red(c)}, ${green(c)}, ${blue(c)}, ${alphaVal})`);
+  }
+  drawingContext.fillStyle = grad;
+  drawingContext.fillRect(0, 0, width, height);
+  pop();
+}
+
+function draw() {
+  updatePalette(); 
+  lerpPalettes(); 
+  background(0);
+  if (scene <= 1) {
+    drawVibrantBackground();
+    drawWelcomeScreen();
+    handleBubbles();
+  } else {
+    drawVibrantBackground();
+    if (waveMode > 0) drawTransverseLogic();
+    if (showOnenessMode) drawOneness();
+    if (showLinesMode) drawLinesMode();
+    if (showDGraphic) drawOverlay(imgBlaqqatTitle, BLEND, 240);
+    if (showAlternateView) drawOverlay(img16AbstractiaXVIDuo, BLEND, 255);
+    if (showControlsMenu) drawOverlay(imgAbstractiaInteractivePanelHUD, BLEND, 217); 
+  }
+  handleSceneTransitions();
+}
+
+function drawTransverseLogic() {
+  push(); 
+  translate(width/2, height/2);
+  if (waveMode === 1) {
+    blendMode(ADD);
+    for (let i = 0; i < 35; i++) {
+      let c = colorsPalette[i % colorsPalette.length];
+      push();
+      rotate(frameCount * 0.025 + i * 0.3);
+      let r = (i * 20 + frameCount * 4) % (width * 0.65);
+      stroke(red(c), green(c), blue(c), map(r, 0, width * 0.65, 255, 0));
+      strokeWeight(1.5);
+      noFill();
+      beginShape();
+      vertex(r, 0);
+      vertex(r + 30, 15);
+      vertex(r + 15, 30);
+      endShape(CLOSE);
+      pop();
+    }
+  } else if (waveMode === 2) {
+    blendMode(SCREEN);
+    for (let i = 0; i < 20; i++) {
+      let c = colorsPalette[i % colorsPalette.length];
+      push();
+      rotate(frameCount * 0.005 + i * (TWO_PI / 20));
+      let dist = map(sin(frameCount * 0.01 + i), -1, 1, 150, width * 0.45);
+      translate(dist, 0);
+      rotate(frameCount * 0.08);
+      fill(red(c), green(c), blue(c), 150);
+      beginShape();
+      vertex(0, -40); vertex(20, 0); vertex(0, 40); vertex(-20, 0);
+      endShape(CLOSE);
+      pop();
+    }
+  } else if (waveMode === 3) {
+    blendMode(ADD);
+    for (let i = 0; i < 20; i++) {
+      let c = colorsPalette[i % colorsPalette.length];
+      let pulse = sin(frameCount * 0.01 + i) * 60;
+      let r = (i * 50 + frameCount * 2) % (width);
+      stroke(red(c), green(c), blue(c), map(r, 0, width, 220, 0));
+      strokeWeight(2); noFill();
+      ellipse(0, 0, r + pulse, r - pulse);
+    }
+  }
+  pop();
+}
+
+function drawOneness() {
+  let breathe = map(sin(frameCount * 0.012), -1, 1, 0.7, 1.9);
+  push();
+  translate(globalAnchorX, globalAnchorY);
+  noFill();
+  for(let i = 0; i < 22; i++) {
+    let c = colorsPalette[i % colorsPalette.length];
+    stroke(red(c), green(c), blue(c), 190);
+    strokeWeight(2 + i * 0.15); rotate(frameCount * 0.0004 + i * 0.015);
+    let r = (120 + i * 15) * breathe;
+    beginShape();
+    for(let a = 0; a < TWO_PI; a += PI/12) {
+      let offset = noise(i * 0.6, a, frameCount * 0.004) * 160;
+      vertex(cos(a) * (r + offset), sin(a) * (r + offset));
+    }
+    endShape(CLOSE);
+  }
+  pop();
+}
+
+function drawLinesMode() {
+  let breathe = map(sin(frameCount * 0.012), -1, 1, 0.4, 3.2);
+  let pulseInten = map(sin(frameCount * 0.02), -1, 1, 0.8, 1.2);
+  push();
+  translate(width/2, height/2);
+  blendMode(ADD);
+  for(let i = 0; i < 90; i++) {
+    let c = colorsPalette[i % colorsPalette.length];
+    stroke(red(c), green(c), blue(c), 140 * pulseInten);
+    strokeWeight(1.4);
+    let angle = i * (TWO_PI / 90) + frameCount * 0.002;
+    let x2 = cos(angle) * (width * 0.75 * breathe * pulseInten);
+    let y2 = sin(angle) * (height * 0.75 * breathe * pulseInten);
+    line(cos(angle)*20*breathe, sin(angle)*20*breathe, x2, y2);
+    noStroke(); fill(red(c), green(c), blue(c), 200); ellipse(x2, y2, 5, 5);
+  }
+  pop();
+}
+
+function handleSceneTransitions() {
+  if (scene === 1) {
+    fadeAlpha += fadeRate; 
+    fill(0, fadeAlpha); rect(0, 0, width, height);
+    if (fadeAlpha >= 255) { 
+      scene = 2; 
+      video40AbstractiaOpening.pause();
+      syncAudio();
+    }
+    button.hide();
+  } else if (scene === 2) {
+    fadeAlpha -= fadeRate; fill(0, max(0, fadeAlpha)); rect(0, 0, width, height);
+  }
+}
+
+function drawWelcomeScreen() {
+  if (!video40AbstractiaOpening) return;
+  push(); blendMode(HARD_LIGHT); tint(255, 217); 
+  let r = max(width / video40AbstractiaOpening.width, height / video40AbstractiaOpening.height);
+  image(video40AbstractiaOpening, width / 2, height / 2, video40AbstractiaOpening.width * r, video40AbstractiaOpening.height * r);
+  pop();
+}
+
+function drawOverlay(media, bMode, alphaVal) {
+  if (!media || media.width === 0) return;
+  push(); blendMode(bMode); tint(255, alphaVal);
+  let r = max(width / media.width, height / media.height);
+  image(media, width / 2, height / 2, media.width * r, media.height * r);
+  pop();
+}
+
+function handleDiveIn() {
+  if (getAudioContext().state !== 'running') getAudioContext().resume();
+  scene = 1; 
+}
+
+function updatePalette() {
+  let now = millis();
+  if (now - lastPaletteChangeTime > nextPaletteChangeDelay) {
+    let result = getPaletteByTime();
+    targetPaletteHex = [...result.colors];
+    lastPaletteChangeTime = now;
+  }
+}
+
+function lerpPalettes() {
+    for (let i = 0; i < targetPaletteHex.length; i++) {
+        let targetColor = color('#' + targetPaletteHex[i]);
+        colorsPalette[i] = colorsPalette[i] ? lerpColor(colorsPalette[i], targetColor, paletteLerpRate) : targetColor;
+    }
+}
+
+function handleBubbles() {
+  let bPos = button.position(), bSize = button.size();
+  if (mouseX > bPos.x - bSize.width/2 && mouseX < bPos.x + bSize.width/2 && mouseY > bPos.y - bSize.height/2 && mouseY < bPos.y + bSize.height/2) {
+    if (frameCount % 3 === 0) bubbles.push({ x: mouseX + random(-50, 50), y: mouseY + random(-20, 20), vx: random(-2, 2), vy: random(-2, -6), s: random(8, 20), a: 200 });
+  }
+  for (let i = bubbles.length - 1; i >= 0; i--) {
+    let b = bubbles[i]; b.x += b.vx; b.y += b.vy; b.a -= 3;
+    noStroke(); fill(224, 255, 255, b.a); ellipse(b.x, b.y, b.s);
+    if (b.a <= 0) bubbles.splice(i, 1);
+  }
+}
+
+function windowResized() { resizeCanvas(windowWidth, windowHeight); styleButton(); }
+  </script>
+
+
+</body></html>
