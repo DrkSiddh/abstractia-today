@@ -4,205 +4,299 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ABSTRACTIA TODAY</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<meta name="description" content="Never-ending interactive art by Maxximillian. A daily ritual.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{--mag:#FF2D78;--void:#040407;--surf:#0C0C13;--bdr:rgba(255,255,255,0.07);--txt:#F0EEE8;--mut:rgba(240,238,232,0.42);--fd:'Bebas Neue',sans-serif;--fm:'Space Mono',monospace}
-html,body{height:100%;background:var(--void);color:var(--txt);font-family:var(--fm);overflow:hidden}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --mag:#FF2D78;--gold:#FFB830;--void:#040407;--surf:#0C0C13;--surf2:#111119;
+  --bdr:rgba(255,255,255,0.07);--txt:#F0EEE8;--mut:rgba(240,238,232,0.42);
+  --fd:'Bebas Neue',sans-serif;--fm:'Space Mono',monospace;--fb:'DM Sans',sans-serif;
+}
+html,body{height:100%;overflow:hidden}
+body{background:var(--void);color:var(--txt);font-family:var(--fb)}
 
-/* FULL SCREEN ART — loaded directly, no iframe */
-#art-container{position:fixed;inset:0;width:100%;height:100%;z-index:1}
-#art-container iframe{width:100%;height:100%;border:none;display:block}
+/* FULL SCREEN ART */
+#art-frame{position:fixed;inset:0;width:100%;height:100%;border:none;display:block;z-index:1}
 
-/* TOP */
-#top{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;justify-content:space-between;align-items:center;padding:20px 28px;background:linear-gradient(to bottom,rgba(4,4,7,0.8),transparent);pointer-events:none}
-.logo{font-family:var(--fd);font-size:22px;letter-spacing:0.06em;pointer-events:all;text-decoration:none;color:var(--txt)}
-.logo em{color:var(--mag);font-style:normal}
-.day-pill{font-family:var(--fm);font-size:9px;letter-spacing:0.22em;color:var(--mag);border:1px solid rgba(255,45,120,0.4);padding:5px 14px;pointer-events:all}
-.info-btn{width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,0.3);background:rgba(4,4,7,0.5);color:rgba(255,255,255,0.6);font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;pointer-events:all;transition:border-color 0.2s,color 0.2s}
-.info-btn:hover{border-color:var(--mag);color:var(--mag)}
+/* TOP BAR */
+#topbar{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:16px 24px;background:linear-gradient(to bottom,rgba(4,4,7,0.85) 0%,transparent 100%);pointer-events:none}
+.tb-logo{font-family:var(--fd);font-size:22px;letter-spacing:0.06em;color:var(--txt);pointer-events:all;text-decoration:none}
+.tb-logo em{color:var(--mag);font-style:normal}
+.tb-day{font-family:var(--fm);font-size:9px;letter-spacing:0.22em;color:var(--mag);text-transform:uppercase;pointer-events:all}
+.tb-info{width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,0.3);background:rgba(4,4,7,0.5);display:flex;align-items:center;justify-content:center;cursor:pointer;font-family:var(--fm);font-size:12px;color:rgba(255,255,255,0.6);pointer-events:all;transition:border-color 0.2s,color 0.2s}
+.tb-info:hover{border-color:var(--mag);color:var(--mag)}
 
-/* BOTTOM */
-#bot{position:fixed;bottom:0;left:0;right:0;z-index:10;padding:24px 28px;background:linear-gradient(to top,rgba(4,4,7,0.9),transparent)}
-.bot-row{display:flex;justify-content:space-between;align-items:flex-end;gap:20px}
-.work-num{font-size:8px;letter-spacing:0.25em;color:var(--mag);text-transform:uppercase;margin-bottom:4px}
-.work-name{font-family:var(--fd);font-size:clamp(22px,4vw,48px);letter-spacing:0.04em;line-height:1}
-.arrows{display:flex;align-items:center;gap:12px}
-.arr{width:44px;height:44px;border:1px solid rgba(255,255,255,0.2);background:rgba(4,4,7,0.7);color:var(--txt);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color 0.2s}
-.arr:hover{border-color:var(--mag)}
-.arr:disabled{opacity:0.2;cursor:default}
-.day-ctr{font-size:9px;letter-spacing:0.12em;color:var(--mut);min-width:52px;text-align:center}
-.collect{font-size:9px;letter-spacing:0.18em;text-transform:uppercase;padding:10px 22px;background:var(--mag);color:#fff;border:none;cursor:pointer;text-decoration:none;display:none;margin-bottom:4px}
+/* BOTTOM HUD */
+#bottomhud{position:fixed;bottom:0;left:0;right:0;z-index:10;padding:20px 24px;background:linear-gradient(to top,rgba(4,4,7,0.9) 0%,transparent 100%)}
+.hud-row{display:flex;align-items:flex-end;justify-content:space-between;gap:20px}
+.hud-left{}
+.work-label{font-family:var(--fm);font-size:8px;letter-spacing:0.25em;color:var(--mag);text-transform:uppercase;margin-bottom:4px}
+.work-title{font-family:var(--fd);font-size:clamp(24px,4vw,48px);letter-spacing:0.04em;line-height:1}
+.work-sub{font-family:var(--fm);font-size:9px;color:var(--mut);letter-spacing:0.12em;margin-top:4px}
 
-/* NO WORK */
-#nowork{position:fixed;inset:0;z-index:5;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px}
-#nowork canvas{position:absolute;inset:0;width:100%;height:100%}
-.nw{position:relative;z-index:2;max-width:440px}
-.nw h1{font-family:var(--fd);font-size:clamp(48px,9vw,96px);line-height:0.9;margin-bottom:16px}
-.nw h1 em{color:var(--mag);font-style:normal}
-.nw p{font-size:9px;letter-spacing:0.2em;color:var(--mut);text-transform:uppercase;line-height:1.9;margin-bottom:28px}
-.nw-form{display:flex;max-width:340px;margin:0 auto}
-.nw-input{flex:1;background:rgba(4,4,7,0.8);border:1px solid var(--bdr);border-right:none;color:var(--txt);font-family:var(--fm);font-size:11px;padding:12px 14px;outline:none}
-.nw-input:focus{border-color:var(--mag)}
-.nw-input::placeholder{color:var(--mut)}
-.nw-btn{font-size:9px;letter-spacing:0.15em;text-transform:uppercase;padding:12px 18px;background:var(--mag);color:#fff;border:none;cursor:pointer;white-space:nowrap}
-.nw-ok{font-size:9px;letter-spacing:0.2em;color:#FFB830;text-transform:uppercase;margin-top:14px;display:none}
-.nw-tb{font-size:8px;letter-spacing:0.18em;color:var(--mut);text-transform:uppercase;margin-top:28px;padding-top:20px;border-top:1px solid var(--bdr)}
-.nw-tb-btn{font-size:9px;letter-spacing:0.15em;text-transform:uppercase;padding:10px 24px;background:transparent;color:var(--txt);border:1px solid var(--bdr);cursor:pointer;margin-top:10px;transition:border-color 0.2s}
-.nw-tb-btn:hover{border-color:var(--mag);color:var(--mag)}
+/* ARROWS */
+.nav-arrows{display:flex;align-items:center;gap:12px}
+.arrow-btn{width:44px;height:44px;border:1px solid rgba(255,255,255,0.2);background:rgba(4,4,7,0.6);color:var(--txt);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color 0.2s,background 0.2s;backdrop-filter:blur(4px)}
+.arrow-btn:hover{border-color:var(--mag);background:rgba(255,45,120,0.1)}
+.arrow-btn:disabled{opacity:0.2;cursor:default}
+.day-counter{font-family:var(--fm);font-size:9px;letter-spacing:0.15em;color:var(--mut);text-align:center;min-width:60px}
+
+/* TODAY badge */
+.today-badge{font-family:var(--fm);font-size:8px;letter-spacing:0.15em;text-transform:uppercase;padding:4px 10px;border:1px solid var(--mag);color:var(--mag);background:rgba(255,45,120,0.08)}
+
+/* COLLECT */
+.collect-btn{font-family:var(--fm);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;padding:10px 22px;background:var(--mag);color:#fff;border:none;cursor:pointer;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);text-decoration:none;display:inline-block;transition:opacity 0.2s}
+.collect-btn:hover{opacity:0.85}
+
+/* NO WORK TODAY — email capture */
+#no-work{position:fixed;inset:0;z-index:5;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px}
+#no-work canvas{position:absolute;inset:0;width:100%;height:100%}
+.no-work-content{position:relative;z-index:2;max-width:480px}
+.no-work-headline{font-family:var(--fd);font-size:clamp(48px,8vw,96px);letter-spacing:0.02em;line-height:0.9;margin-bottom:16px}
+.no-work-headline em{color:var(--mag);font-style:normal}
+.no-work-sub{font-family:var(--fm);font-size:10px;letter-spacing:0.2em;color:var(--mut);text-transform:uppercase;margin-bottom:32px;line-height:1.8}
+.notify-form{display:flex;gap:0;max-width:360px;margin:0 auto}
+.notify-input{flex:1;background:rgba(4,4,7,0.8);border:1px solid var(--bdr);border-right:none;color:var(--txt);font-family:var(--fm);font-size:11px;padding:12px 16px;outline:none;letter-spacing:0.06em}
+.notify-input:focus{border-color:var(--mag)}
+.notify-input::placeholder{color:var(--mut)}
+.notify-btn{font-family:var(--fm);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;padding:12px 20px;background:var(--mag);color:#fff;border:none;cursor:pointer;white-space:nowrap}
+.notify-success{font-family:var(--fm);font-size:9px;letter-spacing:0.2em;color:var(--gold);text-transform:uppercase;margin-top:16px;display:none}
+.throwback-label{font-family:var(--fm);font-size:8px;letter-spacing:0.2em;color:var(--mut);text-transform:uppercase;margin-top:32px;padding-top:20px;border-top:1px solid var(--bdr)}
+.throwback-btn{font-family:var(--fm);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;padding:10px 24px;background:transparent;color:var(--txt);border:1px solid var(--bdr);cursor:pointer;margin-top:12px;transition:border-color 0.2s}
+.throwback-btn:hover{border-color:var(--mag);color:var(--mag)}
 
 /* INFO MODAL */
-#info{display:none;position:fixed;inset:0;z-index:50;background:rgba(4,4,7,0.92);align-items:center;justify-content:center}
-#info.open{display:flex}
-.info-box{background:var(--surf);border:1px solid var(--bdr);padding:40px;width:min(90vw,460px);position:relative}
-.info-x{position:absolute;top:12px;right:16px;background:none;border:none;color:var(--mut);font-size:22px;cursor:pointer}
-.info-x:hover{color:var(--mag)}
-.info-title{font-family:var(--fd);font-size:34px;letter-spacing:0.04em;margin-bottom:6px}
-.info-sub{font-size:8px;letter-spacing:0.22em;color:var(--mag);text-transform:uppercase;margin-bottom:20px}
-.keys{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
-.ki{display:flex;align-items:center;gap:8px;font-size:9px;color:var(--mut)}
-.kc{background:#111119;border:1px solid var(--bdr);padding:3px 8px;font-size:11px;color:var(--txt)}
-.info-p{font-size:12px;color:var(--mut);line-height:1.8;margin-top:12px}
+#info-modal{display:none;position:fixed;inset:0;z-index:50;background:rgba(4,4,7,0.92);align-items:center;justify-content:center;backdrop-filter:blur(8px)}
+#info-modal.open{display:flex}
+.modal-box{background:var(--surf);border:1px solid var(--bdr);padding:40px;width:min(90vw,480px);position:relative}
+.modal-close{position:absolute;top:12px;right:16px;background:none;border:none;color:var(--mut);font-size:22px;cursor:pointer}
+.modal-close:hover{color:var(--mag)}
+.modal-title{font-family:var(--fd);font-size:36px;letter-spacing:0.04em;margin-bottom:6px}
+.modal-sub{font-family:var(--fm);font-size:8px;letter-spacing:0.22em;color:var(--mag);text-transform:uppercase;margin-bottom:20px}
+.key-grid{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0}
+.key-item{display:flex;align-items:center;gap:8px;font-family:var(--fm);font-size:9px;color:var(--mut)}
+.key-chip{background:var(--surf2);border:1px solid var(--bdr);padding:3px 8px;font-size:11px;color:var(--txt)}
+.modal-body-text{font-size:13px;color:var(--mut);line-height:1.8}
+
+/* FOOTER STRIP */
+#footer-strip{position:fixed;bottom:0;left:0;right:0;z-index:20;display:none}
+
+/* LOADING */
+#loader{position:fixed;inset:0;z-index:100;background:var(--void);display:flex;align-items:center;justify-content:center;transition:opacity 0.5s}
+#loader.gone{opacity:0;pointer-events:none}
+.loader-logo{font-family:var(--fd);font-size:72px;letter-spacing:0.05em;animation:pulse 1.5s infinite}
+.loader-logo em{color:var(--mag);font-style:normal}
+@keyframes pulse{0%,100%{opacity:0.4}50%{opacity:1}}
 </style>
 </head>
 <body>
 
-<div id="art-container"></div>
+<div id="loader"><div class="loader-logo">ABSTR<em>A</em>CTIA</div></div>
 
-<div id="nowork">
-  <canvas id="bg"></canvas>
-  <div class="nw">
-    <h1>Day <em id="nwday">—</em><br>is coming.</h1>
-    <p>Today's ABSTRACTIA hasn't dropped yet.<br>Be first to know when it does.</p>
-    <div class="nw-form">
-      <input class="nw-input" type="email" id="nwemail" placeholder="your@email.com">
-      <button class="nw-btn" onclick="notify()">Notify me</button>
+<!-- FULL SCREEN ART -->
+<iframe id="art-frame" scrolling="no" frameborder="0" allowfullscreen></iframe>
+
+<!-- NO WORK TODAY screen -->
+<div id="no-work">
+  <canvas id="bg-canvas"></canvas>
+  <div class="no-work-content">
+    <div class="no-work-headline">Day <em id="noWorkDay">—</em><br>is coming.</div>
+    <p class="no-work-sub">Today's ABSTRACTIA hasn't dropped yet.<br>Be the first to know when it does.</p>
+    <div class="notify-form">
+      <input class="notify-input" type="email" id="notifyEmail" placeholder="your@email.com">
+      <button class="notify-btn" onclick="submitNotify()">Notify me</button>
     </div>
-    <div class="nw-ok" id="nwok">✓ You're on the list, Abstractian.</div>
-    <div class="nw-tb">While you wait</div>
-    <button class="nw-tb-btn" onclick="throwback()">Show me a throwback ↓</button>
+    <p class="notify-success" id="notifySuccess">✓ You're on the list, Abstractian.</p>
+    <div class="throwback-label">While you wait — a throwback</div>
+    <button class="throwback-btn" onclick="showThrowback()">Show me a random ABSTRACTIA ↓</button>
   </div>
 </div>
 
-<div id="top">
-  <a class="logo" href="/">ABSTR<em>A</em>CTIA</a>
-  <div class="day-pill" id="daypill">Day —</div>
-  <button class="info-btn" onclick="document.getElementById('info').classList.add('open')">ⓘ</button>
+<!-- TOP BAR -->
+<div id="topbar">
+  <a href="/" class="tb-logo">ABSTR<em>A</em>CTIA</a>
+  <div class="tb-day" id="topDay">Day —</div>
+  <button class="tb-info" onclick="openInfo()">ⓘ</button>
 </div>
 
-<div id="bot">
-  <div class="bot-row">
-    <div>
-      <div class="work-num" id="wnum"></div>
-      <div class="work-name" id="wname"></div>
-      <a class="collect" id="wcollect" href="#" target="_blank">Collect ↗</a>
+<!-- BOTTOM HUD -->
+<div id="bottomhud">
+  <div class="hud-row">
+    <div class="hud-left">
+      <div class="work-label" id="workLabel">Loading…</div>
+      <div class="work-title" id="workTitle"></div>
+      <div class="work-sub" id="workSub"></div>
     </div>
-    <div class="arrows">
-      <button class="arr" id="prev" onclick="go(-1)">←</button>
-      <div class="day-ctr" id="dctr"></div>
-      <button class="arr" id="next" onclick="go(1)">→</button>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:12px">
+      <a class="collect-btn" id="collectBtn" href="#" target="_blank" style="display:none">Collect ↗</a>
+      <div class="nav-arrows">
+        <button class="arrow-btn" id="prevBtn" onclick="navigate(-1)">←</button>
+        <div class="day-counter" id="dayCtr"></div>
+        <button class="arrow-btn" id="nextBtn" onclick="navigate(1)">→</button>
+      </div>
     </div>
   </div>
 </div>
 
-<div id="info" onclick="if(event.target===this)this.classList.remove('open')">
-  <div class="info-box">
-    <button class="info-x" onclick="document.getElementById('info').classList.remove('open')">×</button>
-    <div class="info-title">How to interact</div>
-    <div class="info-sub">ABSTRACTIA is alive</div>
-    <p class="info-p">Tap the canvas to wake the work. Press <strong>I</strong> to open the interactive menu.</p>
-    <div class="keys">
-      <div class="ki"><span class="kc">Tap</span>Wake</div>
-      <div class="ki"><span class="kc">I</span>Menu</div>
-      <div class="ki"><span class="kc">W</span>Waves</div>
-      <div class="ki"><span class="kc">L</span>Lines</div>
-      <div class="ki"><span class="kc">↑↓</span>Speed</div>
-      <div class="ki"><span class="kc">F</span>Fullscreen</div>
+<!-- INFO MODAL -->
+<div id="info-modal" onclick="if(event.target===this)closeInfo()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeInfo()">×</button>
+    <div class="modal-title">How to interact</div>
+    <div class="modal-sub">ABSTRACTIA is alive</div>
+    <p class="modal-body-text">Tap the canvas to wake the work. Then press <strong>I</strong> on your keyboard to open the interactive menu.</p>
+    <div class="key-grid">
+      <div class="key-item"><span class="key-chip">Tap</span> Wake the work</div>
+      <div class="key-item"><span class="key-chip">I</span> Interactive menu</div>
+      <div class="key-item"><span class="key-chip">W</span> Waves</div>
+      <div class="key-item"><span class="key-chip">L</span> Lines</div>
+      <div class="key-item"><span class="key-chip">↑↓</span> Speed</div>
+      <div class="key-item"><span class="key-chip">F</span> Fullscreen</div>
     </div>
-    <p class="info-p">The palette shifts with time of day. Come back tonight. It's always different.</p>
+    <p class="modal-body-text" style="margin-top:12px">The palette shifts with time of day. Come back at midnight. It's always different.</p>
   </div>
 </div>
 
 <script>
-const SB='https://xtkdnyqjheewsqnvugaj.supabase.co';
-const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0a2RueXFqaGVld3NxbnZ1Z2FqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1MTAyODQsImV4cCI6MjA5MTA4NjI4NH0.T8X7Q1fKjpkD1csafr1F9pD5OULu1DR_eTSeVa-Rhv0';
+const SB_URL='https://xtkdnyqjheewsqnvugaj.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0a2RueXFqaGVld3NxbnZ1Z2FqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1MTAyODQsImV4cCI6MjA5MTA4NjI4NH0.T8X7Q1fKjpkD1csafr1F9pD5OULu1DR_eTSeVa-Rhv0';
 
-function doy(){const n=new Date(),s=new Date(n.getFullYear(),0,0);return Math.floor((n-s)/86400000);}
-const TODAY=doy();
+function getDayOfYear(){
+  const n=new Date(),s=new Date(n.getFullYear(),0,0);
+  return Math.floor((n-s)/86400000);
+}
 
-document.getElementById('daypill').textContent='Day '+TODAY;
-document.getElementById('nwday').textContent=TODAY;
+let works=[];
+let currentIdx=0;
+const today=getDayOfYear();
 
-let works=[],idx=0;
+document.getElementById('topDay').textContent=`Day ${today}`;
+document.getElementById('noWorkDay').textContent=today;
 
 async function boot(){
-  const r=await fetch(`${SB}/rest/v1/works?select=number,numeral,title,html_github_url,collect_url&published=eq.true&order=number.asc`,{headers:{'apikey':KEY,'Authorization':'Bearer '+KEY}});
+  const r=await fetch(`${SB_URL}/rest/v1/works?select=number,numeral,title,html_github_url,collect_url,description&published=eq.true&order=number.asc`,{headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`}});
   works=await r.json();
-  // find today or most recent
-  let i=works.findIndex(w=>w.number===TODAY);
-  if(i<0){
-    // today not posted — show no-work screen
-    document.getElementById('nowork').style.display='flex';
-    document.getElementById('bot').style.display='none';
-    bgCanvas();
+
+  // find today's work (number == today) or closest without going over
+  let todayWork=works.find(w=>w.number===today);
+  let showNoWork=false;
+
+  if(!todayWork){
+    // today not posted — show email capture + random throwback
+    showNoWork=true;
+  }
+
+  if(showNoWork){
+    document.getElementById('no-work').style.display='flex';
+    document.getElementById('art-frame').style.display='none';
+    document.getElementById('bottomhud').style.display='none';
+    startBgCanvas();
+    document.getElementById('loader').classList.add('gone');
     return;
   }
-  idx=i;
-  show(idx);
+
+  // start at today's work
+  currentIdx=works.findIndex(w=>w.number===today);
+  if(currentIdx<0)currentIdx=works.length-1;
+  showWork(currentIdx);
 }
 
-function show(i){
-  const w=works[i];
-  idx=i;
-  // load art as iframe
-  const c=document.getElementById('art-container');
-  c.innerHTML='<iframe src="'+w.html_github_url+'" scrolling="no" frameborder="0" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms"></iframe>';
-  document.getElementById('wnum').textContent=w.numeral+' · Day '+w.number+(w.number===TODAY?' · TODAY':'');
-  const t=w.title&&w.title!=='TBA'?w.title:'ABSTRACTIA '+w.numeral;
-  document.getElementById('wname').textContent=t;
-  const cb=document.getElementById('wcollect');
-  if(w.collect_url){cb.href=w.collect_url;cb.style.display='inline-block';}else cb.style.display='none';
-  document.getElementById('dctr').textContent=w.number+' / '+TODAY;
-  document.getElementById('prev').disabled=(i===0);
-  document.getElementById('next').disabled=(i>=works.length-1||works[i+1]?.number>TODAY);
-  document.getElementById('nowork').style.display='none';
-  document.getElementById('bot').style.display='block';
+function showWork(idx){
+  const w=works[idx];
+  if(!w)return;
+  currentIdx=idx;
+
+  // only navigate up to today's day number
+  document.getElementById('prevBtn').disabled=(idx===0);
+  document.getElementById('nextBtn').disabled=(idx>=works.length-1||works[idx+1]?.number>today);
+
+  const frame=document.getElementById('art-frame');
+  frame.src=w.html_github_url||'';
+  frame.style.display='block';
+  document.getElementById('no-work').style.display='none';
+  document.getElementById('bottomhud').style.display='block';
+
+  const t=w.title&&w.title!=='TBA'?w.title:'';
+  document.getElementById('workLabel').textContent=`${w.numeral} · Day ${w.number}${w.number===today?' · TODAY':''}`;
+  document.getElementById('workTitle').textContent=t||`ABSTRACTIA ${w.numeral}`;
+  const descEl=document.getElementById('workSub');
+  descEl.textContent=w.description||'';
+  descEl.style.display=w.description?'':'none';
+
+  const cb=document.getElementById('collectBtn');
+  if(w.collect_url){cb.href=w.collect_url;cb.style.display='inline-block';}
+  else cb.style.display='none';
+
+  document.getElementById('dayCtr').textContent=`${w.number} / ${today}`;
+
+  frame.onload=()=>document.getElementById('loader').classList.add('gone');
+  // fallback if iframe doesn't fire onload
+  setTimeout(()=>document.getElementById('loader').classList.add('gone'),3000);
 }
 
-function go(d){
-  const n=idx+d;
-  if(n<0||n>=works.length)return;
-  if(works[n].number>TODAY)return;
-  show(n);
+function navigate(dir){
+  const next=currentIdx+dir;
+  if(next<0||next>=works.length)return;
+  if(works[next]?.number>today)return;
+  document.getElementById('loader').classList.remove('gone');
+  setTimeout(()=>showWork(next),100);
 }
 
-function throwback(){
+// THROWBACK — show a random work when today isn't posted
+function showThrowback(){
   if(!works.length)return;
-  const w=works[Math.floor(Math.random()*works.length)];
-  document.getElementById('nowork').style.display='none';
-  document.getElementById('bot').style.display='block';
-  idx=works.indexOf(w);
-  show(idx);
+  const r=works[Math.floor(Math.random()*works.length)];
+  document.getElementById('no-work').style.display='none';
+  document.getElementById('art-frame').style.display='block';
+  document.getElementById('art-frame').src=r.html_github_url;
+  document.getElementById('bottomhud').style.display='block';
+  const t=r.title&&r.title!=='TBA'?r.title:`ABSTRACTIA ${r.numeral}`;
+  document.getElementById('workLabel').textContent=`Throwback · Day ${r.number}`;
+  document.getElementById('workTitle').textContent=t;
+  document.getElementById('workSub').textContent='';
+  document.getElementById('collectBtn').style.display='none';
+  document.getElementById('dayCtr').textContent=`Day ${r.number}`;
+  document.getElementById('prevBtn').disabled=true;
+  document.getElementById('nextBtn').disabled=true;
 }
 
-async function notify(){
-  const e=document.getElementById('nwemail').value.trim();
+// NOTIFY
+async function submitNotify(){
+  const e=document.getElementById('notifyEmail').value.trim();
   if(!e)return;
-  await fetch(`${SB}/rest/v1/subscribers`,{method:'POST',headers:{'Content-Type':'application/json','apikey':KEY,'Authorization':'Bearer '+KEY,'Prefer':'return=minimal'},body:JSON.stringify({email:e,notify_via:['email'],active:true})});
-  document.getElementById('nwok').style.display='block';
-  document.getElementById('nwemail').value='';
+  await fetch(`${SB_URL}/rest/v1/subscribers`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`,'Prefer':'return=minimal'},body:JSON.stringify({email:e,notify_via:['email'],active:true})});
+  document.getElementById('notifySuccess').style.display='block';
+  document.getElementById('notifyEmail').value='';
 }
 
-function bgCanvas(){
-  const c=document.getElementById('bg'),ctx=c.getContext('2d');
-  const p=['#9B5DE5','#FF2D78','#534AB7','#FF8C69'];
+// BG CANVAS for no-work screen
+function startBgCanvas(){
+  const c=document.getElementById('bg-canvas');
+  const ctx=c.getContext('2d');
+  const pal=['#9B5DE5','#FF2D78','#534AB7','#FF8C69','#FFB347'];
   let t=0;
-  (function draw(){
-    c.width=innerWidth;c.height=innerHeight;
+  function draw(){
+    c.width=window.innerWidth;c.height=window.innerHeight;
     ctx.fillStyle='#040407';ctx.fillRect(0,0,c.width,c.height);
-    for(let i=0;i<8;i++){const pr=i/8;ctx.beginPath();ctx.strokeStyle=p[i%p.length];ctx.lineWidth=1.5;ctx.globalAlpha=0.15+pr*0.25;const y=c.height*0.1+pr*c.height*0.8,a=15+pr*35;ctx.moveTo(0,y);for(let x=0;x<=c.width;x+=4)ctx.lineTo(x,y+Math.sin(x*0.007+t+i*1.1)*a);ctx.stroke();}ctx.globalAlpha=1;t+=0.01;requestAnimationFrame(draw);
-  })();
+    for(let i=0;i<10;i++){
+      const p=i/10;
+      ctx.beginPath();ctx.strokeStyle=pal[i%pal.length];ctx.lineWidth=1.5;ctx.globalAlpha=0.2+p*0.3;
+      const y=c.height*0.1+p*c.height*0.8,amp=15+p*35;
+      ctx.moveTo(0,y);
+      for(let x=0;x<=c.width;x+=4)ctx.lineTo(x,y+Math.sin(x*0.007+t+i*1.1)*amp);
+      ctx.stroke();
+    }
+    ctx.globalAlpha=1;t+=0.01;requestAnimationFrame(draw);
+  }
+  draw();
 }
+
+// INFO MODAL
+function openInfo(){document.getElementById('info-modal').classList.add('open');}
+function closeInfo(){document.getElementById('info-modal').classList.remove('open');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeInfo();});
 
 boot();
 </script>
