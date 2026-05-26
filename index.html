@@ -29,8 +29,8 @@ body{background:var(--void);color:var(--txt);font-family:var(--fb)}
 .tb-info:hover{border-color:var(--mag);color:var(--mag)}
 
 /* BOTTOM HUD */
-#bottomhud{position:fixed;bottom:0;left:0;right:0;z-index:10;padding:20px 24px;background:linear-gradient(to top,rgba(4,4,7,0.9) 0%,transparent 100%)}
-.hud-row{display:flex;align-items:flex-end;justify-content:space-between;gap:20px}
+#bottomhud{position:fixed;bottom:36px;left:0;right:0;z-index:10;padding:20px 24px;background:linear-gradient(to top,rgba(4,4,7,0.9) 0%,transparent 100%);pointer-events:none}
+.hud-row{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;pointer-events:all}
 .hud-left{}
 .work-label{font-family:var(--fm);font-size:8px;letter-spacing:0.25em;color:var(--mag);text-transform:uppercase;margin-bottom:4px}
 .work-title{font-family:var(--fd);font-size:clamp(24px,4vw,48px);letter-spacing:0.04em;line-height:1}
@@ -38,10 +38,10 @@ body{background:var(--void);color:var(--txt);font-family:var(--fb)}
 
 /* ARROWS */
 .nav-arrows{display:flex;align-items:center;gap:12px}
-.arrow-btn{width:44px;height:44px;border:1px solid rgba(255,255,255,0.2);background:rgba(4,4,7,0.6);color:var(--txt);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color 0.2s,background 0.2s;backdrop-filter:blur(4px)}
-.arrow-btn:hover{border-color:var(--mag);background:rgba(255,45,120,0.1)}
+.arrow-btn{width:56px;height:56px;border:1px solid rgba(255,255,255,0.3);background:rgba(4,4,7,0.75);color:var(--txt);font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color 0.2s,background 0.2s,transform 0.15s;backdrop-filter:blur(8px)}
+.arrow-btn:hover{border-color:var(--mag);background:rgba(255,45,120,0.15);transform:scale(1.08)}
 .arrow-btn:disabled{opacity:0.2;cursor:default}
-.day-counter{font-family:var(--fm);font-size:9px;letter-spacing:0.15em;color:var(--mut);text-align:center;min-width:60px}
+.day-counter{font-family:var(--fm);font-size:11px;letter-spacing:0.15em;color:var(--txt);text-align:center;min-width:72px}
 
 /* TODAY badge */
 .today-badge{font-family:var(--fm);font-size:8px;letter-spacing:0.15em;text-transform:uppercase;padding:4px 10px;border:1px solid var(--mag);color:var(--mag);background:rgba(255,45,120,0.08)}
@@ -89,6 +89,31 @@ body{background:var(--void);color:var(--txt);font-family:var(--fb)}
 .loader-logo{font-family:var(--fd);font-size:72px;letter-spacing:0.05em;animation:pulse 1.5s infinite}
 .loader-logo em{color:var(--mag);font-style:normal}
 @keyframes pulse{0%,100%{opacity:0.4}50%{opacity:1}}
+
+/* FOOTER STRIP */
+#site-footer{
+  position:fixed;bottom:0;left:0;right:0;z-index:15;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 24px;
+  background:linear-gradient(to top,rgba(4,4,7,0.97) 0%,transparent 100%);
+  pointer-events:none;
+  gap:16px;
+}
+.footer-links{
+  display:flex;align-items:center;gap:20px;pointer-events:all;flex-wrap:wrap;
+}
+.footer-link{
+  font-family:var(--fm);font-size:8px;letter-spacing:0.18em;text-transform:uppercase;
+  color:rgba(240,238,232,0.35);text-decoration:none;
+  transition:color 0.2s;white-space:nowrap;
+}
+.footer-link:hover{color:var(--mag)}
+.footer-sms{
+  font-family:var(--fm);font-size:8px;letter-spacing:0.15em;text-transform:uppercase;
+  color:rgba(240,238,232,0.25);pointer-events:all;white-space:nowrap;text-align:right;
+}
+.footer-sms a{color:rgba(255,45,120,0.7);text-decoration:none;transition:color 0.2s;}
+.footer-sms a:hover{color:var(--mag)}
 </style>
 </head>
 <body>
@@ -124,12 +149,12 @@ body{background:var(--void);color:var(--txt);font-family:var(--fb)}
 <!-- BOTTOM HUD -->
 <div id="bottomhud">
   <div class="hud-row">
-    <div class="hud-left">
+    <div class="hud-left" style="pointer-events:all">
       <div class="work-label" id="workLabel">Loading…</div>
       <div class="work-title" id="workTitle"></div>
       <div class="work-sub" id="workSub"></div>
     </div>
-    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:12px">
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:12px;pointer-events:all">
       <a class="collect-btn" id="collectBtn" href="#" target="_blank" style="display:none">Collect ↗</a>
       <div class="nav-arrows">
         <button class="arrow-btn" id="prevBtn" onclick="navigate(-1)">←</button>
@@ -300,5 +325,20 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeInfo();});
 
 boot();
 </script>
+
+<!-- SITE FOOTER -->
+<div id="site-footer">
+  <div class="footer-links">
+    <a class="footer-link" href="https://x.com/@maxximillian" target="_blank">X @Maxximillian</a>
+    <a class="footer-link" href="https://youtube.com/@maxximillian" target="_blank">YouTube @Maxximillian</a>
+    <a class="footer-link" href="https://maxximillian.art" target="_blank">Maxximillian.art</a>
+    <a class="footer-link" href="https://abstractia.today" target="_blank">Abstractia.today</a>
+  </div>
+  <div class="footer-sms">
+    Updates: <a href="https://sms.abstractia.today" target="_blank">sms.abstractia.today</a>
+    &nbsp;·&nbsp; Select SMS when signing up for texts. Email otherwise.&nbsp;·&nbsp; New drops &amp; walkthroughs only.
+  </div>
+</div>
+
 </body>
 </html>
