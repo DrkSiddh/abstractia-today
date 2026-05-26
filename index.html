@@ -29,7 +29,7 @@ body{background:var(--void);color:var(--txt);font-family:var(--fb)}
 .tb-info:hover{border-color:var(--mag);color:var(--mag)}
 
 /* BOTTOM HUD */
-#bottomhud{position:fixed;bottom:36px;left:0;right:0;z-index:10;padding:20px 24px;background:linear-gradient(to top,rgba(4,4,7,0.9) 0%,transparent 100%);pointer-events:none}
+#bottomhud{position:fixed;bottom:80px;left:0;right:0;z-index:10;padding:20px 24px;background:linear-gradient(to top,rgba(4,4,7,0.9) 0%,transparent 100%);pointer-events:none}
 .hud-row{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;pointer-events:all}
 .hud-left{}
 .work-label{font-family:var(--fm);font-size:8px;letter-spacing:0.25em;color:var(--mag);text-transform:uppercase;margin-bottom:4px}
@@ -93,27 +93,33 @@ body{background:var(--void);color:var(--txt);font-family:var(--fb)}
 /* FOOTER STRIP */
 #site-footer{
   position:fixed;bottom:0;left:0;right:0;z-index:15;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:10px 24px;
-  background:linear-gradient(to top,rgba(4,4,7,0.97) 0%,transparent 100%);
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  align-items:center;
+  padding:14px 28px;
+  background:rgba(4,4,7,0.96);
+  border-top:1px solid rgba(255,255,255,0.07);
   pointer-events:none;
-  gap:16px;
+  gap:12px;
 }
-.footer-links{
-  display:flex;align-items:center;gap:20px;pointer-events:all;flex-wrap:wrap;
+.footer-col{
+  display:flex;flex-direction:column;gap:4px;pointer-events:all;
+}
+.footer-col-mid{align-items:center;text-align:center;}
+.footer-col-right{align-items:flex-end;text-align:right;}
+.footer-label{
+  font-family:var(--fm);font-size:10px;letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--mag);margin-bottom:4px;
 }
 .footer-link{
-  font-family:var(--fm);font-size:8px;letter-spacing:0.18em;text-transform:uppercase;
-  color:rgba(240,238,232,0.35);text-decoration:none;
-  transition:color 0.2s;white-space:nowrap;
+  font-family:var(--fm);font-size:13px;letter-spacing:0.08em;
+  color:rgba(240,238,232,0.7);text-decoration:none;
+  transition:color 0.2s;white-space:nowrap;line-height:1.7;
 }
 .footer-link:hover{color:var(--mag)}
-.footer-sms{
-  font-family:var(--fm);font-size:8px;letter-spacing:0.15em;text-transform:uppercase;
-  color:rgba(240,238,232,0.25);pointer-events:all;white-space:nowrap;text-align:right;
+.footer-sms-note{
+  font-family:var(--fm);font-size:11px;letter-spacing:0.06em;
+  color:rgba(240,238,232,0.4);line-height:1.7;
 }
-.footer-sms a{color:rgba(255,45,120,0.7);text-decoration:none;transition:color 0.2s;}
-.footer-sms a:hover{color:var(--mag)}
 </style>
 </head>
 <body>
@@ -235,7 +241,7 @@ function showWork(idx){
 
   // only navigate up to today's day number
   document.getElementById('prevBtn').disabled=(idx===0);
-  document.getElementById('nextBtn').disabled=(idx>=works.length-1||works[idx+1]?.number>today);
+  document.getElementById('nextBtn').disabled=(idx>=works.length-1);
 
   const frame=document.getElementById('art-frame');
   frame.src=w.html_github_url||'';
@@ -264,7 +270,6 @@ function showWork(idx){
 function navigate(dir){
   const next=currentIdx+dir;
   if(next<0||next>=works.length)return;
-  if(works[next]?.number>today)return;
   document.getElementById('loader').classList.remove('gone');
   setTimeout(()=>showWork(next),100);
 }
@@ -283,8 +288,8 @@ function showThrowback(){
   document.getElementById('workSub').textContent='';
   document.getElementById('collectBtn').style.display='none';
   document.getElementById('dayCtr').textContent=`Day ${r.number}`;
-  document.getElementById('prevBtn').disabled=true;
-  document.getElementById('nextBtn').disabled=true;
+  document.getElementById('prevBtn').disabled=(currentIdx===0);
+  document.getElementById('nextBtn').disabled=(currentIdx>=works.length-1);
 }
 
 // NOTIFY
@@ -328,15 +333,20 @@ boot();
 
 <!-- SITE FOOTER -->
 <div id="site-footer">
-  <div class="footer-links">
+  <div class="footer-col">
+    <div class="footer-label">Artist</div>
+    <a class="footer-link" href="https://maxximillian.art" target="_blank">Maxximillian.art</a>
     <a class="footer-link" href="https://x.com/@maxximillian" target="_blank">X @Maxximillian</a>
     <a class="footer-link" href="https://youtube.com/@maxximillian" target="_blank">YouTube @Maxximillian</a>
-    <a class="footer-link" href="https://maxximillian.art" target="_blank">Maxximillian.art</a>
+  </div>
+  <div class="footer-col footer-col-mid">
+    <div class="footer-label">Collection</div>
     <a class="footer-link" href="https://abstractia.today" target="_blank">Abstractia.today</a>
   </div>
-  <div class="footer-sms">
-    Updates: <a href="https://sms.abstractia.today" target="_blank">sms.abstractia.today</a>
-    &nbsp;·&nbsp; Select SMS when signing up for texts. Email otherwise.&nbsp;·&nbsp; New drops &amp; walkthroughs only.
+  <div class="footer-col footer-col-right">
+    <div class="footer-label">Updates — Drops &amp; Walkthroughs Only</div>
+    <a class="footer-link" href="https://sms.abstractia.today" target="_blank">sms.abstractia.today</a>
+    <div class="footer-sms-note">Select SMS when signing up to receive texts,<br>otherwise you&#39;ll get email.</div>
   </div>
 </div>
 
