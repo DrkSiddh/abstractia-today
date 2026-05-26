@@ -14,11 +14,11 @@
   --bdr:rgba(255,255,255,0.07);--txt:#F0EEE8;--mut:rgba(240,238,232,0.42);
   --fd:'Bebas Neue',sans-serif;--fm:'Space Mono',monospace;--fb:'DM Sans',sans-serif;
 }
-html,body{height:100%;overflow:hidden}
+html,body{height:100%;overflow:hidden;display:flex;flex-direction:column;}
 body{background:var(--void);color:var(--txt);font-family:var(--fb)}
 
 /* FULL SCREEN ART */
-#art-frame{position:fixed;inset:0;width:100%;height:100%;border:none;display:block;z-index:1}
+#art-frame{width:100%;height:100%;border:none;display:block;z-index:1;}
 
 /* TOP BAR */
 #topbar{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:16px 24px;background:linear-gradient(to bottom,rgba(4,4,7,0.85) 0%,transparent 100%);pointer-events:none}
@@ -28,9 +28,11 @@ body{background:var(--void);color:var(--txt);font-family:var(--fb)}
 .tb-info{width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,0.3);background:rgba(4,4,7,0.5);display:flex;align-items:center;justify-content:center;cursor:pointer;font-family:var(--fm);font-size:12px;color:rgba(255,255,255,0.6);pointer-events:all;transition:border-color 0.2s,color 0.2s}
 .tb-info:hover{border-color:var(--mag);color:var(--mag)}
 
+#art-wrap{position:relative;flex:1;min-height:0;}
+
 /* BOTTOM HUD */
-#bottomhud{position:fixed;bottom:80px;left:0;right:0;z-index:10;padding:20px 24px;background:linear-gradient(to top,rgba(4,4,7,0.9) 0%,transparent 100%);pointer-events:none}
-.hud-row{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;pointer-events:all}
+#bottomhud{position:absolute;bottom:0;left:0;right:0;z-index:10;padding:20px 24px;background:linear-gradient(to top,rgba(4,4,7,0.9) 0%,transparent 100%);pointer-events:none;}
+.hud-row{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;pointer-events:all;}
 .hud-left{}
 .work-label{font-family:var(--fm);font-size:8px;letter-spacing:0.25em;color:var(--mag);text-transform:uppercase;margin-bottom:4px}
 .work-title{font-family:var(--fd);font-size:clamp(24px,4vw,48px);letter-spacing:0.04em;line-height:1}
@@ -38,10 +40,10 @@ body{background:var(--void);color:var(--txt);font-family:var(--fb)}
 
 /* ARROWS */
 .nav-arrows{display:flex;align-items:center;gap:12px}
-.arrow-btn{width:56px;height:56px;border:1px solid rgba(255,255,255,0.3);background:rgba(4,4,7,0.75);color:var(--txt);font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color 0.2s,background 0.2s,transform 0.15s;backdrop-filter:blur(8px)}
-.arrow-btn:hover{border-color:var(--mag);background:rgba(255,45,120,0.15);transform:scale(1.08)}
+.arrow-btn{width:56px;height:56px;border:1px solid rgba(255,255,255,0.3);background:rgba(4,4,7,0.8);color:var(--txt);font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color 0.2s,background 0.2s,transform 0.15s;backdrop-filter:blur(8px);}
+.arrow-btn:hover{border-color:var(--mag);background:rgba(255,45,120,0.15);transform:scale(1.08);}
 .arrow-btn:disabled{opacity:0.2;cursor:default}
-.day-counter{font-family:var(--fm);font-size:11px;letter-spacing:0.15em;color:var(--txt);text-align:center;min-width:72px}
+.day-counter{font-family:var(--fm);font-size:14px;letter-spacing:0.1em;color:var(--txt);text-align:center;min-width:72px;}
 
 /* TODAY badge */
 .today-badge{font-family:var(--fm);font-size:8px;letter-spacing:0.15em;text-transform:uppercase;padding:4px 10px;border:1px solid var(--mag);color:var(--mag);background:rgba(255,45,120,0.08)}
@@ -90,35 +92,33 @@ body{background:var(--void);color:var(--txt);font-family:var(--fb)}
 .loader-logo em{color:var(--mag);font-style:normal}
 @keyframes pulse{0%,100%{opacity:0.4}50%{opacity:1}}
 
-/* FOOTER STRIP */
+/* FOOTER */
 #site-footer{
-  position:fixed;bottom:0;left:0;right:0;z-index:15;
-  display:grid;grid-template-columns:1fr 1fr 1fr;
-  align-items:center;
-  padding:14px 28px;
-  background:rgba(4,4,7,0.96);
-  border-top:1px solid rgba(255,255,255,0.07);
-  pointer-events:none;
-  gap:12px;
+  flex-shrink:0;
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  align-items:start;
+  gap:32px;
+  padding:28px 40px;
+  background:#040407;
+  border-top:1px solid rgba(255,255,255,0.12);
 }
-.footer-col{
-  display:flex;flex-direction:column;gap:4px;pointer-events:all;
-}
+.footer-col{display:flex;flex-direction:column;gap:8px;}
 .footer-col-mid{align-items:center;text-align:center;}
 .footer-col-right{align-items:flex-end;text-align:right;}
 .footer-label{
-  font-family:var(--fm);font-size:10px;letter-spacing:0.22em;text-transform:uppercase;
-  color:var(--mag);margin-bottom:4px;
+  font-family:var(--fm);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;
+  color:var(--mag);margin-bottom:6px;
 }
 .footer-link{
-  font-family:var(--fm);font-size:13px;letter-spacing:0.08em;
-  color:rgba(240,238,232,0.7);text-decoration:none;
-  transition:color 0.2s;white-space:nowrap;line-height:1.7;
+  font-family:var(--fm);font-size:18px;
+  color:rgba(240,238,232,0.8);text-decoration:none;
+  transition:color 0.2s;line-height:2;
 }
-.footer-link:hover{color:var(--mag)}
-.footer-sms-note{
-  font-family:var(--fm);font-size:11px;letter-spacing:0.06em;
-  color:rgba(240,238,232,0.4);line-height:1.7;
+.footer-link:hover{color:var(--mag);}
+.footer-note{
+  font-family:var(--fm);font-size:14px;
+  color:rgba(240,238,232,0.4);line-height:1.9;margin-top:4px;
 }
 </style>
 </head>
@@ -127,7 +127,25 @@ body{background:var(--void);color:var(--txt);font-family:var(--fb)}
 <div id="loader"><div class="loader-logo">ABSTR<em>A</em>CTIA</div></div>
 
 <!-- FULL SCREEN ART -->
-<iframe id="art-frame" scrolling="no" frameborder="0" allowfullscreen></iframe>
+<div id="art-wrap"><iframe id="art-frame" scrolling="no" frameborder="0" allowfullscreen></iframe>
+<!-- BOTTOM HUD -->
+<div id="bottomhud">
+  <div class="hud-row">
+    <div class="hud-left" style="pointer-events:all;">
+      <div class="work-label" id="workLabel">Loading…</div>
+      <div class="work-title" id="workTitle"></div>
+      <div class="work-sub" id="workSub"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:12px;pointer-events:all;">
+      <a class="collect-btn" id="collectBtn" href="#" target="_blank" style="display:none">Collect ↗</a>
+      <div class="nav-arrows">
+        <button class="arrow-btn" id="prevBtn" onclick="navigate(-1)">←</button>
+        <div class="day-counter" id="dayCtr"></div>
+        <button class="arrow-btn" id="nextBtn" onclick="navigate(1)">→</button>
+      </div>
+    </div>
+  </div>
+</div></div>
 
 <!-- NO WORK TODAY screen -->
 <div id="no-work">
@@ -152,24 +170,6 @@ body{background:var(--void);color:var(--txt);font-family:var(--fb)}
   <button class="tb-info" onclick="openInfo()">ⓘ</button>
 </div>
 
-<!-- BOTTOM HUD -->
-<div id="bottomhud">
-  <div class="hud-row">
-    <div class="hud-left" style="pointer-events:all">
-      <div class="work-label" id="workLabel">Loading…</div>
-      <div class="work-title" id="workTitle"></div>
-      <div class="work-sub" id="workSub"></div>
-    </div>
-    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:12px;pointer-events:all">
-      <a class="collect-btn" id="collectBtn" href="#" target="_blank" style="display:none">Collect ↗</a>
-      <div class="nav-arrows">
-        <button class="arrow-btn" id="prevBtn" onclick="navigate(-1)">←</button>
-        <div class="day-counter" id="dayCtr"></div>
-        <button class="arrow-btn" id="nextBtn" onclick="navigate(1)">→</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- INFO MODAL -->
 <div id="info-modal" onclick="if(event.target===this)closeInfo()">
@@ -331,7 +331,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeInfo();});
 boot();
 </script>
 
-<!-- SITE FOOTER -->
+<!-- FOOTER -->
 <div id="site-footer">
   <div class="footer-col">
     <div class="footer-label">Artist</div>
@@ -346,7 +346,7 @@ boot();
   <div class="footer-col footer-col-right">
     <div class="footer-label">Updates — Drops &amp; Walkthroughs Only</div>
     <a class="footer-link" href="https://sms.abstractia.today" target="_blank">sms.abstractia.today</a>
-    <div class="footer-sms-note">Select SMS when signing up to receive texts,<br>otherwise you&#39;ll get email.</div>
+    <div class="footer-note">Select SMS when signing up to receive texts.<br>Otherwise you'll get email.</div>
   </div>
 </div>
 
