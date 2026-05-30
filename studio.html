@@ -8,540 +8,564 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --mag:#FF2D78;--gold:#FFB830;--void:#040407;--surf:#0C0C13;--surf2:#111119;--surf3:#16161F;
-  --bdr:rgba(255,255,255,0.08);--bdr2:rgba(255,255,255,0.14);--txt:#F0EEE8;--mut:rgba(240,238,232,0.42);
-  --grn:#4CAF76;--blue:#378ADD;--fd:'Bebas Neue',sans-serif;--fm:'Space Mono',monospace;--fb:'DM Sans',sans-serif;
+  --mag:#FF2D78;--gold:#FFB830;--void:#050508;--surf:#0D0D14;--surf2:#13131C;
+  --bdr:rgba(255,255,255,0.08);--txt:#F0EEE8;--mut:rgba(240,238,232,0.45);
+  --grn:#4CAF76;--fd:'Bebas Neue',sans-serif;--fm:'Space Mono',monospace;--fb:'DM Sans',sans-serif;
 }
-body{background:var(--void);color:var(--txt);font-family:var(--fb);font-size:14px;min-height:100vh}
 
-/* ── GATE ── */
-#gate{position:fixed;inset:0;background:var(--void);z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px}
-.gate-logo{font-family:var(--fd);font-size:64px;letter-spacing:0.05em}
-.gate-logo em{color:var(--mag);font-style:normal}
-.gate-sub{font-family:var(--fm);font-size:9px;letter-spacing:0.3em;color:var(--mut);text-transform:uppercase}
-.gate-form{display:flex;flex-direction:column;gap:10px;width:300px}
-.gate-input{background:var(--surf);border:1px solid var(--bdr);color:var(--txt);font-family:var(--fm);font-size:12px;padding:12px 16px;outline:none;letter-spacing:0.1em;text-align:center;transition:border-color 0.2s}
+/* GATE */
+#gate{
+  position:fixed;inset:0;background:var(--void);z-index:1000;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;
+}
+.gate-logo{font-family:var(--fd);font-size:72px;letter-spacing:0.05em;color:var(--txt)}
+.gate-logo span{color:var(--mag)}
+.gate-sub{font-family:var(--fm);font-size:10px;letter-spacing:0.3em;color:var(--mut);text-transform:uppercase}
+.gate-form{display:flex;flex-direction:column;align-items:center;gap:12px;width:320px}
+.gate-input{
+  background:var(--surf);border:1px solid var(--bdr);color:var(--txt);
+  font-family:var(--fm);font-size:13px;padding:14px 20px;width:100%;outline:none;
+  letter-spacing:0.1em;text-align:center;
+  transition:border-color 0.2s;
+}
 .gate-input:focus{border-color:var(--mag)}
-.gate-input::placeholder{color:rgba(240,238,232,0.2)}
-.gate-btn{font-family:var(--fm);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;padding:12px;background:var(--mag);color:#fff;border:none;cursor:pointer;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:opacity 0.2s}
+.gate-input::placeholder{color:rgba(240,238,232,0.2);letter-spacing:0.1em}
+.gate-btn{
+  font-family:var(--fm);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;
+  padding:14px 40px;background:var(--mag);color:#fff;border:none;cursor:pointer;
+  clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
+  width:100%;transition:opacity 0.2s;
+}
 .gate-btn:hover{opacity:0.85}
-.gate-err{font-family:var(--fm);font-size:9px;letter-spacing:0.2em;color:var(--mag);text-transform:uppercase;opacity:0;transition:opacity 0.3s;text-align:center}
-.gate-err.show{opacity:1}
+.gate-error{
+  font-family:var(--fm);font-size:9px;letter-spacing:0.2em;color:var(--mag);
+  text-transform:uppercase;opacity:0;transition:opacity 0.3s;
+}
+.gate-error.show{opacity:1}
 
-/* ── STUDIO LAYOUT ── */
+/* STUDIO — hidden until unlocked */
 #studio{display:none}
-.studio-nav{background:var(--surf);border-bottom:1px solid var(--bdr);padding:16px 40px;display:flex;align-items:center;justify-content:space-between}
-.studio-logo{font-family:var(--fd);font-size:28px;letter-spacing:0.05em}
-.studio-logo em{color:var(--mag);font-style:normal}
-.studio-tabs{display:flex;gap:2px}
-.tab-btn{font-family:var(--fm);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;padding:8px 18px;background:transparent;color:var(--mut);border:1px solid var(--bdr);cursor:pointer;transition:all 0.2s}
-.tab-btn.active,.tab-btn:hover{background:var(--mag-dim,rgba(255,45,120,0.1));border-color:var(--mag);color:var(--mag)}
-.studio-body{padding:40px;max-width:1400px;margin:0 auto}
 
-/* ── PANELS ── */
-.panel{display:none}
-.panel.active{display:block}
-
-/* ── DROP ZONE ── */
-.drop-zone{border:2px dashed rgba(255,45,120,0.35);background:var(--surf);padding:40px;text-align:center;cursor:pointer;transition:all 0.2s;margin-bottom:20px;position:relative}
-.drop-zone.over{border-color:var(--mag);background:rgba(255,45,120,0.04)}
+body{background:var(--void);color:var(--txt);font-family:var(--fb);font-size:14px;padding:40px 32px 80px;max-width:1200px;margin:0 auto}
+h1{font-family:var(--fd);font-size:56px;letter-spacing:0.03em;margin-bottom:4px}
+.sub{font-family:var(--fm);font-size:10px;letter-spacing:0.25em;color:var(--mag);text-transform:uppercase;margin-bottom:32px}
+.drop-zone{border:2px dashed rgba(255,45,120,0.4);background:var(--surf);padding:48px 40px;text-align:center;cursor:pointer;transition:border-color 0.2s,background 0.2s;margin-bottom:24px;position:relative;}
+.drop-zone.over{border-color:var(--mag);background:rgba(255,45,120,0.05)}
+.drop-zone-icon{font-family:var(--fd);font-size:48px;color:var(--mag);opacity:0.4;margin-bottom:12px}
+.drop-zone h2{font-family:var(--fd);font-size:28px;margin-bottom:6px}
+.drop-zone p{font-size:12px;color:var(--mut)}
 .drop-zone input{position:absolute;inset:0;opacity:0;cursor:pointer}
-.drop-zone-icon{font-family:var(--fd);font-size:44px;color:var(--mag);opacity:0.4;margin-bottom:10px}
-.drop-zone h2{font-family:var(--fd);font-size:26px;margin-bottom:6px}
-.drop-zone p{font-size:12px;color:var(--mut);line-height:1.7}
-
-/* ── STATS ── */
-.stats-row{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
-.stat{background:var(--surf);border:1px solid var(--bdr);padding:12px 16px;flex:1;min-width:100px}
-.stat-num{font-family:var(--fd);font-size:30px;color:var(--mag)}
-.stat-lbl{font-family:var(--fm);font-size:7px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mut);margin-top:2px}
-
-/* ── WORKS TABLE ── */
-.tbl-header,.work-row{display:grid;grid-template-columns:52px 1fr 180px 180px 120px 140px 80px 70px;gap:8px;align-items:start;padding:10px 14px;border:1px solid var(--bdr);margin-bottom:2px}
-.tbl-header{background:var(--surf2);border-color:var(--bdr)}
-.work-row{background:var(--surf);transition:border-color 0.2s}
+.stats-row{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+.stat{background:var(--surf);border:1px solid var(--bdr);padding:12px 16px;flex:1;min-width:120px}
+.stat-num{font-family:var(--fd);font-size:32px;color:var(--mag)}
+.stat-label{font-family:var(--fm);font-size:8px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mut)}
+.work-row-header{background:var(--surf2);border:1px solid var(--bdr);margin-bottom:2px;padding:8px 16px;display:grid;grid-template-columns:56px 1fr 180px 180px 160px 90px 70px;gap:10px;}
+.col-label{font-family:var(--fm);font-size:8px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mut)}
+.work-row{background:var(--surf);border:1px solid var(--bdr);margin-bottom:2px;padding:12px 16px;display:grid;grid-template-columns:56px 1fr 180px 180px 160px 90px 70px;gap:10px;align-items:start;}
 .work-row:hover{border-color:rgba(255,45,120,0.2)}
-.col-lbl{font-family:var(--fm);font-size:7px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mut)}
-.wnum{font-family:var(--fd);font-size:20px;color:var(--mag);line-height:1}
-.wnum small{display:block;font-family:var(--fm);font-size:9px;color:var(--mut);margin-top:2px}
-.w-input{background:var(--surf2);border:1px solid var(--bdr);color:var(--txt);font-family:var(--fb);font-size:11px;padding:6px 8px;width:100%;outline:none;transition:border-color 0.2s;margin-bottom:4px}
-.w-input:focus{border-color:var(--mag)}
-.w-input::placeholder{color:rgba(240,238,232,0.2)}
-.w-title-input{font-family:var(--fm);font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase}
-.w-select{background:var(--surf2);border:1px solid var(--bdr);color:var(--txt);font-family:var(--fm);font-size:8px;padding:6px 8px;width:100%;outline:none;-webkit-appearance:none;letter-spacing:0.06em}
-.w-select.tbd{border-color:rgba(255,184,48,0.3);color:var(--gold)}
-.w-select option{background:#111119}
-.w-files{font-size:9px;line-height:1.7}
-.has{color:var(--grn)}.missing{color:rgba(255,45,120,0.5)}
-.status-pill{font-family:var(--fm);font-size:7px;letter-spacing:0.12em;text-transform:uppercase;padding:3px 8px;display:inline-block;border:1px solid}
-.s-ready{background:rgba(76,175,118,0.12);border-color:var(--grn);color:var(--grn)}
-.s-tbd{background:rgba(255,184,48,0.08);border-color:rgba(255,184,48,0.4);color:var(--gold)}
-.s-missing{background:rgba(255,45,120,0.08);border-color:var(--mag);color:var(--mag)}
-
-/* ── ACTION ROW ── */
-.action-row{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}
-.btn{font-family:var(--fm);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;padding:11px 22px;border:none;cursor:pointer;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);transition:opacity 0.2s,transform 0.15s}
+.work-num{font-family:var(--fd);font-size:22px;color:var(--mag);line-height:1}
+.work-name-input{background:var(--surf2);border:1px solid var(--bdr);color:var(--txt);font-family:var(--fm);font-size:10px;font-weight:700;padding:6px 8px;width:100%;outline:none;margin-bottom:4px;letter-spacing:0.05em;}
+.work-name-input:focus{border-color:var(--mag)}
+.work-files{font-size:10px;color:var(--mut);line-height:1.6}
+.work-files .has{color:var(--grn)}
+.work-files .missing{color:rgba(255,45,120,0.5)}
+.work-input{background:var(--surf2);border:1px solid var(--bdr);color:var(--txt);font-family:var(--fb);font-size:11px;padding:6px 8px;width:100%;outline:none;transition:border-color 0.2s;}
+.work-input:focus{border-color:var(--mag)}
+.work-input::placeholder{color:rgba(240,238,232,0.2)}
+.edition-select{background:var(--surf2);border:1px solid var(--bdr);color:var(--txt);font-family:var(--fm);font-size:9px;padding:6px 8px;width:100%;outline:none;letter-spacing:0.08em;}
+.edition-select option{background:#13131C}
+.edition-select.tbd{border-color:rgba(255,184,48,0.3);color:var(--gold)}
+.video-list{margin-top:4px}
+.video-tag{font-family:var(--fm);font-size:8px;color:var(--grn);letter-spacing:0.08em;display:block;line-height:1.8}
+.status-badge{font-family:var(--fm);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 8px;text-align:center;display:block}
+.badge-ready{background:rgba(76,175,118,0.15);border:1px solid var(--grn);color:var(--grn)}
+.badge-tbd{background:rgba(255,184,48,0.1);border:1px solid rgba(255,184,48,0.4);color:var(--gold)}
+.badge-missing{background:rgba(255,45,120,0.1);border:1px solid var(--mag);color:var(--mag)}
+.action-row{display:flex;gap:12px;flex-wrap:wrap;margin:24px 0}
+.btn{font-family:var(--fm);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;padding:12px 24px;border:none;cursor:pointer;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:opacity 0.2s,transform 0.15s;}
 .btn:hover{opacity:0.85;transform:translateY(-1px)}
-.btn-mag{background:var(--mag);color:#fff}
-.btn-gold{background:var(--gold);color:#040407}
-.btn-ghost{background:var(--surf);color:var(--txt);border:1px solid var(--bdr)}
-.btn-danger{background:transparent;border:1px solid rgba(255,45,120,0.25);color:rgba(255,45,120,0.6);font-size:8px;padding:8px 16px;cursor:pointer;transition:all 0.2s}
+.btn-primary{background:var(--mag);color:#fff}
+.btn-gold{background:var(--gold);color:#050508}
+.btn-secondary{background:var(--surf);color:var(--txt);border:1px solid var(--bdr)}
+.btn-danger{background:transparent;color:rgba(255,45,120,0.6);border:1px solid rgba(255,45,120,0.2);font-size:9px;padding:8px 16px;}
 .btn-danger:hover{border-color:var(--mag);color:var(--mag)}
-.push-status{display:none;padding:14px 18px;font-family:var(--fm);font-size:10px;letter-spacing:0.1em;border:1px solid var(--bdr);margin-bottom:16px}
-.saved-badge{font-family:var(--fm);font-size:8px;color:var(--grn);letter-spacing:0.1em;margin-left:10px;opacity:0;transition:opacity 0.3s}
+.output-section{display:none;margin-top:32px}
+.output-section.visible{display:block}
+.output-title{font-family:var(--fd);font-size:28px;margin-bottom:12px;border-bottom:1px solid var(--bdr);padding-bottom:10px}
+.output-box{background:var(--surf);border:1px solid var(--bdr);padding:16px;font-family:var(--fm);font-size:10px;color:var(--mut);max-height:280px;overflow-y:auto;line-height:1.8;margin-bottom:12px;white-space:pre-wrap;word-break:break-all;}
+.copy-btn{font-family:var(--fm);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;padding:8px 20px;background:var(--surf2);border:1px solid var(--bdr);color:var(--mut);cursor:pointer;transition:border-color 0.2s,color 0.2s;}
+.copy-btn:hover{border-color:var(--mag);color:var(--mag)}
+.copy-btn.copied{border-color:var(--grn);color:var(--grn)}
+.empty-state{text-align:center;padding:40px;color:var(--mut);font-family:var(--fm);font-size:10px;letter-spacing:0.2em;text-transform:uppercase}
+.saved-badge{font-family:var(--fm);font-size:9px;color:var(--grn);letter-spacing:0.1em;margin-left:12px;opacity:0;transition:opacity 0.3s}
 .saved-badge.show{opacity:1}
-
-/* ── LEADS DASHBOARD ── */
-.leads-header{display:grid;grid-template-columns:1fr 120px 120px 130px 140px 100px;gap:8px;padding:8px 14px;background:var(--surf2);border:1px solid var(--bdr);margin-bottom:2px}
-.lead-row{display:grid;grid-template-columns:1fr 120px 120px 130px 140px 100px;gap:8px;padding:12px 14px;background:var(--surf);border:1px solid var(--bdr);margin-bottom:2px;align-items:center;transition:border-color 0.2s}
-.lead-row:hover{border-color:rgba(255,45,120,0.2)}
-.lead-name{font-weight:500;font-size:13px}
-.lead-email{font-size:11px;color:var(--mut);font-family:var(--fm)}
-.lead-type-badge{font-family:var(--fm);font-size:7px;letter-spacing:0.12em;text-transform:uppercase;padding:3px 8px;border:1px solid var(--bdr);color:var(--mut)}
-.lead-budget{font-family:var(--fm);font-size:9px;color:var(--mut);letter-spacing:0.06em}
-.lead-date{font-family:var(--fm);font-size:9px;color:var(--mut2)}
-.lead-status{font-family:var(--fm);font-size:7px;letter-spacing:0.12em;text-transform:uppercase;padding:3px 8px;display:inline-block;border:1px solid;cursor:pointer;transition:all 0.2s}
-.ls-new{background:rgba(55,138,221,0.1);border-color:var(--blue);color:#7ab8f0}
-.ls-reviewing{background:rgba(255,184,48,0.1);border-color:var(--gold);color:var(--gold)}
-.ls-quoted{background:rgba(155,93,229,0.1);border-color:#9B5DE5;color:#9B5DE5}
-.ls-booked{background:rgba(76,175,118,0.1);border-color:var(--grn);color:var(--grn)}
-.ls-declined{background:rgba(136,135,128,0.1);border-color:#888780;color:#b4b2a9}
-.ls-archived{background:rgba(136,135,128,0.06);border-color:var(--bdr);color:var(--mut2)}
-.leads-empty{font-family:var(--fm);font-size:9px;letter-spacing:0.2em;color:var(--mut);text-align:center;padding:48px;text-transform:uppercase}
-.lead-notes-input{width:100%;background:var(--surf2);border:1px solid var(--bdr);color:var(--txt);font-family:var(--fb);font-size:11px;padding:4px 8px;outline:none;margin-top:4px}
-.lead-notes-input:focus{border-color:var(--mag)}
-.leads-filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
-.lf-btn{font-family:var(--fm);font-size:7px;letter-spacing:0.15em;text-transform:uppercase;padding:4px 12px;background:transparent;border:1px solid var(--bdr);color:var(--mut);cursor:pointer;transition:all 0.2s}
-.lf-btn.active,.lf-btn:hover{background:rgba(255,45,120,0.08);border-color:var(--mag);color:var(--mag)}
 </style>
 </head>
 <body>
 
-<!-- GATE -->
+<!-- PASSWORD GATE -->
 <div id="gate">
-  <div class="gate-logo">ABSTR<em>A</em>CTIA</div>
+  <div class="gate-logo">ABSTR<span>A</span>CTIA</div>
   <div class="gate-sub">Studio — Private Access</div>
   <div class="gate-form">
-    <input class="gate-input" type="password" id="gateInput" placeholder="Passphrase" onkeydown="if(event.key==='Enter')checkGate()">
-    <button class="gate-btn" onclick="checkGate()">Enter Studio</button>
-    <div class="gate-err" id="gateErr">Access denied</div>
+    <input class="gate-input" type="password" id="gateInput" placeholder="Enter passphrase" 
+      onkeydown="if(event.key==='Enter')checkPassword()">
+    <button class="gate-btn" onclick="checkPassword()">Enter Studio</button>
+    <div class="gate-error" id="gateError">Access denied</div>
   </div>
 </div>
 
-<!-- STUDIO -->
+<!-- STUDIO — shown after correct password -->
 <div id="studio">
-  <div class="studio-nav">
-    <div class="studio-logo">ABSTR<em>A</em>CTIA <span style="font-family:var(--fm);font-size:11px;color:var(--mut);letter-spacing:0.2em">STUDIO</span></div>
-    <div class="studio-tabs">
-      <button class="tab-btn active" onclick="showTab('uploader')">Upload Works</button>
-      <button class="tab-btn" onclick="showTab('leads')">Partnership Leads</button>
-      <button class="tab-btn" onclick="showTab('signals')">Signals</button>
-    </div>
-    <span style="font-family:var(--fm);font-size:8px;color:var(--mut)"><a href="index.html" style="color:var(--mut);text-decoration:none">← Back to site</a></span>
-  </div>
 
-  <div class="studio-body">
+<h1>ABSTRACTIA</h1>
+<p class="sub">Studio — Bulk Work Uploader <span class="saved-badge" id="savedBadge">✓ Saved</span></p>
 
-    <!-- ── UPLOADER PANEL ── -->
-    <div id="panel-uploader" class="panel active">
-      <h1 style="font-family:var(--fd);font-size:48px;letter-spacing:0.03em;margin-bottom:4px">WORKS <span class="saved-badge" id="savedBadge">✓ Saved</span></h1>
-      <p style="font-family:var(--fm);font-size:9px;letter-spacing:0.25em;color:var(--mag);text-transform:uppercase;margin-bottom:24px">Bulk Uploader v5 — Direct to Supabase</p>
-
-      <div class="drop-zone" id="dropZone">
-        <input type="file" id="fileInput" webkitdirectory multiple>
-        <div class="drop-zone-icon">◈</div>
-        <h2>Drop your abstractia-htmls folder here</h2>
-        <p>HTML files detected by leading number · everything merges · nothing wiped<br>Accepts: .html, .htm — all other files ignored</p>
-      </div>
-
-      <div class="stats-row" id="statsRow" style="display:none">
-        <div class="stat"><div class="stat-num" id="stTotal">0</div><div class="stat-lbl">Works</div></div>
-        <div class="stat"><div class="stat-num" id="stHtml">0</div><div class="stat-lbl">HTML</div></div>
-        <div class="stat"><div class="stat-num" id="stReady">0</div><div class="stat-lbl">Ready</div></div>
-        <div class="stat"><div class="stat-num" id="stTbd">0</div><div class="stat-lbl">TBD</div></div>
-        <div class="stat"><div class="stat-num" id="stUrls">0</div><div class="stat-lbl">Collect URLs</div></div>
-        <div class="stat"><div class="stat-num" id="stArticles">0</div><div class="stat-lbl">Articles</div></div>
-      </div>
-
-      <div id="worksContainer"></div>
-
-      <div class="action-row" id="actionRow" style="display:none">
-        <button class="btn btn-mag" id="pushBtn" onclick="pushToSupabase()">⚡ Push all to Supabase</button>
-        <button class="btn btn-ghost" onclick="generateSQL()">View SQL</button>
-        <button class="btn btn-danger" onclick="confirmClear()">Clear all</button>
-      </div>
-      <div class="push-status" id="pushStatus"></div>
-      <div id="sqlOut" style="display:none;margin-top:20px">
-        <div style="font-family:var(--fd);font-size:22px;margin-bottom:10px">SQL PREVIEW</div>
-        <div id="sqlBox" style="background:var(--surf);border:1px solid var(--bdr);padding:14px;font-family:var(--fm);font-size:9px;color:var(--mut);max-height:240px;overflow-y:auto;white-space:pre-wrap;word-break:break-all;margin-bottom:10px"></div>
-        <button class="btn btn-ghost" onclick="copySql()">Copy SQL</button>
-      </div>
-    </div>
-
-    <!-- ── LEADS PANEL ── -->
-    <div id="panel-leads" class="panel">
-      <h1 style="font-family:var(--fd);font-size:48px;letter-spacing:0.03em;margin-bottom:4px">PARTNERSHIP LEADS</h1>
-      <p style="font-family:var(--fm);font-size:9px;letter-spacing:0.25em;color:var(--mag);text-transform:uppercase;margin-bottom:24px">All inquiries from abstractia.today</p>
-      <div class="leads-filter-row">
-        <button class="lf-btn active" onclick="filterLeads('all',this)">All</button>
-        <button class="lf-btn" onclick="filterLeads('new',this)">New</button>
-        <button class="lf-btn" onclick="filterLeads('reviewing',this)">Reviewing</button>
-        <button class="lf-btn" onclick="filterLeads('quoted',this)">Quoted</button>
-        <button class="lf-btn" onclick="filterLeads('booked',this)">Booked ✓</button>
-        <button class="lf-btn" onclick="filterLeads('declined',this)">Declined</button>
-      </div>
-      <div id="leadsContainer"><div class="leads-empty">Loading leads…</div></div>
-    </div>
-
-    <!-- ── SIGNALS PANEL ── -->
-    <div id="panel-signals" class="panel">
-      <h1 style="font-family:var(--fd);font-size:48px;letter-spacing:0.03em;margin-bottom:4px">SIGNALS</h1>
-      <p style="font-family:var(--fm);font-size:9px;letter-spacing:0.25em;color:var(--mag);text-transform:uppercase;margin-bottom:24px">Community heatmap activity</p>
-      <div id="signalsContainer"><div class="leads-empty">Loading signals…</div></div>
-    </div>
-
-  </div>
+<div class="drop-zone" id="dropZone">
+  <input type="file" id="fileInput" webkitdirectory multiple>
+  <div class="drop-zone-icon">◈</div>
+  <h2>Drop your work folders here</h2>
+  <p>HTML files, MP4s, GIFs, PNGs, TXTs — all detected automatically by leading number<br>Everything merges with what's already here — nothing gets wiped</p>
 </div>
+
+<div class="stats-row" id="statsRow" style="display:none">
+  <div class="stat"><div class="stat-num" id="statTotal">0</div><div class="stat-label">Works</div></div>
+  <div class="stat"><div class="stat-num" id="statHtml">0</div><div class="stat-label">HTML files</div></div>
+  <div class="stat"><div class="stat-num" id="statVideo">0</div><div class="stat-label">Openings</div></div>
+  <div class="stat"><div class="stat-num" id="statReady">0</div><div class="stat-label">Ready</div></div>
+  <div class="stat"><div class="stat-num" id="statTbd">0</div><div class="stat-label">TBD</div></div>
+</div>
+
+<div id="worksContainer"></div>
+
+<div class="action-row" id="actionRow" style="display:none">
+  <button class="btn btn-primary" id="pushBtn" onclick="pushToSupabase()">⚡ Send to Supabase — one click</button>
+  <button class="btn btn-gold" onclick="generateGithubInstructions()">GitHub file list ↗</button>
+  <button class="btn btn-secondary" onclick="generateSQL()">View SQL</button>
+  <button class="btn btn-danger" onclick="confirmClear()">Clear all & start over</button>
+</div>
+<div id="pushStatus" style="display:none;margin:0 0 24px;padding:16px 20px;font-family:var(--fm);font-size:11px;letter-spacing:0.1em;border:1px solid var(--bdr)"></div>
+
+<div class="output-section" id="sqlOutput">
+  <p class="output-title">SUPABASE SQL</p>
+  <div class="output-box" id="sqlBox"></div>
+  <button class="copy-btn" id="sqlCopyBtn" onclick="copyOutput('sqlBox','sqlCopyBtn','Copy SQL')">Copy SQL</button>
+</div>
+
+<div class="output-section" id="githubOutput">
+  <p class="output-title">GITHUB FILE LIST</p>
+  <div class="output-box" id="githubBox"></div>
+  <button class="copy-btn" id="githubCopyBtn" onclick="copyOutput('githubBox','githubCopyBtn','Copy list')">Copy list</button>
+</div>
+
+</div><!-- end #studio -->
 
 <script>
-// ── CONFIG ──
-const PASS='lagniappe_maxximillian';
-const SESSION_KEY='abstractia_studio_v5';
-const STORAGE_KEY='abstractia_works_v5';
-const SB_URL='https://xtkdnyqjheewsqnvugaj.supabase.co';
-const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0a2RueXFqaGVld3NxbnZ1Z2FqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1MTAyODQsImV4cCI6MjA5MTA4NjI4NH0.T8X7Q1fKjpkD1csafr1F9pD5OULu1DR_eTSeVa-Rhv0';
+// PASSWORD GATE
+const PASS = 'lagniappe_maxximillian';
+const SESSION_KEY = 'abstractia_studio_auth';
 
-// ── GATE ──
-function checkGate(){
-  const v=document.getElementById('gateInput').value;
-  if(v===PASS){sessionStorage.setItem(SESSION_KEY,'1');bootStudio();}
-  else{const e=document.getElementById('gateErr');e.classList.add('show');document.getElementById('gateInput').value='';setTimeout(()=>e.classList.remove('show'),2000);}
-}
-function bootStudio(){
-  document.getElementById('gate').style.display='none';
-  document.getElementById('studio').style.display='block';
-  initUploader();
-  loadLeads();
-  loadSignalsPanel();
-}
-if(sessionStorage.getItem(SESSION_KEY)==='1')bootStudio();
-
-// ── TABS ──
-function showTab(name){
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('panel-'+name).classList.add('active');
-  event.target.classList.add('active');
+function checkPassword(){
+  const val = document.getElementById('gateInput').value;
+  if(val === PASS){
+    sessionStorage.setItem(SESSION_KEY, '1');
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('studio').style.display = 'block';
+    initStudio();
+  } else {
+    const err = document.getElementById('gateError');
+    err.classList.add('show');
+    document.getElementById('gateInput').value = '';
+    setTimeout(()=>err.classList.remove('show'), 2000);
+  }
 }
 
-// ── ROMAN NUMERALS ──
+// Auto-unlock if already authenticated this session
+if(sessionStorage.getItem(SESSION_KEY) === '1'){
+  document.getElementById('gate').style.display = 'none';
+  document.getElementById('studio').style.display = 'block';
+}
+
+// STUDIO LOGIC
+const STORAGE_KEY = 'abstractia_works_v4';
+
 function toRoman(n){
   if(!n||n<1)return'?';
-  const v=[1000,900,500,400,100,90,50,40,10,9,5,4,1],s=['M','CM','D','CD','C','XC','L','XL','X','IX','V','IV','I'];
+  const v=[1000,900,500,400,100,90,50,40,10,9,5,4,1];
+  const s=['M','CM','D','CD','C','XC','L','XL','X','IX','V','IV','I'];
   let r='';for(let i=0;i<v.length;i++)while(n>=v[i]){r+=s[i];n-=v[i];}return r;
 }
 function fromRoman(s){
+  if(!s)return null;
   const m={I:1,V:5,X:10,L:50,C:100,D:500,M:1000};
   let r=0,prev=0;
-  for(let i=(s||'').length-1;i>=0;i--){const v=m[s[i].toUpperCase()]||0;r+=v<prev?-v:v;prev=v;}
+  for(let i=s.length-1;i>=0;i--){
+    const v=m[s[i].toUpperCase()]||0;
+    r+=v<prev?-v:v;prev=v;
+  }
   return r||null;
 }
 
-// ── FILENAME PARSING ──
-function parseNum(name){
-  const m=name.match(/^(\d+)[\s_]/)||name.match(/^(\d+)\./);
-  if(m)return parseInt(m[1]);
-  const rom=name.match(/abstractia[\s_]+([IVXLCDM]+)/i);
-  if(rom)return fromRoman(rom[1]);
-  const any=name.match(/(\d+)/);
-  return any?parseInt(any[1]):null;
-}
-function parseTitle(name){
-  let t=name.replace(/^\d+[\s_]*/,'').replace(/abstractia[\s_]+[IVXLCDM]+[\s_]*/i,'').replace(/^abstractia[\s_]*/i,'').replace(/\.(html?|mp4|gif|jpg|jpeg|png|webp|txt)$/i,'').replace(/_/g,' ').trim().toUpperCase();
-  return t||null;
-}
-function detectStates(fn){
-  const f=fn.toLowerCase(),s=new Set();
-  if(f.includes('gm')||f.includes('morning'))s.add('gm');
-  if(f.includes('pm')||f.includes('afternoon'))s.add('pm');
-  if(f.includes('evening'))s.add('evening');
-  if(f.includes('night')||f.includes('midnight'))s.add('night');
-  if(f.includes('420')||f.includes('4_20'))s.add('420');
-  if(f.includes('wave'))s.add('waves');
-  if(f.includes('line'))s.add('lines');
-  if(f.includes('wkd')||f.includes('weekend'))s.add('wkd');
-  if(f.includes('sunday')||f.includes('☀'))s.add('sunday');
-  if(f.includes('lagniappe')||f.includes('endodeca')||f.includes('skelevaggio')||f.includes('pepavaggio'))s.add('lagniappe');
-  return s;
+// Parse leading number from filename — the number IS the key
+function parseLeadingNumber(name){
+  const m = name.match(/^(\d+)[_\s]/);
+  if(m) return parseInt(m[1]);
+  const m2 = name.match(/^(\d+)\./);
+  if(m2) return parseInt(m2[1]);
+  // fallback: roman after "abstractia"
+  const rom = name.match(/abstractia[\s_]+([IVXLCDM]+)(?:[\s_]|$)/i);
+  if(rom) return fromRoman(rom[1]);
+  const any = name.match(/(\d+)/);
+  if(any) return parseInt(any[1]);
+  return null;
 }
 
-// ── WORKS STATE ──
-let works={};
+// Parse title — everything after the number prefix, strip extension
+function parseTitle(name){
+  let t = name.replace(/^\d+[_\s]+/,'');
+  t = t.replace(/abstractia[\s_]+[IVXLCDM]+[\s_]*/i,'');
+  t = t.replace(/^abstractia[\s_]*/i,'');
+  t = t.replace(/\.(html|htm|mp4|gif|jpg|jpeg|png|webp|txt)$/i,'');
+  t = t.replace(/[_]+/g,' ').replace(/opening|thumbnail|description/gi,'').trim().toUpperCase();
+  return t || null;
+}
+
+function detectStates(filename){
+  const f = filename.toLowerCase();
+  const states = new Set();
+  if(f.includes('gm')||f.includes('morning')) states.add('gm');
+  if(f.includes('pm')||f.includes('afternoon')||f.includes('sunset')) states.add('pm');
+  if(f.includes('evening')) states.add('evening');
+  if(f.includes('420')||f.includes('4_20')||f.includes('green')) states.add('420');
+  if(f.includes('night')||f.includes('midnight')) states.add('night');
+  if(f.includes('wave')) states.add('waves');
+  if(f.includes('line')) states.add('lines');
+  if(f.includes('wkd')||f.includes('weekend')) states.add('wkd');
+  if(f.includes('☀')||f.includes('sunday')) states.add('sunday');
+  if(f.includes('lagniappe')||f.includes('sauce')||f.includes('easter')||f.includes('secret')) states.add('lagniappe');
+  if(f.includes('companion')) states.add('companion');
+  if(f.includes('endodeca')||f.includes('skelevaggio')||f.includes('pepavaggio')||f.includes('swell')) states.add('lagniappe');
+  return states;
+}
+
+let works = {};
+
 function loadSaved(){
   try{
-    const d=localStorage.getItem(STORAGE_KEY);
-    if(d){works=JSON.parse(d);Object.values(works).forEach(w=>{w.states=new Set(w.states||[]);});return true;}
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if(saved){
+      works = JSON.parse(saved);
+      Object.values(works).forEach(w=>{
+        w.states = new Set(w.states||[]);
+        w.videos = w.videos||[];
+      });
+      return true;
+    }
   }catch(e){}
   return false;
 }
-function saveWorks(){
+
+function saveWork(){
   try{
-    const out={};
-    Object.entries(works).forEach(([k,w])=>{out[k]={...w,states:[...w.states]};});
-    localStorage.setItem(STORAGE_KEY,JSON.stringify(out));
-    const b=document.getElementById('savedBadge');b.classList.add('show');setTimeout(()=>b.classList.remove('show'),1500);
+    const toSave = {};
+    Object.entries(works).forEach(([k,w])=>{
+      toSave[k] = {...w, states:[...w.states]};
+    });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+    const badge = document.getElementById('savedBadge');
+    badge.classList.add('show');
+    setTimeout(()=>badge.classList.remove('show'), 1500);
   }catch(e){}
 }
 
 function processFiles(fileList){
-  const files=Array.from(fileList);
-  let added=0;
+  const files = Array.from(fileList);
+  let newCount = 0;
+
   files.forEach(file=>{
-    const parts=(file.webkitRelativePath||file.name).split('/');
-    const fn=parts[parts.length-1];
-    const ext=fn.split('.').pop().toLowerCase();
-    if(fn.startsWith('.')||!['html','htm'].includes(ext))return;
-    const num=parseNum(fn);
-    if(!num||num<1||num>365)return;
+    const path = file.webkitRelativePath || file.name;
+    const parts = path.split('/');
+    const fileName = parts[parts.length-1];
+    const ext = fileName.split('.').pop().toLowerCase();
+
+    if(fileName.startsWith('.')||fileName==='Thumbs.db'||fileName==='.DS_Store') return;
+
+    // Leading number is the key
+    let num = parseLeadingNumber(fileName);
+    if(!num||num<1||num>365) return;
+
     if(!works[num]){
-      works[num]={number:num,numeral:toRoman(num),title:'',htmlFile:null,states:new Set(),collectUrl:'',articleUrl:'',socialUrls:{instagram:'',x:'',youtube:''},editionType:'tbd',hasLagniappe:false,description:''};
-      added++;
+      works[num] = {
+        number:num, numeral:toRoman(num),
+        title:'', htmlFile:null, openingFile:null, thumbnailFile:null,
+        descriptionFile:null, videos:[], states:new Set(),
+        collectUrl:'', youtubeUrl:'', editionType:'tbd',
+        hasLagniappe:false,
+      };
+      const t = parseTitle(fileName);
+      if(t&&t.length>1) works[num].title = t;
+      newCount++;
     }
-    const w=works[num];
-    w.htmlFile=fn;
-    if(!w.title){const t=parseTitle(fn);if(t&&t.length>1)w.title=t;}
-    const s=detectStates(fn);s.forEach(st=>w.states.add(st));
-    if(s.has('lagniappe'))w.hasLagniappe=true;
+
+    const w = works[num];
+
+    if(['html','htm'].includes(ext)){
+      w.htmlFile = fileName;
+      if(!w.title){ const t=parseTitle(fileName); if(t) w.title=t; }
+    } else if(['mp4','gif'].includes(ext)){
+      // opening = any mp4/gif
+      if(!w.openingFile) w.openingFile = fileName;
+      if(!w.videos.includes(fileName)) w.videos.push(fileName);
+      const states = detectStates(fileName);
+      states.forEach(s=>w.states.add(s));
+      if(states.has('lagniappe')) w.hasLagniappe = true;
+    } else if(['jpg','jpeg','png','webp'].includes(ext)){
+      w.thumbnailFile = fileName;
+    } else if(ext==='txt'){
+      w.descriptionFile = fileName;
+    }
   });
-  saveWorks();renderWorks();
+
+  saveWork();
+  renderWorks();
+  if(newCount>0){
+    document.getElementById('dropZone').querySelector('p').textContent =
+      `${newCount} new works detected and merged. Drop more anytime.`;
+  }
 }
 
 function renderWorks(){
-  const container=document.getElementById('worksContainer');
-  const keys=Object.keys(works).map(Number).sort((a,b)=>a-b);
-  if(!keys.length){container.innerHTML='<div style="text-align:center;padding:40px;font-family:var(--fm);font-size:9px;letter-spacing:0.2em;color:var(--mut);text-transform:uppercase">No works yet — drop your folder above</div>';document.getElementById('statsRow').style.display='none';document.getElementById('actionRow').style.display='none';return;}
+  const container = document.getElementById('worksContainer');
+  const keys = Object.keys(works).map(Number).sort((a,b)=>a-b);
+
+  if(!keys.length){
+    container.innerHTML = '<div class="empty-state">No works yet — drop your files above</div>';
+    document.getElementById('statsRow').style.display='none';
+    document.getElementById('actionRow').style.display='none';
+    return;
+  }
+
   document.getElementById('statsRow').style.display='flex';
   document.getElementById('actionRow').style.display='flex';
-  document.getElementById('stTotal').textContent=keys.length;
-  document.getElementById('stHtml').textContent=keys.filter(k=>works[k].htmlFile).length;
-  document.getElementById('stReady').textContent=keys.filter(k=>works[k].htmlFile&&works[k].editionType!=='tbd').length;
-  document.getElementById('stTbd').textContent=keys.filter(k=>works[k].editionType==='tbd').length;
-  document.getElementById('stUrls').textContent=keys.filter(k=>works[k].collectUrl).length;
-  document.getElementById('stArticles').textContent=keys.filter(k=>works[k].articleUrl).length;
+  document.getElementById('statTotal').textContent=keys.length;
+  document.getElementById('statHtml').textContent=keys.filter(k=>works[k].htmlFile).length;
+  document.getElementById('statVideo').textContent=keys.filter(k=>works[k].openingFile).length;
+  document.getElementById('statReady').textContent=keys.filter(k=>works[k].htmlFile&&works[k].editionType!=='tbd').length;
+  document.getElementById('statTbd').textContent=keys.filter(k=>works[k].editionType==='tbd').length;
 
-  let html=`<div class="tbl-header">
-    <div class="col-lbl">#</div>
-    <div class="col-lbl">Work / HTML file</div>
-    <div class="col-lbl">Collect URL</div>
-    <div class="col-lbl">Article URL</div>
-    <div class="col-lbl">Edition</div>
-    <div class="col-lbl">Social</div>
-    <div class="col-lbl">Lagniappe</div>
-    <div class="col-lbl">Status</div>
+  let html=`
+  <div class="work-row-header">
+    <div class="col-label">#</div>
+    <div class="col-label">Work & files</div>
+    <div class="col-label">Collect URL</div>
+    <div class="col-label">YouTube / Article</div>
+    <div class="col-label">Edition</div>
+    <div class="col-label">Lagniappe</div>
+    <div class="col-label">Status</div>
   </div>`;
 
   keys.forEach(num=>{
-    const w=works[num];
-    const isTbd=w.editionType==='tbd';
-    const sc=!w.htmlFile?'s-missing':isTbd?'s-tbd':'s-ready';
-    const sl=!w.htmlFile?'No HTML':isTbd?'TBD':'Ready';
-    html+=`<div class="work-row">
-      <div class="wnum">${w.numeral}<small>${num}</small></div>
+    const w = works[num];
+    const hasHtml = !!w.htmlFile;
+    const isTbd = w.editionType==='tbd';
+    const statusClass = !hasHtml?'badge-missing':isTbd?'badge-tbd':'badge-ready';
+    const statusText = !hasHtml?'No HTML':isTbd?'TBD':'Ready';
+
+    const fileList = [
+      w.htmlFile ? `<span class="has">✓ ${w.htmlFile}</span>` : `<span class="missing">✗ No HTML</span>`,
+      w.openingFile ? `<span class="has">✓ opening: ${w.openingFile}</span>` : '',
+      w.thumbnailFile ? `<span class="has">✓ thumbnail</span>` : '',
+      w.descriptionFile ? `<span class="has">✓ description.txt</span>` : '',
+      w.videos.length>1 ? `<span class="has">✓ ${w.videos.length} videos</span>` : '',
+    ].filter(Boolean).join('');
+
+    html+=`
+    <div class="work-row">
+      <div class="work-num">${toRoman(num)}<br><span style="font-size:11px;color:var(--mut)">${num}</span></div>
       <div>
-        <input class="w-input w-title-input" placeholder="TITLE" value="${w.title||''}" onchange="works[${num}].title=this.value;saveWorks()" oninput="works[${num}].title=this.value;saveWorks()">
-        <div class="w-files">${w.htmlFile?`<span class="has">✓ ${w.htmlFile}</span>`:'<span class="missing">✗ No HTML</span>'}</div>
+        <input class="work-name-input" placeholder="TITLE" value="${w.title||''}"
+          onchange="works[${num}].title=this.value;saveWork()"
+          oninput="works[${num}].title=this.value;saveWork()">
+        <div class="work-files">${fileList}</div>
       </div>
       <div>
-        <input class="w-input" placeholder="transient.art/…" value="${w.collectUrl||''}" onchange="works[${num}].collectUrl=this.value;saveWorks()" oninput="works[${num}].collectUrl=this.value;saveWorks()">
+        <input class="work-input" placeholder="transient.art/..." value="${w.collectUrl||''}"
+          onchange="works[${num}].collectUrl=this.value;saveWork()"
+          oninput="works[${num}].collectUrl=this.value;saveWork()">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <input class="work-input" placeholder="YouTube URL" value="${w.youtubeUrl||''}"
+          onchange="works[${num}].youtubeUrl=this.value;saveWork()"
+          oninput="works[${num}].youtubeUrl=this.value;saveWork()">
       </div>
       <div>
-        <input class="w-input" placeholder="Article / press URL" value="${w.articleUrl||''}" onchange="works[${num}].articleUrl=this.value;saveWorks()" oninput="works[${num}].articleUrl=this.value;saveWorks()">
-      </div>
-      <div>
-        <select class="w-select ${isTbd?'tbd':''}" onchange="works[${num}].editionType=this.value;this.className='w-select'+(this.value==='tbd'?' tbd':'');saveWorks();renderWorks()">
-          <option value="tbd" ${w.editionType==='tbd'?'selected':''}>TBD</option>
-          <option value="unique" ${w.editionType==='unique'?'selected':''}>Unique 1/1</option>
+        <select class="edition-select ${isTbd?'tbd':''}"
+          onchange="works[${num}].editionType=this.value;this.className='edition-select '+(this.value==='tbd'?'tbd':'');saveWork();renderWorks()">
+          <option value="tbd" ${w.editionType==='tbd'?'selected':''}>TBD — not yet set</option>
+          <option value="unique" ${w.editionType==='unique'?'selected':''}>Unique — 1/1</option>
           <option value="editions" ${w.editionType==='editions'?'selected':''}>Editions</option>
-          <option value="limited" ${w.editionType==='limited'?'selected':''}>Limited 420</option>
-          <option value="open" ${w.editionType==='open'?'selected':''}>Open</option>
-          <option value="monthly" ${w.editionType==='monthly'?'selected':''}>Monthly</option>
+          <option value="limited" ${w.editionType==='limited'?'selected':''}>Limited — 420</option>
+          <option value="open" ${w.editionType==='open'?'selected':''}>Open Edition</option>
+          <option value="monthly" ${w.editionType==='monthly'?'selected':''}>Monthly Drop</option>
           <option value="commemorative" ${w.editionType==='commemorative'?'selected':''}>Commemorative</option>
         </select>
       </div>
-      <div>
-        <input class="w-input" placeholder="IG handle" value="${w.socialUrls?.instagram||''}" style="margin-bottom:3px" onchange="works[${num}].socialUrls.instagram=this.value;saveWorks()">
-        <input class="w-input" placeholder="𝕏 handle" value="${w.socialUrls?.x||''}" onchange="works[${num}].socialUrls.x=this.value;saveWorks()">
+      <div style="text-align:center;padding-top:4px">
+        <input type="checkbox" id="lag-${num}" ${w.hasLagniappe?'checked':''}
+          style="accent-color:var(--mag);width:16px;height:16px;cursor:pointer"
+          onchange="works[${num}].hasLagniappe=this.checked;saveWork()">
+        <label for="lag-${num}" style="font-family:var(--fm);font-size:8px;color:var(--mut);display:block;margin-top:2px;cursor:pointer">Lagniappe</label>
       </div>
-      <div style="text-align:center;padding-top:6px">
-        <input type="checkbox" id="lag-${num}" ${w.hasLagniappe?'checked':''} style="accent-color:var(--mag);width:16px;height:16px;cursor:pointer" onchange="works[${num}].hasLagniappe=this.checked;saveWorks()">
-        <label for="lag-${num}" style="font-family:var(--fm);font-size:7px;color:var(--mut);display:block;cursor:pointer;margin-top:2px">Lagniappe</label>
-      </div>
-      <div><span class="status-pill ${sc}">${sl}</span></div>
+      <div><span class="status-badge ${statusClass}">${statusText}</span></div>
     </div>`;
   });
-  container.innerHTML=html;
+
+  container.innerHTML = html;
 }
 
-// ── SUPABASE PUSH ──
-const BASE_URL='https://abstractia-today.vercel.app/works/';
-
-async function sbPost(table,data){
-  const res=await fetch(`${SB_URL}/rest/v1/${table}?on_conflict=number`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`,'Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(data)});
-  if(!res.ok){const txt=await res.text();console.error('Supabase error',res.status,txt);}
-  return res;
-}
-
-function buildRow(num){
-  const w=works[num];
-  const t=w.title||'TBA';
-  const numeral=w.numeral;
-  const slug=`${numeral.toLowerCase()}-${t.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}`;
-  const et=w.editionType==='tbd'?'editions':w.editionType;
-  const states=[...w.states];if(!states.length)states.push('waves','lines');
-  return{
-    number:num,numeral,title:t,slug,edition_type:et,
-    edition_size:{unique:1,limited:420}[et]||null,
-    series_type:'waves',
-    html_github_url:w.htmlFile?`${BASE_URL}${encodeURIComponent(w.htmlFile)}`:null,
-    collect_url:w.collectUrl||null,
-    article_url:w.articleUrl||null,
-    social_urls:w.socialUrls||{},
-    states,
-    time_palette:w.states.has('gm')||w.states.has('pm')||w.states.has('420'),
-    has_lagniappe:w.hasLagniappe||w.states.has('lagniappe'),
-    published:true
-  };
-}
-
-async function pushToSupabase(){
-  const keys=Object.keys(works).map(Number).sort((a,b)=>a-b);
-  if(!keys.length){alert('No works to push.');return;}
-  const btn=document.getElementById('pushBtn');
-  const st=document.getElementById('pushStatus');
-  btn.textContent='Pushing…';btn.disabled=true;
-  st.style.display='block';st.style.borderColor='rgba(255,184,48,0.4)';st.style.color='var(--gold)';st.textContent='Connecting…';
-  const rows=keys.map(buildRow);
-  const chunks=[];for(let i=0;i<rows.length;i+=20)chunks.push(rows.slice(i,i+20));
-  let ok=0,err=0;
-  for(let i=0;i<chunks.length;i++){
-    st.textContent=`Sending batch ${i+1}/${chunks.length}…`;
-    try{const r=await sbPost('works',chunks[i]);if(r.ok)ok+=chunks[i].length;else err+=chunks[i].length;}
-    catch(e){err+=chunks[i].length;}
-  }
-  if(!err){
-    st.style.borderColor='rgba(76,175,118,0.5)';st.style.color='var(--grn)';st.textContent=`✓ ${ok} works live on Supabase.`;
-    btn.textContent='✓ Pushed';
-  }else{
-    st.style.borderColor='rgba(255,45,120,0.5)';st.style.color='var(--mag)';st.textContent=`${ok} saved, ${err} errors.`;
-    btn.textContent='⚡ Push all to Supabase';btn.disabled=false;
-  }
+function getEditionSize(type){
+  return{unique:1,limited:420,editions:null,open:null,monthly:null,tbd:null,commemorative:null}[type]??null;
 }
 
 function generateSQL(){
-  const keys=Object.keys(works).map(Number).sort((a,b)=>a-b);
-  const rows=keys.map(buildRow).map(r=>`(${r.number},'${r.numeral}','${(r.title||'').replace(/'/g,"''")}','${r.slug}','${r.edition_type}',${r.edition_size||'NULL'},'waves',${r.html_github_url?`'${r.html_github_url}'`:'NULL'},${r.collect_url?`'${r.collect_url}'`:'NULL'},${r.article_url?`'${r.article_url}'`:'NULL'},'${JSON.stringify(r.states)}'::jsonb,'${JSON.stringify(r.social_urls)}'::jsonb,${r.time_palette},${r.has_lagniappe},true)`);
-  const sql=`INSERT INTO works(number,numeral,title,slug,edition_type,edition_size,series_type,html_github_url,collect_url,article_url,states,social_urls,time_palette,has_lagniappe,published)\nVALUES\n${rows.join(',\n')}\nON CONFLICT(number) DO UPDATE SET title=EXCLUDED.title,slug=EXCLUDED.slug,edition_type=EXCLUDED.edition_type,html_github_url=EXCLUDED.html_github_url,collect_url=EXCLUDED.collect_url,article_url=EXCLUDED.article_url,states=EXCLUDED.states,social_urls=EXCLUDED.social_urls,time_palette=EXCLUDED.time_palette,has_lagniappe=EXCLUDED.has_lagniappe,updated_at=now();`;
-  document.getElementById('sqlBox').textContent=sql;
-  document.getElementById('sqlOut').style.display='block';
+  const keys = Object.keys(works).map(Number).sort((a,b)=>a-b);
+  if(!keys.length) return;
+  let sql = `-- ABSTRACTIA — Bulk Works Insert\n-- Generated ${new Date().toISOString()}\n\n`;
+  sql += `INSERT INTO works (\n  number, numeral, title, slug, edition_type, edition_size,\n  series_type, html_github_url, demo_video_url, collect_url,\n  states, time_palette, has_lagniappe, published\n) VALUES\n`;
+  const rows = keys.map(num=>{
+    const w = works[num];
+    const title = (w.title||'TBA').replace(/'/g,"''");
+    const numeral = w.numeral;
+    const slug = `${numeral.toLowerCase()}-${title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}`;
+    const edSize = getEditionSize(w.editionType);
+    const edType = w.editionType==='tbd'?'editions':w.editionType;
+    const base = 'https://abstractia-today.pages.dev/works/';
+    const htmlUrl = w.htmlFile ? `'${base}${encodeURIComponent(w.htmlFile)}'` : 'NULL';
+    const videoUrl = w.youtubeUrl ? `'${w.youtubeUrl}'` : w.openingFile ? `'${base}${encodeURIComponent(w.openingFile)}'` : 'NULL';
+    const collectUrl = w.collectUrl ? `'${w.collectUrl}'` : 'NULL';
+    const statesArr = [...w.states];
+    if(!statesArr.length) statesArr.push('waves','lines');
+    const timePalette = w.states.has('gm')||w.states.has('pm')||w.states.has('420');
+    const hasLagniappe = w.hasLagniappe||w.states.has('lagniappe');
+    return `  (${num}, '${numeral}', '${title}', '${slug}', '${edType}', ${edSize===null?'NULL':edSize},\n   'waves', ${htmlUrl}, ${videoUrl}, ${collectUrl},\n   '${JSON.stringify(statesArr)}'::jsonb, ${timePalette}, ${hasLagniappe}, true)`;
+  });
+  sql += rows.join(',\n') + '\n';
+  sql += `ON CONFLICT (number) DO UPDATE SET\n  title=EXCLUDED.title, slug=EXCLUDED.slug, edition_type=EXCLUDED.edition_type,\n  edition_size=EXCLUDED.edition_size, html_github_url=EXCLUDED.html_github_url,\n  demo_video_url=EXCLUDED.demo_video_url, collect_url=EXCLUDED.collect_url,\n  states=EXCLUDED.states, time_palette=EXCLUDED.time_palette,\n  has_lagniappe=EXCLUDED.has_lagniappe, updated_at=now();\n`;
+  document.getElementById('sqlBox').textContent = sql;
+  document.getElementById('sqlOutput').classList.add('visible');
+  document.getElementById('sqlOutput').scrollIntoView({behavior:'smooth'});
 }
-function copySql(){navigator.clipboard.writeText(document.getElementById('sqlBox').textContent).then(()=>{const b=event.target;b.textContent='Copied ✓';setTimeout(()=>b.textContent='Copy SQL',2000);});}
 
-function confirmClear(){if(confirm('Clear all works? Cannot be undone.')){works={};localStorage.removeItem(STORAGE_KEY);renderWorks();}}
+function generateGithubInstructions(){
+  const keys = Object.keys(works).map(Number).sort((a,b)=>a-b);
+  let text = `ABSTRACTIA — Files needed in GitHub\nRepo: github.com/DrkSiddh/abstractia-today\nPath: abstractia-today/works/\n\n`;
+  keys.forEach(num=>{
+    const w = works[num];
+    text += `--- ${num} ${w.title||'TBA'} ---\n`;
+    if(w.htmlFile) text += `  ${w.htmlFile}\n`;
+    if(w.openingFile) text += `  ${w.openingFile}\n`;
+    if(w.thumbnailFile) text += `  ${w.thumbnailFile}\n`;
+    if(w.descriptionFile) text += `  ${w.descriptionFile}\n`;
+    w.videos.forEach(v=>{ if(v!==w.openingFile) text+=`  ${v}\n`; });
+  });
+  text += `\nDrop all files into: abstractia-today/works/\nGitHub Desktop: commit + push.\n`;
+  document.getElementById('githubBox').textContent = text;
+  document.getElementById('githubOutput').classList.add('visible');
+  document.getElementById('githubOutput').scrollIntoView({behavior:'smooth'});
+}
 
-function initUploader(){
+function copyOutput(boxId,btnId,label){
+  navigator.clipboard.writeText(document.getElementById(boxId).textContent).then(()=>{
+    const btn = document.getElementById(btnId);
+    btn.textContent='Copied ✓'; btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent=label;btn.classList.remove('copied');},2000);
+  });
+}
+
+function confirmClear(){
+  if(confirm('Clear all work? This cannot be undone.')){
+    works={};
+    localStorage.removeItem(STORAGE_KEY);
+    renderWorks();
+  }
+}
+
+// Drag and drop
+function initStudio(){
   loadSaved();
-  if(Object.keys(works).length)renderWorks();
-  const dz=document.getElementById('dropZone');
+  if(Object.keys(works).length>0){
+    document.getElementById('dropZone').querySelector('p').textContent =
+      `${Object.keys(works).length} works restored. Drop more files to add.`;
+    renderWorks();
+  }
+
+  const dz = document.getElementById('dropZone');
   dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('over');});
   dz.addEventListener('dragleave',()=>dz.classList.remove('over'));
   dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('over');processFiles(e.dataTransfer.files);});
   document.getElementById('fileInput').addEventListener('change',e=>processFiles(e.target.files));
 }
 
-// ── LEADS DASHBOARD ──
-let allLeads=[];
-const STATUS_ORDER=['new','reviewing','quoted','booked','declined','archived'];
-const STATUS_CLS={new:'ls-new',reviewing:'ls-reviewing',quoted:'ls-quoted',booked:'ls-booked',declined:'ls-declined',archived:'ls-archived'};
+// Auto-init if already unlocked
+if(sessionStorage.getItem(SESSION_KEY)==='1') initStudio();
 
-async function loadLeads(){
-  try{
-    const r=await fetch(`${SB_URL}/rest/v1/inquiries?select=*&order=submitted_at.desc`,{headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`}});
-    allLeads=await r.json();
-    renderLeads(allLeads);
-  }catch(e){document.getElementById('leadsContainer').innerHTML='<div class="leads-empty">Error loading leads.</div>';}
-}
+// Direct Supabase push
+const SUPA_URL='https://xtkdnyqjheewsqnvugaj.supabase.co';
+const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0a2RueXFqaGVld3NxbnZ1Z2FqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1MTAyODQsImV4cCI6MjA5MTA4NjI4NH0.T8X7Q1fKjpkD1csafr1F9pD5OULu1DR_eTSeVa-Rhv0';
 
-function filterLeads(status,btn){
-  document.querySelectorAll('.lf-btn').forEach(b=>b.classList.remove('active'));
-  if(btn)btn.classList.add('active');
-  renderLeads(status==='all'?allLeads:allLeads.filter(l=>l.status===status));
-}
-
-function renderLeads(leads){
-  const c=document.getElementById('leadsContainer');
-  if(!leads.length){c.innerHTML='<div class="leads-empty">No leads yet.</div>';return;}
-  c.innerHTML=`<div class="leads-header">
-    <div class="col-lbl">Contact</div>
-    <div class="col-lbl">Type</div>
-    <div class="col-lbl">Budget</div>
-    <div class="col-lbl">Notes</div>
-    <div class="col-lbl">Date</div>
-    <div class="col-lbl">Status</div>
-  </div>`+leads.map(l=>{
-    const d=new Date(l.submitted_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'2-digit'});
-    const sc=STATUS_CLS[l.status]||'ls-new';
-    const nextStatus=STATUS_ORDER[(STATUS_ORDER.indexOf(l.status)+1)%STATUS_ORDER.length];
-    return`<div class="lead-row">
-      <div>
-        <div class="lead-name">${l.name||'—'}</div>
-        <div class="lead-email">${l.email||''}</div>
-        ${l.organization?`<div style="font-size:10px;color:var(--mut);margin-top:2px">${l.organization}</div>`:''}
-      </div>
-      <div><span class="lead-type-badge">${l.inquiry_type||'general'}</span></div>
-      <div class="lead-budget">${l.budget_range||'—'}</div>
-      <div>
-        ${l.notes?`<div style="font-size:11px;color:var(--mut);line-height:1.5;margin-bottom:4px">${l.notes.slice(0,80)}${l.notes.length>80?'…':''}</div>`:''}
-        <input class="lead-notes-input" placeholder="Internal notes…" value="${(l.internal_notes||'').replace(/"/g,'&quot;')}" onchange="updateLeadNotes('${l.id}',this.value)">
-      </div>
-      <div class="lead-date">${d}</div>
-      <div>
-        <span class="lead-status ${sc}" onclick="advanceLeadStatus('${l.id}','${nextStatus}',this,'${l.status}')" title="Click to advance status">${l.status}</span>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-async function advanceLeadStatus(id,next,el,current){
-  const opts=['new','reviewing','quoted','booked','declined','archived','pass'];
-  // cycle or show dropdown
-  const choice=prompt(`Set status for this lead:\n${STATUS_ORDER.join(' → ')}\n\nCurrent: ${current}\nType new status:`,next);
-  if(!choice)return;
-  const s=choice.toLowerCase().trim();
-  if(!STATUS_ORDER.includes(s)){alert('Invalid status.');return;}
-  await fetch(`${SB_URL}/rest/v1/inquiries?id=eq.${id}`,{method:'PATCH',headers:{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`},body:JSON.stringify({status:s,updated_at:new Date().toISOString()})});
-  loadLeads();
-}
-async function updateLeadNotes(id,notes){
-  await fetch(`${SB_URL}/rest/v1/inquiries?id=eq.${id}`,{method:'PATCH',headers:{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`},body:JSON.stringify({internal_notes:notes,updated_at:new Date().toISOString()})});
-}
-
-// ── SIGNALS PANEL ──
-async function loadSignalsPanel(){
-  try{
-    const r=await fetch(`${SB_URL}/rest/v1/signals?select=*&order=signaled_at.desc&limit=100`,{headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`}});
-    const sigs=await r.json();
-    const c=document.getElementById('signalsContainer');
-    if(!Array.isArray(sigs)||!sigs.length){c.innerHTML='<div class="leads-empty">No signals yet.</div>';return;}
-    c.innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px">
-    ${sigs.map(s=>`<div style="background:var(--surf);border:1px solid var(--bdr);padding:14px;font-size:12px">
-      <div style="font-family:var(--fm);font-size:9px;color:var(--mag);margin-bottom:6px">${s.platform||'anon'} · Hour ${s.hour_of_day??'?'}</div>
-      <div style="font-weight:500">${s.handle?`@${s.handle}`:'anonymous'}</div>
-      ${s.city||s.country?`<div style="font-size:10px;color:var(--mut);margin-top:2px">${[s.city,s.country].filter(Boolean).join(', ')}</div>`:''}
-      <div style="font-size:9px;color:var(--mut2);margin-top:4px;font-family:var(--fm)">${new Date(s.signaled_at).toLocaleString()}</div>
-      ${s.screenshot_url?`<div style="margin-top:8px;font-family:var(--fm);font-size:8px;color:var(--blue)">📸 Has screenshot</div>`:''}
-    </div>`).join('')}
-    </div>`;
-  }catch(e){}
+async function pushToSupabase(){
+  const keys = Object.keys(works).map(Number).sort((a,b)=>a-b);
+  if(!keys.length){alert('No works to push yet.');return;}
+  const btn=document.getElementById('pushBtn');
+  const status=document.getElementById('pushStatus');
+  btn.textContent='Sending...';btn.disabled=true;
+  status.style.display='block';status.style.borderColor='rgba(255,184,48,0.4)';status.style.color='var(--gold)';
+  status.textContent='Connecting to Supabase...';
+  const base='https://abstractia-today.pages.dev/works/';
+  const rows=keys.map(num=>{
+    const w=works[num];
+    const title=w.title||'TBA';
+    const numeral=w.numeral;
+    const slug=`${numeral.toLowerCase()}-${title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}`;
+    const edType=w.editionType==='tbd'?'editions':w.editionType;
+    const edSize=getEditionSize(w.editionType);
+    const htmlUrl=w.htmlFile?`${base}${encodeURIComponent(w.htmlFile)}`:null;
+    const videoUrl=w.youtubeUrl||(w.openingFile?`${base}${encodeURIComponent(w.openingFile)}`:null);
+    const statesArr=[...w.states];
+    if(!statesArr.length)statesArr.push('waves','lines');
+    return{
+      number:num,numeral,title,slug,
+      edition_type:edType,edition_size:edSize,series_type:'waves',
+      html_github_url:htmlUrl||null,demo_video_url:videoUrl||null,
+      collect_url:w.collectUrl||null,states:statesArr,
+      time_palette:w.states.has('gm')||w.states.has('pm')||w.states.has('420'),
+      has_lagniappe:w.hasLagniappe||w.states.has('lagniappe'),
+      published:true
+    };
+  });
+  const chunks=[];
+  for(let i=0;i<rows.length;i+=20)chunks.push(rows.slice(i,i+20));
+  let ok=0,err=0;
+  for(let i=0;i<chunks.length;i++){
+    status.textContent=`Sending batch ${i+1} of ${chunks.length}...`;
+    try{
+      const res=await fetch(`${SUPA_URL}/rest/v1/works?on_conflict=number`,{
+        method:'POST',
+        headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':`Bearer ${SUPA_KEY}`,'Prefer':'resolution=merge-duplicates'},
+        body:JSON.stringify(chunks[i])
+      });
+      if(res.ok)ok+=chunks[i].length; else{await res.text();err+=chunks[i].length;}
+    }catch(e){err+=chunks[i].length;}
+  }
+  if(err===0){
+    status.style.borderColor='rgba(76,175,118,0.5)';status.style.color='var(--grn)';
+    status.textContent=`✓ ${ok} works sent to Supabase. Your gallery is live.`;
+    btn.textContent='✓ Sent to Supabase';
+  } else {
+    status.style.borderColor='rgba(255,45,120,0.5)';status.style.color='var(--mag)';
+    status.textContent=`${ok} saved, ${err} errors.`;
+    btn.textContent='⚡ Send to Supabase — one click';btn.disabled=false;
+  }
 }
 </script>
 </body>
