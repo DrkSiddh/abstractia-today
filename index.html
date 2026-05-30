@@ -141,6 +141,14 @@ body{background:var(--void);color:var(--txt);font-family:var(--fb)}
 .receipt-check{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:var(--grn);color:#04200f;font-size:11px;font-weight:700}
 #receipt.warn .receipt-check{background:var(--mut);color:var(--void)}
 
+/* WRONG-FILE FLAG */
+#wrongfile{position:fixed;inset:0;z-index:6;display:none;align-items:center;justify-content:center;padding:40px;text-align:center}
+#wrongfile.show{display:flex}
+.wf-box{max-width:420px;border:1px solid var(--mag);background:rgba(255,45,120,0.06);padding:28px 26px}
+.wf-title{font-family:var(--fd);font-size:32px;letter-spacing:0.03em;color:var(--mag);margin-bottom:10px}
+.wf-text{font-family:var(--fm);font-size:11px;line-height:1.8;color:var(--mut);letter-spacing:0.04em}
+.wf-text strong{color:var(--txt)}
+
 /* LOADING */
 #loader{position:fixed;inset:0;z-index:100;background:var(--void);display:flex;align-items:center;justify-content:center;transition:opacity 0.5s}
 #loader.gone{opacity:0;pointer-events:none}
@@ -282,6 +290,14 @@ body{background:var(--void);color:var(--txt);font-family:var(--fb)}
 <!-- TINY RECEIPT -->
 <div id="receipt"><span class="receipt-check">&#10003;</span><span id="receiptText">Saved</span></div>
 
+<!-- WRONG-FILE FLAG -->
+<div id="wrongfile">
+  <div class="wf-box">
+    <div class="wf-title">Wrong file</div>
+    <div class="wf-text">This work is pointing at a copy of the site instead of the artwork. Swap the file in <strong>works/</strong> for the real piece, then push. The catalog entry is fine &mdash; only the file needs replacing.</div>
+  </div>
+</div>
+
 <script>
 const SB_URL='https://xtkdnyqjheewsqnvugaj.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0a2RueXFqaGVld3NxbnZ1Z2FqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1MTAyODQsImV4cCI6MjA5MTA4NjI4NH0.T8X7Q1fKjpkD1csafr1F9pD5OULu1DR_eTSeVa-Rhv0';
@@ -306,11 +322,12 @@ const today=getDayOfYear();
 document.getElementById('topDay').textContent='Day '+today;
 document.getElementById('noWorkDay').textContent=today;
 updateSavedCount();
+getUID();
 
 /* ---------- BOOT ---------- */
 async function boot(){
   try{
-    const r=await fetch(SB_URL+'/rest/v1/works?select=number,numeral,title,html_github_url,collect_url,description,article_url,social_urls&published=eq.true&order=number.asc',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+    const r=await fetch(SB_URL+'/rest/v1/works?select=number,numeral,title,html_github_url,collect_url,description,article_url,social_urls&published=eq.true&number=lte.'+today+'&order=number.asc',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
     works=await r.json();
   }catch(e){works=[];}
   if(!Array.isArray(works))works=[];
@@ -368,7 +385,8 @@ function showWork(idx,initial){
   if(initial && !sessionStorage.getItem(ENTERED_KEY)){showGate();}
   else{hideGate();}
 
-  frame.onload=function(){document.getElementById('loader').classList.add('gone');};
+  hideWrongFile();
+  frame.onload=function(){document.getElementById('loader').classList.add('gone');checkMirror(frame);};
   setTimeout(function(){document.getElementById('loader').classList.add('gone');},3000);
 }
 
@@ -438,6 +456,16 @@ function enterExperience(){
   localStorage.setItem(SEEN_KEY,'1');
   buzz(12);
   hideGate();
+}
+
+/* ---------- VISITOR IDENTITY (anonymous, durable) ---------- */
+function getUID(){
+  let u=localStorage.getItem('abstractia_uid');
+  if(!u){
+    u=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():('v_'+Date.now()+'_'+Math.random().toString(36).slice(2));
+    localStorage.setItem('abstractia_uid',u);
+  }
+  return u;
 }
 
 /* ---------- BOOKMARKS (account-free) ---------- */
@@ -540,7 +568,7 @@ function submitName(skip){
 
 /* ---------- SUBSCRIBER WRITES ---------- */
 function postSubscriber(email,source){
-  fetch(SB_URL+'/rest/v1/subscribers',{method:'POST',headers:{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Prefer':'return=minimal'},body:JSON.stringify({email:email,notify_via:['email'],platform:source,active:true})}).catch(function(){});
+  fetch(SB_URL+'/rest/v1/subscribers',{method:'POST',headers:{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Prefer':'return=minimal'},body:JSON.stringify({email:email,notify_via:['email'],platform:source,active:true,visitor_id:getUID(),bookmarks:getBookmarks()})}).catch(function(){});
 }
 function patchName(email,name){
   if(!email)return;
@@ -578,6 +606,19 @@ function showThrowback(){
   const w=works[idx];
   document.getElementById('workLabel').textContent='Throwback \u00b7 Day '+w.number;
 }
+
+/* ---------- WRONG-FILE GUARD (best-effort) ---------- */
+function checkMirror(frame){
+  try{
+    const doc=frame.contentDocument;
+    if(!doc)return;
+    const title=(doc.title||'').toUpperCase();
+    const looksLikeSite=(title.indexOf('ABSTRACTIA TODAY')!==-1)||!!(doc.getElementById&&doc.getElementById('art-frame'));
+    if(looksLikeSite)showWrongFile();else hideWrongFile();
+  }catch(e){/* different domain: browser blocks inspection, leave as-is */}
+}
+function showWrongFile(){const el=document.getElementById('wrongfile');if(el)el.classList.add('show');}
+function hideWrongFile(){const el=document.getElementById('wrongfile');if(el)el.classList.remove('show');}
 
 /* ---------- INFO MODAL ---------- */
 function openInfo(){document.getElementById('info-modal').classList.add('open');}
