@@ -619,7 +619,15 @@ function checkMirror(frame){
     if(!doc)return;
     const title=(doc.title||'').toUpperCase();
     const looksLikeSite=(title.indexOf('ABSTRACTIA TODAY')!==-1)||!!(doc.getElementById&&doc.getElementById('art-frame'));
-    if(looksLikeSite)showWrongFile();else hideWrongFile();
+    if(looksLikeSite){
+      // Cloudflare served a copy of the site = the real file for this slot isn't deployed yet.
+      if(currentNumber===today){
+        // Never show a broken TODAY. Fall through to the graceful "coming" screen.
+        hideWrongFile();hideGate();showNoWork();
+      } else {
+        showWrongFile();
+      }
+    } else { hideWrongFile(); }
   }catch(e){/* different domain: browser blocks inspection, leave as-is */}
 }
 function showWrongFile(){const el=document.getElementById('wrongfile');if(el)el.classList.add('show');}
