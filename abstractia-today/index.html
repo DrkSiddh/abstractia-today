@@ -225,7 +225,9 @@ body{background:var(--void);color:var(--txt);font-family:var(--fb)}
       <a class="link-btn" id="articleBtn" href="#" target="_blank" rel="noopener" style="display:none">Read &#8599;</a>
       <a class="icon-btn" id="xBtn" href="#" target="_blank" rel="noopener" style="display:none">X</a>
       <a class="icon-btn" id="igBtn" href="#" target="_blank" rel="noopener" style="display:none">IG</a>
+      <a class="icon-btn" id="liBtn" href="#" target="_blank" rel="noopener" style="display:none">in</a>
       <a class="icon-btn" id="ytBtn" href="#" target="_blank" rel="noopener" style="display:none">YT</a>
+      <a class="icon-btn" id="linkBtn" href="#" target="_blank" rel="noopener" style="display:none">&#8599;</a>
       <button class="save-btn" id="saveBtn" onclick="toggleBookmark(currentNumber)"><span>&#9825;</span> Save</button>
     </div>
     <div class="nav-arrows">
@@ -400,7 +402,9 @@ function renderActions(w){
   const s=w.social_urls||{};
   setSocial('xBtn',s.x);
   setSocial('igBtn',s.instagram);
+  setSocial('liBtn',s.linkedin);
   setSocial('ytBtn',s.youtube);
+  setSocial('linkBtn',s.link);
 
   updateSaveBtn();
 }
@@ -417,6 +421,7 @@ function toUrl(id,val){
   const h=val.replace(/^@/,'');
   if(id==='xBtn')return 'https://x.com/'+h;
   if(id==='igBtn')return 'https://instagram.com/'+h;
+  if(id==='liBtn')return 'https://linkedin.com/in/'+h;
   if(id==='ytBtn')return 'https://youtube.com/@'+h;
   return val;
 }
