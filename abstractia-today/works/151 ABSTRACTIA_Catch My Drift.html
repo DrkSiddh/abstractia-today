@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.11.11/lib/p5.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/p5@0.7.0/lib/addons/p5.sound.min.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "mediabunny": "https://cdn.jsdelivr.net/npm/mediabunny@1.25.8/+esm"
+      }
+    }
+  </script>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
+      overflow: auto;
+      background: transparent;
+    }
+
+    main {
+      height: 100%;
+      display: flex;
+      overflow: auto;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #p5_loading {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      animation-delay: 1s;
+      color: #4e5d7b;
+      font-family: "FK Grotesk Regular", sans-serif;
+      font-size: 30px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 30px;
+      letter-spacing: -1.5px;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .5; }
+    }
+  </style>
+  <title>151 Abstractia | Made on juno.transient.xyz</title>
+</head>
+<body>
+  
+    
+  <script>
+    let cnv;
+let isMobile;
+let imgSkelevaggioLovesAbstractiaVDaySuperHaute;
+let videoIXOpen;
+let imgVIControls;
+let imgAbstractiaCard;
+let gifAbstractLindia;
+let audioPresence; 
+let audioAltMode;   
+let audioInterlopr; 
+let button;
+let fontRock3D;
+
+let scene = 0; 
+let fadeAlpha = 0;
+let introAlpha = 0; 
+let fadeRate = 5;
+let showAlternateView = false;
+let isDarkMode = false; 
+let showLinesMode = false; 
+let showWavesMode = false;
+let showMountainMode = false; 
+let showFluidMode = false;
+const LERP_RATE = 0.05;
+let isQuietMode = false; 
+let isHushed = false;    
+let showControlsMenu = false;
+let isDeveloperMode = false;
+let isHovering = false;
+
+let roses = []; 
+let bgParticles = [];
+let fluidParticles = [];
+
+let colorsPalette = []; 
+let brightsColors = [];
+let targetPaletteColors = []; 
+let paletteLerpRate = 0.01; 
+let lastPaletteChangeTime = 0;
+let nextPaletteChangeDelay = 12000; 
+let bgScrollOffset = 0;
+let welcomeVol = 0;
+
+let keyedImageA;
+
+const DAY_PALETTE = ["0000FF", "007FFF", "0096c7", "00b4d8", "1E90FF"];
+const BRIGHTS_PALETTE = ["35ff69", "42bfdd", "ff0055", "f5b700", "00a1e4"];
+const EMERALD_ENIGMA = ["5CE289", "113E1F", "165A26", "2B8346", "52A267"]; 
+const SUNSET_ROMANCE = ["913337", "3D231E", "643333", "66292A", "80383F"];
+const MAGENTA_MYSTERY = ["944D6F", "B86780", "682438", "CB4983", "B02F6F"];
+
+const VALENTINE_BORDEAUX = ["590d22", "800f2f", "a4133c", "c9184a", "ff4d6d", "ff758f", "ff8fa3", "ffb3c1", "ffccd5", "fff0f3"];
+const LATE_NIGHT_MIX = ["250902", "38040e", "640d14", "800e13", "ad2831", "247ba0", "70c1b3", "b2dbbf", "f3ffbd", "ff1654"];
+const ETHEREAL_METALLIC = ["6f2dbd", "a663cc", "b298dc", "b8d0eb", "b9faf8", "27187e", "758bfd", "92a2fe", "aeb8fe", "b38cf5"];
+const DAYBREAK_TEAL = ["247ba0", "70c1b3", "b2dbbf", "f3ffbd", "ff1654"];
+
+function preload() {
+  imgSkelevaggioLovesAbstractiaVDaySuperHaute = loadImage("https://dae.transientusercontent.xyz/uploads/0141c684-468f-4f39-96a2-7cf8c67c9ae3");
+  fontRock3D = loadFont("https://dae.transientusercontent.xyz/uploads/fa827533-05e2-4540-b01f-5b7c3bcdeed4");
+  imgVIControls = loadImage("https://dae.transientusercontent.xyz/uploads/69b45e99-a77c-4616-a053-8f388829aba8"); 
+  imgAbstractiaCard = loadImage("https://dae.transientusercontent.xyz/uploads/067b752f-b4bd-41f1-8ab5-3df1f95453b6");
+  gifAbstractLindia = loadImage("https://dae.transientusercontent.xyz/uploads/ee55ee3a-c3c7-4095-b2dc-7baaef466749");
+  audioAltMode = loadSound("https://dae.transientusercontent.xyz/uploads/3e4f68cc-c8d5-425a-a6f2-42fce103ec0b"); 
+  audioPresence = loadSound("https://dae.transientusercontent.xyz/uploads/29c38ae5-bd52-4a53-80b8-670c28196c76"); 
+  audioInterlopr = loadSound("https://dae.transientusercontent.xyz/uploads/93eeb7f7-2549-4b9f-8c96-3222014ba270");
+}
+
+function getPaletteByTime() {
+    if (isDarkMode) return { colors: BRIGHTS_PALETTE, type: "VIBRANT" };
+    let h = hour();
+    let m = minute();
+    let totalMins = h * 60 + m;
+    
+    if (totalMins >= 1330 || totalMins <= 141) return { colors: ETHEREAL_METALLIC, type: "ETHEREAL" };
+    if (totalMins > 141 && totalMins < 355) return { colors: DAYBREAK_TEAL, type: "DAYBREAK" };
+    if (totalMins >= 1075 && totalMins <= 1268) return { colors: VALENTINE_BORDEAUX, type: "BORDEAUX" };
+    if (totalMins >= 1269 && totalMins < 1330) return { colors: LATE_NIGHT_MIX, type: "MIDNIGHT" };
+    if (totalMins >= 1147 && totalMins <= 1207) return { colors: SUNSET_ROMANCE, type: "SUNSET" }; 
+    if (totalMins >= 980 && totalMins <= 1146) return { colors: EMERALD_ENIGMA, type: "EMERALD" };
+    if (totalMins >= 671 && totalMins <= 932) return { colors: MAGENTA_MYSTERY, type: "MAGENTA" };
+    
+    return { colors: DAY_PALETTE, type: "DAY" };
+}
+
+function isInsideHeart(x, y, size) {
+  if (!size || size <= 0) return false;
+  let nx = x / (size * 0.45);
+  let ny = -y / (size * 0.45) + 0.15; 
+  if (isNaN(nx) || isNaN(ny)) return false;
+  return Math.pow(nx * nx + ny * ny - 1, 3) - nx * nx * Math.pow(ny, 3) < 0;
+}
+
+function setup() {
+  cnv = createCanvas(windowWidth, windowHeight);
+  imageMode(CENTER);
+  isMobile = (('ontouchstart' in window) || navigator.maxTouchPoints > 0) && width < 767;
+  cnv.elt.style.touchAction = 'none';
+  cnv.elt.addEventListener('touchmove', e => { e.preventDefault(); }, { passive: false });
+  
+  let style = createElement('style');
+  style.html(`@font-face { font-family: 'Rock3DFont'; src: url('https://dae.transientusercontent.xyz/uploads/fa827533-05e2-4540-b01f-5b7c3bcdeed4'); }`);
+
+  videoIXOpen = createVideo('https://dae.transientusercontent.xyz/uploads/1a322977-ed79-420e-8da1-04697c30f3a2');
+  configureVideo(videoIXOpen);
+  videoIXOpen.volume(0);
+
+  if (audioPresence) { audioPresence.setLoop(true); audioPresence.setVolume(0); }
+  if (audioAltMode) { audioAltMode.setLoop(true); audioAltMode.setVolume(0); }
+  if (audioInterlopr) { audioInterlopr.setLoop(true); audioInterlopr.setVolume(0); }
+
+  button = createButton('GET ABSTRACT 🌹');
+  button.mousePressed(handleDiveIn);
+  button.mouseOver(() => { isHovering = true; });
+  button.mouseOut(() => { isHovering = false; });
+  styleButton();
+  
+  let initial = getPaletteByTime(); 
+  let initSet = [...initial.colors];
+  initSet.sort(() => random() - 0.5); 
+  for (let hex of initSet) {
+    let c = color('#' + hex);
+    colorsPalette.push(c);
+    targetPaletteColors.push(c);
+  }
+  for (let hex of BRIGHTS_PALETTE) brightsColors.push(color('#' + hex));
+  for (let i = 0; i < 30; i++) bgParticles.push(new BackgroundParticle());
+  for (let i = 0; i < 150; i++) fluidParticles.push(new FluidParticle());
+
+  if (imgSkelevaggioLovesAbstractiaVDaySuperHaute) {
+    let img = imgSkelevaggioLovesAbstractiaVDaySuperHaute;
+    keyedImageA = createImage(img.width, img.height);
+    img.loadPixels();
+    keyedImageA.loadPixels();
+    
+    let xMin = (img.width * 0.64) + 25 - 8; 
+    let xMax = (img.width * 0.92) - 115 - 20 + 2; 
+    let yMin = (img.height * 0.38) - 110 + 13 + 6; 
+    let yMax = (img.height * 0.82) - 149 + 1; 
+
+    for (let y = 0; y < img.height; y++) {
+      for (let x = 0; x < img.width; x++) {
+        let i = (x + y * img.width) * 4;
+        let r = img.pixels[i], g = img.pixels[i+1], b = img.pixels[i+2];
+        let isInsideMachineScreen = (x > xMin && x < xMax && y > yMin && y < yMax);
+        if (isInsideMachineScreen && g > 45 && g > r * 1.02 && g > b * 1.02) {
+          keyedImageA.pixels[i+3] = 0; 
+        } else {
+          keyedImageA.pixels[i] = r; keyedImageA.pixels[i+1] = g; keyedImageA.pixels[i+2] = b; keyedImageA.pixels[i+3] = 255;
+        }
+      }
+    }
+    keyedImageA.updatePixels();
+  }
+}
+
+function configureVideo(v) {
+  v.elt.muted = true;
+  v.elt.setAttribute('playsinline', '');
+  v.elt.setAttribute('webkit-playsinline', '');
+  v.elt.crossOrigin = 'anonymous'; 
+  v.loop(); v.hide();
+}
+
+function styleButton() {
+  button.style('font-family', 'Rock3DFont, sans-serif'); 
+  button.style('font-size', '38px'); 
+  button.style('padding', '10px 40px');
+  button.style('border', 'none');
+  button.style('background-color', 'transparent');
+  button.style('color', '#FF3131'); 
+  button.style('text-shadow', '0 0 5px #FF3131, 0 0 10px #FF3131, 0 0 20px #FF3131');
+  button.style('-webkit-text-stroke', '0.5px #FFFFFF');
+  button.style('cursor', 'pointer');
+  button.style('white-space', 'nowrap');
+  button.style('width', 'auto');
+  button.style('display', 'flex');
+  button.style('flex-direction', 'row');
+  button.style('align-items', 'center');
+  button.style('justify-content', 'center');
+  button.position(width * 0.9 - 350, height * 0.75 + 110);
+}
+
+function updatePalette() {
+  let now = millis();
+  if (now - lastPaletteChangeTime > nextPaletteChangeDelay) {
+    let result = getPaletteByTime();
+    let newSet = [...result.colors];
+    if (newSet.length > 0) {
+        while(newSet.length < 5) newSet.push(newSet[newSet.length - 1]);
+        newSet.sort(() => random() - 0.5); 
+        targetPaletteColors = newSet.map(hex => color('#' + hex));
+    }
+    nextPaletteChangeDelay = random(10, 20) * 1000;
+    lastPaletteChangeTime = now;
+    paletteLerpRate = 0.02;
+  }
+}
+
+function lerpPalettes() {
+    if (!targetPaletteColors || targetPaletteColors.length === 0) return;
+    for (let i = 0; i < targetPaletteColors.length; i++) {
+        let targetC = targetPaletteColors[i];
+        if (i < colorsPalette.length) {
+            if (colorsPalette[i] instanceof p5.Color && targetC instanceof p5.Color) {
+                colorsPalette[i] = lerpColor(colorsPalette[i], targetC, paletteLerpRate);
+            } else {
+                colorsPalette[i] = targetC;
+            }
+        } else {
+            colorsPalette[i] = targetC;
+        }
+    }
+}
+
+function keyPressed() {
+  if (key === 'b' || key === 'B') resetToWelcome();
+  else if (scene === 2) handleInGameKeys();
+}
+
+function handleInGameKeys() {
+  if (key === 'a' || key === 'A') { showAlternateView = !showAlternateView; isDeveloperMode = false; showControlsMenu = false; }
+  else if (key === 'c' || key === 'C') { isDarkMode = !isDarkMode; lastPaletteChangeTime = 0; }
+  else if (key === 'l' || key === 'L') showLinesMode = !showLinesMode;
+  else if (key === 'w' || key === 'W') showWavesMode = !showWavesMode;
+  else if (key === 's' || key === 'S') showMountainMode = !showMountainMode;
+  else if (key === 'o' || key === 'O') showFluidMode = !showFluidMode;
+  else if (key === 'q' || key === 'Q') isQuietMode = !isQuietMode;
+  else if (key === 'h' || key === 'H') isHushed = !isHushed; 
+  else if (key === 'i' || key === 'I') { showControlsMenu = !showControlsMenu; isDeveloperMode = false; showAlternateView = false; }
+  else if (key === 'd' || key === 'D') { isDeveloperMode = !isDeveloperMode; showControlsMenu = false; showAlternateView = false; }
+}
+
+function resetToWelcome() {
+  scene = 0; fadeAlpha = 0; introAlpha = 0; welcomeVol = 0;
+  showAlternateView = isDarkMode = showLinesMode = showWavesMode = showMountainMode = showFluidMode = isDeveloperMode = false;
+  videoIXOpen.stop(); videoIXOpen.loop();
+  if (audioPresence) audioPresence.setVolume(0);
+  if (audioAltMode) audioAltMode.setVolume(0);
+  if (audioInterlopr) audioInterlopr.setVolume(0);
+  button.show(); button.removeAttribute('disabled');
+  roses = [];
+}
+
+function drawOmbreBackground() {
+  if (!colorsPalette || colorsPalette.length === 0) return;
+  noStroke();
+  background(isDarkMode ? 10 : (colorsPalette[0] instanceof p5.Color ? colorsPalette[0] : 0));
+  
+  for (let i = colorsPalette.length - 1; i >= 0; i--) {
+    let c = colorsPalette[i];
+    if (!(c instanceof p5.Color)) continue;
+    let speed = 0.008 + (i * 0.002);
+    let freq = 0.003 + (i * 0.0007);
+    let amp = 100 + (i * 25);
+    let baseY = height * (i / colorsPalette.length) + sin(frameCount * speed) * 60;
+
+    let points = [];
+    for (let x = 0; x <= width; x += 30) {
+      let noiseFactor = noise(x * 0.002, frameCount * 0.01 + i) * 80;
+      let y = baseY + sin(x * freq + frameCount * speed * 2 + i) * amp + noiseFactor;
+      points.push({x, y});
+    }
+    if (points.length === 0) continue;
+
+    fill(red(c), green(c), blue(c), isDarkMode ? 100 : 255);
+    
+    beginShape();
+    vertex(0, height);
+    for (let p of points) vertex(p.x, p.y);
+    vertex(width, height);
+    endShape(CLOSE);
+
+    beginShape();
+    vertex(0, 0);
+    for (let p of points) vertex(p.x, height - p.y);
+    vertex(width, 0);
+    endShape(CLOSE);
+
+    if (i % 2 === 0) {
+      push();
+      blendMode('screen');
+      fill(255, 255, 255, isDarkMode ? 15 : 35);
+      
+      beginShape();
+      for (let p of points) {
+        let ySheen = p.y - 10 + sin(p.x * freq + frameCount * speed * 2.2 + i) * 20;
+        vertex(p.x, ySheen);
+      }
+      for (let x = width; x >= 0; x -= 30) {
+        let idx = floor(x/30);
+        let p = (idx >= 0 && idx < points.length) ? points[idx] : points[points.length-1];
+        vertex(x, p.y + 5);
+      }
+      endShape(CLOSE);
+
+      beginShape();
+      for (let p of points) {
+        let ySheen = p.y - 10 + sin(p.x * freq + frameCount * speed * 2.2 + i) * 20;
+        vertex(p.x, height - ySheen);
+      }
+      for (let x = width; x >= 0; x -= 30) {
+        let idx = floor(x/30);
+        let p = (idx >= 0 && idx < points.length) ? points[idx] : points[points.length-1];
+        vertex(x, height - (p.y + 5));
+      }
+      endShape(CLOSE);
+      pop();
+    }
+  }
+}
+
+function drawNeonMountainPattern() {
+  if (!colorsPalette || colorsPalette.length === 0) return;
+  push();
+  blendMode(isDarkMode ? 'lighten' : 'screen');
+  noFill();
+
+  let layers = 5;
+  let scrollSpeed = frameCount * 0.005;
+
+  for (let i = 0; i < layers; i++) {
+    let c = colorsPalette[i % colorsPalette.length];
+    if (!(c instanceof p5.Color)) continue;
+
+    stroke(red(c), green(c), blue(c), map(i, 0, layers, 100, 255));
+    strokeWeight(map(i, 0, layers, 4, 1.5));
+
+    let baseY = height * 0.4 + (i * (height * 0.12));
+    let freq = 0.0015 + (i * 0.0005);
+    let amp = 150 + (i * 50);
+
+    beginShape();
+    // Start slightly off-screen to avoid gaps during scroll
+    for (let x = -100; x <= width + 100; x += 40) {
+      let noiseVal = noise(x * freq + scrollSpeed, i * 10);
+      let y = baseY + (noiseVal - 0.5) * amp;
+      
+      // Reactive dip near mouse
+      let d = dist(x, y, mouseX, mouseY);
+      if (d < 300) {
+        y += map(d, 0, 300, 80, 0);
+      }
+      
+      vertex(x, y);
+    }
+    endShape();
+
+    // Symmetrical Mirrored Mountain Bottom
+    beginShape();
+    for (let x = -100; x <= width + 100; x += 40) {
+      let noiseVal = noise(x * freq + scrollSpeed, i * 10 + 50);
+      let y = height - (baseY + (noiseVal - 0.5) * amp);
+      vertex(x, y);
+    }
+    endShape();
+  }
+
+  // Draw the Lindia GIF separately at the end of the mode to avoid loop interference
+  if (gifAbstractLindia && gifAbstractLindia.width > 0) {
+    blendMode('overlay');
+    tint(255, 120);
+    let r = max(width / gifAbstractLindia.width, height / gifAbstractLindia.height);
+    image(gifAbstractLindia, width / 2, height / 2, gifAbstractLindia.width * r, gifAbstractLindia.height * r);
+  }
+  pop();
+}
+
+function drawFluidDreamMode() {
+  if (!fluidParticles || fluidParticles.length === 0) return;
+  push(); 
+  translate(width / 2, height / 2); 
+  blendMode(isDarkMode ? 'screen' : 'add');
+  for (let p of fluidParticles) {
+    if (p) {
+        p.update();
+        p.display();
+    }
+  }
+  pop();
+}
+
+function drawLiquidRibbons() {
+  if (!colorsPalette || colorsPalette.length === 0) return;
+  push(); blendMode(isDarkMode ? 'exclusion' : 'screen'); noFill();
+  let spacing = 70;
+  let time = frameCount * 0.015;
+  for(let i = 0; i < 18; i++) {
+    let c = colorsPalette[i % colorsPalette.length]; 
+    if (!(c instanceof p5.Color)) continue;
+    stroke(red(c), green(c), blue(c), 190);
+    strokeWeight(map(sin(time + i * 0.5), -1, 1, 1.5, 4.5)); 
+    beginShape();
+    for(let x = -50; x < width + 50; x += 25) {
+      let noiseVal = noise(x * 0.004, i * 0.15, time);
+      let y = height * 0.5 + (i - 9) * spacing + map(noiseVal, 0, 1, -250, 250);
+      let d = dist(x, y, mouseX, mouseY);
+      if (d < 350) {
+          let pushFactor = map(d, 0, 350, -180, 0) * sin(time * 5 + x * 0.02);
+          y += pushFactor;
+      }
+      curveVertex(x, y);
+    }
+    endShape();
+  }
+  pop();
+}
+
+function drawWhimsicalOrganicLines() {
+  if (!colorsPalette || colorsPalette.length === 0 || !brightsColors || brightsColors.length === 0) return;
+  push(); blendMode(isDarkMode ? 'difference' : 'screen'); noFill();
+  let numPaths = 22, dSize = height * 0.8;
+  for (let i = 0; i < numPaths; i++) {
+    let c1 = colorsPalette[i % colorsPalette.length];
+    let c2 = colorsPalette[(i + 4) % colorsPalette.length];
+    let c3 = brightsColors[i % brightsColors.length];
+    if (!(c1 instanceof p5.Color) || !(c2 instanceof p5.Color) || !(c3 instanceof p5.Color)) continue;
+    
+    strokeWeight(noise(i * 5, frameCount * 0.003) * 5 + 1.5);
+    let yBase = (height / (numPaths + 1)) * (i + 1);
+    
+    let prevX = -50;
+    let p_noiseVal = (noise(prevX * 0.0008, i * 1.5, frameCount * 0.003) * 600 - 300);
+    let p_sineVal = sin(prevX * 0.0012 + frameCount * 0.009 + i * 0.8) * 110;
+    let prevY = yBase + p_noiseVal + p_sineVal;
+
+    for (let x = 0; x <= width + 50; x += 50) {
+      let inter = map(x, 0, width, 0, 1);
+      let lineCol = (inter < 0.5) ? lerpColor(c1, c2, inter * 2) : lerpColor(c2, c3, constrain((inter - 0.5) * 2, 0, 1));
+      stroke(red(lineCol), green(lineCol), blue(lineCol), map(sin(frameCount * 0.006 + i * 0.3), -1, 1, 120, 255));
+      
+      let noiseVal = (noise(x * 0.0008, i * 1.5, frameCount * 0.003) * 600 - 300);
+      let sineVal = sin(x * 0.0012 + frameCount * 0.009 + i * 0.8) * 110;
+      let targetY = yBase + noiseVal + sineVal;
+      
+      let dMouse = dist(x, targetY, mouseX, mouseY);
+      if (dMouse < 250) targetY += map(dMouse, 0, 250, -120, 0);
+
+      if (showFluidMode && isInsideHeart(x - width/2, targetY - height/2, dSize)) {
+          targetY += cos(frameCount * 0.08 + x * 0.02) * 20;
+          strokeWeight(4.0);
+      }
+      line(prevX, prevY, x, targetY);
+      prevX = x; prevY = targetY;
+    }
+  } pop();
+}
+
+function draw() {
+  updatePalette(); lerpPalettes(); background(0);
+  if (scene <= 1) {
+    drawOmbreBackground();
+    for (let p of bgParticles) { p.update(); p.display(); }
+    drawWelcomeScreen();
+    welcomeVol = lerp(welcomeVol, scene === 0 ? 1.0 : 0.0, 0.05); 
+    if (videoIXOpen) videoIXOpen.volume(welcomeVol);
+  } else {
+    if (isDeveloperMode) {
+      drawDMode();
+    } else {
+      drawVideoScreen(); 
+      if (showControlsMenu) drawOverlay(imgVIControls, 'hard-light', 230);
+    }
+
+    let masterScale = isQuietMode ? 0 : 1;
+    if (audioPresence && audioPresence.isLoaded()) audioPresence.setVolume(lerp(audioPresence.getVolume(), 0.3 * masterScale, LERP_RATE));
+    if (audioAltMode && audioAltMode.isLoaded()) audioAltMode.setVolume(lerp(audioAltMode.getVolume(), (showFluidMode && !isHushed) ? 0.6 * masterScale : 0, LERP_RATE));
+    if (audioInterlopr && audioInterlopr.isLoaded()) audioInterlopr.setVolume(lerp(audioInterlopr.getVolume(), (showWavesMode) ? 0.45 * masterScale : 0, LERP_RATE));
+  }
+  handleSceneTransitions();
+}
+
+function drawDMode() {
+  background(0);
+  if (imgAbstractiaCard && imgAbstractiaCard.width > 0) {
+    push();
+    let r = max(width / imgAbstractiaCard.width, height / imgAbstractiaCard.height);
+    tint(255, 230); 
+    image(imgAbstractiaCard, width / 2, height / 2, imgAbstractiaCard.width * r, imgAbstractiaCard.height * r);
+    pop();
+  }
+}
+
+function handleSceneTransitions() {
+  if (scene === 0) {
+    introAlpha = lerp(introAlpha, 230, 0.02); button.style('transform', `scale(${map(sin(frameCount * 0.05), -1, 1, 1, 1.05)})`);
+    if (isHovering) {
+        let cx = (width * 0.9) - 350, cy = height * 0.75 + 110;
+        for (let i = 0; i < 2; i++) roses.push(new Rose(cx + random(0, 150), cy + random(-20, 20)));
+    }
+    for (let i = roses.length - 1; i >= 0; i--) { roses[i].update(); roses[i].display(); if (roses[i].isDead()) roses.splice(i, 1); }
+    button.show();
+  } else if (scene === 1) {
+    introAlpha = lerp(introAlpha, 0, 0.08); fadeAlpha += fadeRate; fill(0, fadeAlpha); rect(0, 0, width, height);
+    if (fadeAlpha >= 255) { 
+      scene = 2; if (videoIXOpen) videoIXOpen.pause(); 
+      if (audioPresence && audioPresence.isLoaded() && !audioPresence.isPlaying()) audioPresence.play();
+      if (audioAltMode && audioAltMode.isLoaded() && !audioAltMode.isPlaying()) audioAltMode.play();
+      if (audioInterlopr && audioInterlopr.isLoaded() && !audioInterlopr.isPlaying()) audioInterlopr.play();
+    }
+    button.hide();
+  } else {
+    fadeAlpha -= fadeRate; if (fadeAlpha > 0) { fill(0, fadeAlpha); rect(0, 0, width, height); } else { fadeAlpha = 0; }
+  }
+}
+
+function drawWelcomeScreen() {
+  if (!videoIXOpen || videoIXOpen.width === 0) return;
+  let ratio = max(width / videoIXOpen.width, height / videoIXOpen.height);
+  push(); 
+  blendMode('source-over'); 
+  tint(255, introAlpha); 
+  image(videoIXOpen, width / 2, height / 2, videoIXOpen.width * ratio, videoIXOpen.height * ratio); 
+  pop();
+}
+
+function drawVideoScreen() {
+    drawOmbreBackground(); 
+    if (showMountainMode) drawNeonMountainPattern(); 
+    if (showLinesMode) drawWhimsicalOrganicLines();
+    if (showFluidMode) drawFluidDreamMode();
+    if (showWavesMode) drawLiquidRibbons();
+    if (!isDeveloperMode && showAlternateView && keyedImageA && keyedImageA.width > 0) {
+        push(); let r = max(width / keyedImageA.width, height / keyedImageA.height); image(keyedImageA, width / 2, height / 2, keyedImageA.width * r, keyedImageA.height * r); pop();
+    }
+}
+
+function drawOverlay(media, bMode, alphaVal) {
+  if (!media || media.width === 0) return;
+  push(); blendMode(bMode); tint(255, alphaVal);
+  let r = max(width / media.width, height / media.height); image(media, width / 2, height / 2, media.width * r, media.height * r); pop();
+}
+
+function handleDiveIn() { if (getAudioContext().state !== 'running') getAudioContext().resume(); if (scene === 0) { scene = 1; button.attribute('disabled', ''); } }
+
+function windowResized() { resizeCanvas(windowWidth, windowHeight); if (button) button.position(width * 0.9 - 350, height * 0.75 + 110); }
+
+class Rose {
+  constructor(x, y) { this.pos = createVector(x, y); this.vel = p5.Vector.fromAngle(random(-HALF_PI - 0.5, -HALF_PI + 0.5), random(2, 5)); this.lifespan = 255; this.size = random(20, 48); }
+  update() { this.pos.add(this.vel); this.vel.y = lerp(this.vel.y, -3, 0.05); this.vel.mult(0.98); this.lifespan -= 2.5; }
+  display() { push(); textSize(this.size); textAlign(CENTER, CENTER); fill(255, this.lifespan); text("🌹", this.pos.x, this.pos.y); pop(); }
+  isDead() { return this.lifespan < 0; }
+}
+
+class BackgroundParticle {
+  constructor() { this.reset(); }
+  reset() { this.pos = createVector(random(width), random(height)); this.vel = createVector(random(-0.5, 0.5), random(-0.2, -0.8)); this.size = random(2, 6); this.alpha = random(50, 150); }
+  update() { this.pos.add(this.vel); if (this.pos.y < -10) this.pos.y = height + 10; if (this.pos.x < -10) this.pos.x = width + 10; if (this.pos.x > width + 10) this.pos.x = -10; }
+  display() { 
+    push(); noStroke(); 
+    let c = (colorsPalette && colorsPalette.length > 0) ? colorsPalette[floor(random(colorsPalette.length))] : color(255);
+    if (c instanceof p5.Color) fill(red(c), green(c), blue(c), this.alpha); 
+    else fill(255, this.alpha);
+    circle(this.pos.x, this.pos.y, this.size); 
+    pop(); 
+  }
+}
+
+class FluidParticle {
+  constructor() { this.init(); }
+  init() { 
+    this.pos = createVector(random(-width/2, width/2), random(-height/2, height/2)); 
+    this.vel = createVector(0, 0); 
+    this.acc = createVector(0, 0); 
+    this.maxSpeed = random(2, 5); 
+    this.color = (colorsPalette && colorsPalette.length > 0) ? colorsPalette[floor(random(colorsPalette.length))] : color(255); 
+    this.size = random(4, 12); 
+    this.noiseOffset = random(5000); 
+  }
+  update() {
+    let angle = noise(this.pos.x * 0.005, this.pos.y * 0.005, frameCount * 0.01 + this.noiseOffset) * TWO_PI * 3;
+    this.acc = p5.Vector.fromAngle(angle).mult(0.15);
+    
+    let mX = mouseX - width / 2;
+    let mY = mouseY - height / 2;
+    let dMouse = dist(this.pos.x, this.pos.y, mX, mY);
+    if (dMouse < 220) {
+      let pushForce = createVector(this.pos.x - mX, this.pos.y - mY);
+      pushForce.normalize();
+      pushForce.mult(map(dMouse, 0, 220, 0.8, 0));
+      this.acc.add(pushForce);
+    }
+
+    this.vel.add(this.acc); this.vel.limit(this.maxSpeed); this.pos.add(this.vel);
+    let dSize = height * 0.8;
+    if (!isInsideHeart(this.pos.x, this.pos.y, dSize)) {
+      let towardCenter = createVector(0,0).sub(this.pos).normalize().mult(0.8);
+      this.vel.add(towardCenter);
+    }
+  }
+  display() {
+    if (!(this.color instanceof p5.Color)) {
+        this.color = (colorsPalette && colorsPalette.length > 0 && (colorsPalette[0] instanceof p5.Color)) ? colorsPalette[0] : color(255);
+    }
+    fill(red(this.color), green(this.color), blue(this.color), 200); noStroke();
+    ellipse(this.pos.x, this.pos.y, this.size, this.size);
+    if (random(1) < 0.02 && colorsPalette && colorsPalette.length > 0) {
+      let nextC = colorsPalette[floor(random(colorsPalette.length))];
+      if (nextC instanceof p5.Color) this.color = nextC;
+    }
+  }
+}
+  </script>
+
+
+</body></html>
