@@ -220,14 +220,65 @@ function parseLeadingNumber(name){
   return null;
 }
 
-// Parse title — everything after the number prefix, strip extension
+// Parse title — REGULATE OUTPUT, NOT INPUT.
+// Strip the day number + the word ABSTRACTIA (+ any roman numeral that trails it).
+// Whatever DESCRIPTIVE words are left become the title ("Aqua", "Fiesta").
+// If nothing's left, return null -> the front-facing title defaults to "ABSTRACTIA <numeral>".
 function parseTitle(name){
-  let t = name.replace(/^\d+[_\s]+/,'');
-  t = t.replace(/abstractia[\s_]+[IVXLCDM]+[\s_]*/i,'');
-  t = t.replace(/^abstractia[\s_]*/i,'');
-  t = t.replace(/\.(html|htm|mp4|gif|jpg|jpeg|png|webp|txt)$/i,'');
-  t = t.replace(/[_]+/g,' ').replace(/opening|thumbnail|description/gi,'').trim().toUpperCase();
+  let t = name;
+  t = t.replace(/\.(html|htm|mp4|gif|jpg|jpeg|png|webp|txt)$/i,''); // drop extension
+  t = t.replace(/^\d+[_\s.]+/,'');                                  // drop leading day number
+  t = t.replace(/abstractia[\s_]+[IVXLCDM]+\b/i,'');                // drop "ABSTRACTIA CLI"
+  t = t.replace(/\babstractia\b/i,'');                              // drop a stray "ABSTRACTIA"
+  t = t.replace(/\b(opening|thumbnail|description)\b/gi,'');        // drop helper words
+  t = t.replace(/[_]+/g,' ').replace(/\s+/g,' ').trim();           // tidy separators
   return t || null;
+}
+
+// Detect which platform a pasted POST url belongs to (full post link, not a handle)
+function detectPlatform(url){
+  const u=String(url||'').toLowerCase();
+  if(!u) return '';
+  if(u.includes('x.com')||u.includes('twitter.com')) return 'x';
+  if(u.includes('instagram.com')) return 'instagram';
+  if(u.includes('linkedin.com')) return 'linkedin';
+  if(u.includes('youtube.com')||u.includes('youtu.be')) return 'youtube';
+  return 'link';
+}
+function socialHint(url){
+  const p=detectPlatform(url);
+  if(!p) return '';
+  return '→ '+{x:'X post',instagram:'Instagram post',linkedin:'LinkedIn post',youtube:'YouTube',link:'post link'}[p];
+}
+function buildSocial(w){
+  const out={};
+  const url=String(w.socialPostUrl||'').trim();
+  if(url) out[detectPlatform(url)]=url;
+  return Object.keys(out).length?out:null;
+}
+// Front-facing title: descriptive words win; otherwise default to ABSTRACTIA <numeral>
+function outputTitle(w){
+  const typed=String(w.title||'').trim();
+  return typed || ('ABSTRACTIA '+w.numeral);
+}
+// Clean slug that never doubles up the word abstractia or the numeral
+function makeSlug(numeral,title){
+  const n=numeral.toLowerCase();
+  let t=String(title||'').toLowerCase()
+    .replace(/abstractia/g,'')
+    .replace(new RegExp('\\b'+n+'\\b','g'),'')
+    .replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  return t?(n+'-'+t):n;
+}
+// Turn a Postgres error body into plain English so the studio can name the bad row
+function cleanErr(body){
+  try{
+    const j=JSON.parse(body);
+    if(j.code==='23502'){const m=(j.message||'').match(/column "([^"]+)"/);return 'missing '+(m?m[1]:'a required field');}
+    if(j.code==='23514') return 'day number out of range (must be 1–365)';
+    if(j.code==='23505') return 'duplicate — already exists';
+    return (j.message||body||'unknown error');
+  }catch(e){ return body||'unknown error'; }
 }
 
 function detectStates(filename){
@@ -299,7 +350,7 @@ function processFiles(fileList){
         number:num, numeral:toRoman(num),
         title:'', htmlFile:null, openingFile:null, thumbnailFile:null,
         descriptionFile:null, videos:[], states:new Set(),
-        collectUrl:'', youtubeUrl:'', editionType:'tbd',
+        collectUrl:'', articleUrl:'', socialPostUrl:'', youtubeUrl:'', editionType:'tbd',
         hasLagniappe:false,
       };
       const t = parseTitle(fileName);
@@ -357,8 +408,8 @@ function renderWorks(){
   <div class="work-row-header">
     <div class="col-label">#</div>
     <div class="col-label">Work & files</div>
-    <div class="col-label">Collect URL</div>
-    <div class="col-label">YouTube / Article</div>
+    <div class="col-label">Collect / Article</div>
+    <div class="col-label">Social post URL</div>
     <div class="col-label">Edition</div>
     <div class="col-label">Lagniappe</div>
     <div class="col-label">Status</div>
@@ -383,20 +434,20 @@ function renderWorks(){
     <div class="work-row">
       <div class="work-num">${toRoman(num)}<br><span style="font-size:11px;color:var(--mut)">${num}</span></div>
       <div>
-        <input class="work-name-input" placeholder="TITLE" value="${w.title||''}"
-          onchange="works[${num}].title=this.value;saveWork()"
+        <input class="work-name-input" placeholder="ABSTRACTIA ${w.numeral}  (auto if blank)" value="${w.title||''}"
           oninput="works[${num}].title=this.value;saveWork()">
         <div class="work-files">${fileList}</div>
       </div>
-      <div>
-        <input class="work-input" placeholder="transient.art/..." value="${w.collectUrl||''}"
-          onchange="works[${num}].collectUrl=this.value;saveWork()"
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <input class="work-input" placeholder="Collect URL — transient.art/…" value="${w.collectUrl||''}"
           oninput="works[${num}].collectUrl=this.value;saveWork()">
+        <input class="work-input" placeholder="Article URL — the written piece" value="${w.articleUrl||''}"
+          oninput="works[${num}].articleUrl=this.value;saveWork()">
       </div>
       <div style="display:flex;flex-direction:column;gap:4px">
-        <input class="work-input" placeholder="YouTube URL" value="${w.youtubeUrl||''}"
-          onchange="works[${num}].youtubeUrl=this.value;saveWork()"
-          oninput="works[${num}].youtubeUrl=this.value;saveWork()">
+        <input class="work-input" placeholder="Paste a POST link — X / IG / LinkedIn" value="${w.socialPostUrl||''}"
+          oninput="works[${num}].socialPostUrl=this.value;saveWork();document.getElementById('sochint-${num}').textContent=socialHint(this.value)">
+        <span class="video-tag" id="sochint-${num}">${socialHint(w.socialPostUrl)}</span>
       </div>
       <div>
         <select class="edition-select ${isTbd?'tbd':''}"
@@ -431,26 +482,29 @@ function generateSQL(){
   const keys = Object.keys(works).map(Number).sort((a,b)=>a-b);
   if(!keys.length) return;
   let sql = `-- ABSTRACTIA — Bulk Works Insert\n-- Generated ${new Date().toISOString()}\n\n`;
-  sql += `INSERT INTO works (\n  number, numeral, title, slug, edition_type, edition_size,\n  series_type, html_github_url, demo_video_url, collect_url,\n  states, time_palette, has_lagniappe, published\n) VALUES\n`;
+  sql += `INSERT INTO works (\n  number, numeral, title, slug, edition_type, edition_size,\n  series_type, html_github_url, demo_video_url, collect_url,\n  article_url, social_urls, states, time_palette, has_lagniappe, published\n) VALUES\n`;
   const rows = keys.map(num=>{
     const w = works[num];
-    const title = (w.title||'TBA').replace(/'/g,"''");
     const numeral = w.numeral;
-    const slug = `${numeral.toLowerCase()}-${title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}`;
+    const title = outputTitle(w).replace(/'/g,"''");
+    const slug = makeSlug(numeral, outputTitle(w));
     const edSize = getEditionSize(w.editionType);
     const edType = w.editionType==='tbd'?'editions':w.editionType;
     const base = 'https://abstractia-today.pages.dev/works/';
     const htmlUrl = w.htmlFile ? `'${base}${encodeURIComponent(w.htmlFile)}'` : 'NULL';
     const videoUrl = w.youtubeUrl ? `'${w.youtubeUrl}'` : w.openingFile ? `'${base}${encodeURIComponent(w.openingFile)}'` : 'NULL';
-    const collectUrl = w.collectUrl ? `'${w.collectUrl}'` : 'NULL';
+    const collectUrl = w.collectUrl ? `'${w.collectUrl.replace(/'/g,"''")}'` : 'NULL';
+    const articleUrl = w.articleUrl ? `'${w.articleUrl.replace(/'/g,"''")}'` : 'NULL';
+    const social = buildSocial(w);
+    const socialUrls = social ? `'${JSON.stringify(social).replace(/'/g,"''")}'::jsonb` : 'NULL';
     const statesArr = [...w.states];
     if(!statesArr.length) statesArr.push('waves','lines');
     const timePalette = w.states.has('gm')||w.states.has('pm')||w.states.has('420');
     const hasLagniappe = w.hasLagniappe||w.states.has('lagniappe');
-    return `  (${num}, '${numeral}', '${title}', '${slug}', '${edType}', ${edSize===null?'NULL':edSize},\n   'waves', ${htmlUrl}, ${videoUrl}, ${collectUrl},\n   '${JSON.stringify(statesArr)}'::jsonb, ${timePalette}, ${hasLagniappe}, true)`;
+    return `  (${num}, '${numeral}', '${title}', '${slug}', '${edType}', ${edSize===null?'NULL':edSize},\n   'waves', ${htmlUrl}, ${videoUrl}, ${collectUrl},\n   ${articleUrl}, ${socialUrls}, '${JSON.stringify(statesArr)}'::jsonb, ${timePalette}, ${hasLagniappe}, true)`;
   });
   sql += rows.join(',\n') + '\n';
-  sql += `ON CONFLICT (number) DO UPDATE SET\n  title=EXCLUDED.title, slug=EXCLUDED.slug, edition_type=EXCLUDED.edition_type,\n  edition_size=EXCLUDED.edition_size, html_github_url=EXCLUDED.html_github_url,\n  demo_video_url=EXCLUDED.demo_video_url, collect_url=EXCLUDED.collect_url,\n  states=EXCLUDED.states, time_palette=EXCLUDED.time_palette,\n  has_lagniappe=EXCLUDED.has_lagniappe, updated_at=now();\n`;
+  sql += `ON CONFLICT (number) DO UPDATE SET\n  title=EXCLUDED.title, slug=EXCLUDED.slug, edition_type=EXCLUDED.edition_type,\n  edition_size=EXCLUDED.edition_size, html_github_url=EXCLUDED.html_github_url,\n  demo_video_url=EXCLUDED.demo_video_url, collect_url=EXCLUDED.collect_url,\n  article_url=EXCLUDED.article_url, social_urls=EXCLUDED.social_urls,\n  states=EXCLUDED.states, time_palette=EXCLUDED.time_palette,\n  has_lagniappe=EXCLUDED.has_lagniappe, updated_at=now();\n`;
   document.getElementById('sqlBox').textContent = sql;
   document.getElementById('sqlOutput').classList.add('visible');
   document.getElementById('sqlOutput').scrollIntoView({behavior:'smooth'});
@@ -513,6 +567,17 @@ if(sessionStorage.getItem(SESSION_KEY)==='1') initStudio();
 const SUPA_URL='https://xtkdnyqjheewsqnvugaj.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh0a2RueXFqaGVld3NxbnZ1Z2FqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1MTAyODQsImV4cCI6MjA5MTA4NjI4NH0.T8X7Q1fKjpkD1csafr1F9pD5OULu1DR_eTSeVa-Rhv0';
 
+async function sbSend(chunk){
+  try{
+    const res=await fetch(`${SUPA_URL}/rest/v1/works?on_conflict=number`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':`Bearer ${SUPA_KEY}`,'Prefer':'resolution=merge-duplicates,return=minimal'},
+      body:JSON.stringify(chunk)
+    });
+    return {ok:res.ok, body: res.ok ? '' : await res.text()};
+  }catch(e){ return {ok:false, body:String((e&&e.message)||e)}; }
+}
+
 async function pushToSupabase(){
   const keys = Object.keys(works).map(Number).sort((a,b)=>a-b);
   if(!keys.length){alert('No works to push yet.');return;}
@@ -524,9 +589,9 @@ async function pushToSupabase(){
   const base='https://abstractia-today.pages.dev/works/';
   const rows=keys.map(num=>{
     const w=works[num];
-    const title=w.title||'TBA';
     const numeral=w.numeral;
-    const slug=`${numeral.toLowerCase()}-${title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}`;
+    const title=outputTitle(w);                 // descriptive words, or "ABSTRACTIA <numeral>"
+    const slug=makeSlug(numeral,title);
     const edType=w.editionType==='tbd'?'editions':w.editionType;
     const edSize=getEditionSize(w.editionType);
     const htmlUrl=w.htmlFile?`${base}${encodeURIComponent(w.htmlFile)}`:null;
@@ -537,34 +602,39 @@ async function pushToSupabase(){
       number:num,numeral,title,slug,
       edition_type:edType,edition_size:edSize,series_type:'waves',
       html_github_url:htmlUrl||null,demo_video_url:videoUrl||null,
-      collect_url:w.collectUrl||null,states:statesArr,
+      collect_url:(w.collectUrl||'').trim()||null,
+      article_url:(w.articleUrl||'').trim()||null,
+      social_urls:buildSocial(w),
+      states:statesArr,
       time_palette:w.states.has('gm')||w.states.has('pm')||w.states.has('420'),
       has_lagniappe:w.hasLagniappe||w.states.has('lagniappe'),
       published:true
     };
   });
-  const chunks=[];
-  for(let i=0;i<rows.length;i+=20)chunks.push(rows.slice(i,i+20));
-  let ok=0,err=0;
-  for(let i=0;i<chunks.length;i++){
-    status.textContent=`Sending batch ${i+1} of ${chunks.length}...`;
-    try{
-      const res=await fetch(`${SUPA_URL}/rest/v1/works?on_conflict=number`,{
-        method:'POST',
-        headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':`Bearer ${SUPA_KEY}`,'Prefer':'resolution=merge-duplicates'},
-        body:JSON.stringify(chunks[i])
-      });
-      if(res.ok)ok+=chunks[i].length; else{await res.text();err+=chunks[i].length;}
-    }catch(e){err+=chunks[i].length;}
+
+  let ok=0; const failures=[];
+  for(let i=0;i<rows.length;i+=20){
+    const batch=rows.slice(i,i+20);
+    status.textContent=`Sending ${i+1}–${Math.min(i+20,rows.length)} of ${rows.length}…`;
+    const res=await sbSend(batch);
+    if(res.ok){ ok+=batch.length; continue; }
+    // batch hit a bad row — retry one at a time so the good ones still land
+    for(const row of batch){
+      const r1=await sbSend([row]);
+      if(r1.ok) ok++;
+      else failures.push({number:row.number, reason:cleanErr(r1.body)});
+    }
   }
-  if(err===0){
+
+  if(!failures.length){
     status.style.borderColor='rgba(76,175,118,0.5)';status.style.color='var(--grn)';
-    status.textContent=`✓ ${ok} works sent to Supabase. Your gallery is live.`;
-    btn.textContent='✓ Sent to Supabase';
+    status.textContent=`✓ ${ok} works sent to Supabase. The good ones are live.`;
+    btn.textContent='✓ Sent to Supabase';btn.disabled=true;
   } else {
     status.style.borderColor='rgba(255,45,120,0.5)';status.style.color='var(--mag)';
-    status.textContent=`${ok} saved, ${err} errors.`;
-    btn.textContent='⚡ Send to Supabase — one click';btn.disabled=false;
+    const list=failures.map(f=>`#${f.number} — ${f.reason}`).join('  ·  ');
+    status.innerHTML=`✓ ${ok} saved. ${failures.length} need a look:<br><span style="color:var(--gold)">${list}</span>`;
+    btn.textContent='⚡ Re-send (good rows skip)';btn.disabled=false;
   }
 }
 </script>
