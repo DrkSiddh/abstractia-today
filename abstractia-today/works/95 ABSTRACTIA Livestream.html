@@ -60,7 +60,7 @@ let imgAbstractiaVIAlt;
 let imgWifPatronsAbstractia;
 let imgAbstractLindiaGif;
 let imgSkelevaggio;
-let img94Abstractia;
+let imgNightCarnival; 
 let imgCommunityCard;
 let imgGenesisControl;
 let videoEarthAccordingToMermaids;
@@ -118,7 +118,7 @@ function preload() {
   imgWifPatronsAbstractia = loadImage("https://dae.transientusercontent.xyz/uploads/01e851eb-76aa-472b-b3ae-3803d37e82dc");
   fontRock3D = loadFont("https://dae.transientusercontent.xyz/uploads/fa827533-05e2-4540-b01f-5b7c3bcdeed4");
   imgSkelevaggio = loadImage("https://dae.transientusercontent.xyz/uploads/95975d24-a960-41b7-ae69-143a0ca23eda");
-  img94Abstractia = loadImage("https://dae.transientusercontent.xyz/uploads/c8e3424e-9059-4e18-ac62-75b2a6595d32");
+  imgNightCarnival = loadImage("https://dae.transientusercontent.xyz/uploads/4cea0467-b3ef-41da-b919-62b09b5d8247");
   imgCommunityCard = loadImage("https://dae.transientusercontent.xyz/uploads/067b752f-b4bd-41f1-8ab5-3df1f95453b6");
   imgGenesisControl = loadImage("https://dae.transientusercontent.xyz/uploads/e7fed469-a4c5-4006-b4c6-27ea35cb8bb9");
   audioVCurious = loadSound("https://dae.transientusercontent.xyz/uploads/caa54e58-6804-4376-af0d-465427ea0407"); 
@@ -128,23 +128,36 @@ function preload() {
 
 function applyChromaKey(img) {
   img.loadPixels();
-  for (let y = 0; y < img.height; y++) {
-    for (let x = 0; x < img.width; x++) {
-      let i = (x + y * img.width) * 4;
-      let r = img.pixels[i];
-      let g = img.pixels[i + 1];
-      let b = img.pixels[i + 2];
-      
-      let isKeyed = (g > 120 && r < 100 && b < 100);
-      let d = dist(r, g, b, 37, 120, 44);
+  for (let i = 0; i < img.pixels.length; i += 4) {
+    let r = img.pixels[i];
+    let g = img.pixels[i + 1];
+    let b = img.pixels[i + 2];
 
-      if (isKeyed) {
-        img.pixels[i + 3] = 0;
-      } else if (d < 55) {
-        let sideWeight = map(x, img.width * 0.3, img.width * 0.9, 0, 1, true);
-        let alphaValue = map(d, 0, 55, 0, 255);
-        let alphaFinal = lerp(255, alphaValue, sideWeight);
-        img.pixels[i + 3] = min(img.pixels[i + 3], alphaFinal);
+    let rNorm = r / 255, gNorm = g / 255, bNorm = b / 255;
+    let maxC = Math.max(rNorm, gNorm, bNorm), minC = Math.min(rNorm, gNorm, bNorm);
+    let delta = maxC - minC;
+    let h = 0, s = 0, l = (maxC + minC) / 2;
+
+    if (delta !== 0) {
+      s = l > 0.5 ? delta / (2 - maxC - minC) : delta / (maxC + minC);
+      if (maxC === rNorm) h = (gNorm - bNorm) / delta + (gNorm < bNorm ? 6 : 0);
+      else if (maxC === gNorm) h = (bNorm - rNorm) / delta + 2;
+      else h = (rNorm - gNorm) / delta + 4;
+      h /= 6;
+    }
+
+    let hueDegrees = h * 360;
+    
+    // Target all green hues for Hollywood-style keying
+    if (hueDegrees > 60 && hueDegrees < 185 && s > 0.1) {
+      let distFromGreen = Math.abs(hueDegrees - 120);
+      let maskStrength = map(distFromGreen, 0, 60, 0, 1, true);
+      let alphaVal = pow(maskStrength, 1.5) * 255; // Feathered matte
+      img.pixels[i + 3] = min(img.pixels[i + 3], alphaVal);
+      
+      // Spill suppression: blend green toward neutral averages
+      if (alphaVal < 200) {
+        img.pixels[i + 1] = lerp(g, (r + b) / 2, 0.5); 
       }
     }
   }
@@ -187,6 +200,7 @@ function setup() {
   document.head.appendChild(style);
 
   applyChromaKey(imgSkelevaggio);
+  applyChromaKey(imgNightCarnival); 
 
   videoOpeningVI = createVideo('https://dae.transientusercontent.xyz/uploads/630a59a0-15f7-4021-90da-67fb4a5c9936');
   videoOpeningVI.elt.muted = true;
@@ -251,7 +265,7 @@ function setup() {
   button.style('position', 'absolute');
   button.style('white-space', 'nowrap');
   
-  button.position(width / 2, height * 0.75 - 100);
+  updateButtonPosition();
   
   let initial = getPaletteByTime(); 
   currentPaletteHex = [...initial.colors];
@@ -265,6 +279,13 @@ function setup() {
   for (let i = 0; i < 30; i++) {
     bgParticles.push(new BackgroundParticle());
   }
+}
+
+function updateButtonPosition() {
+  // Center for vertical/square, shift left for landscape relative to the right 15% mark
+  let x = (width <= height) ? width / 2 : (width * 0.85) - 300;
+  let y = (height * 0.85) + 40;
+  button.position(x, y);
 }
 
 function startAudioContext() {
@@ -587,7 +608,7 @@ function drawCommunityCardOverlay() {
 }
 
 function drawAlternateImageOverlay() {
-    let img = imgSkelevaggio; 
+    let img = imgNightCarnival; 
     if (!img || img.width === 0) return;
     push();
     blendMode(BLEND); 
@@ -598,8 +619,9 @@ function drawAlternateImageOverlay() {
 
 function handleHoverEffects() {
   if (isHovering) {
-    let centerX = width / 2, centerY = height * 0.75 - 100;
-    for (let i = 0; i < 2; i++) bubbles.push(new Bubble(centerX + random(-10, 10), centerY + random(-10, 10)));
+    let xPos = (width <= height) ? width / 2 : (width * 0.85) - 300;
+    let yPos = (height * 0.85) + 40;
+    for (let i = 0; i < 2; i++) bubbles.push(new Bubble(xPos + random(-10, 10), yPos + random(-10, 10)));
   }
   for (let i = bubbles.length - 1; i >= 0; i--) {
     bubbles[i].update();
@@ -627,11 +649,11 @@ function handleAudioVolume() {
 }
 
 function drawWelcomeScreen() {
-  if (!img94Abstractia || img94Abstractia.width === 0) return;
+  if (!imgNightCarnival || imgNightCarnival.width === 0) return;
   push();
-  tint(255, 255 * 0.85);
-  let ratio = max(width / img94Abstractia.width, height / img94Abstractia.height);
-  image(img94Abstractia, width / 2, height / 2, img94Abstractia.width * ratio, img94Abstractia.height * ratio);
+  tint(255, 255); 
+  let ratio = max(width / imgNightCarnival.width, height / imgNightCarnival.height);
+  image(imgNightCarnival, width / 2, height / 2, imgNightCarnival.width * ratio, imgNightCarnival.height * ratio);
   pop();
 }
 
@@ -701,7 +723,7 @@ function handleFadeIn() {
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
-  if (button) button.position(width / 2, height * 0.75 - 100);
+  if (button) updateButtonPosition();
 }
 
 class Bubble {
