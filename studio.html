@@ -601,7 +601,10 @@ async function pushToSupabase(){
     return{
       number:num,numeral,title,slug,
       edition_type:edType,edition_size:edSize,series_type:'waves',
-      html_github_url:htmlUrl||null,demo_video_url:videoUrl||null,
+      // only update file pointers when a real file was staged this session
+      // omitting the key preserves the existing DB value on metadata-only pushes
+      ...(htmlUrl?{html_github_url:htmlUrl}:{}),
+      ...(videoUrl?{demo_video_url:videoUrl}:{})  ,
       collect_url:(w.collectUrl||'').trim()||null,
       article_url:(w.articleUrl||'').trim()||null,
       social_urls:buildSocial(w),
