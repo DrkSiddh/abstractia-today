@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.11.11/lib/p5.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/p5@0.7.0/lib/addons/p5.sound.min.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "mediabunny": "https://cdn.jsdelivr.net/npm/mediabunny@1.25.8/+esm"
+      }
+    }
+  </script>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
+      overflow: auto;
+      background: transparent;
+    }
+
+    main {
+      height: 100%;
+      display: flex;
+      overflow: auto;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #p5_loading {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      animation-delay: 1s;
+      color: #4e5d7b;
+      font-family: "FK Grotesk Regular", sans-serif;
+      font-size: 30px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 30px;
+      letter-spacing: -1.5px;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .5; }
+    }
+  </style>
+  <title>157 Abstractia Hazel | Made on juno.transient.xyz</title>
+</head>
+<body>
+  
+    
+  <script>
+    let cnv;
+let isMobile;
+let imgAbstractLindia;
+let imgWifPatronsAbstractia;
+let img12AbstractiaSkelevaggioLovesAbstractiaRed;
+let imgBlaqqatTitle;
+let imgAbstractPanel; 
+let img157Abstractia; 
+let videoIXOpen;
+let fontTiltPrism;
+let fontPolloPueblo;
+let audioVCurious;
+let audioSoftMystical;
+let button;
+
+let scene = 0; 
+let fadeAlpha = 0;
+let fadeRate = 3;
+let showAlternateView = false;
+let waveMode = 0; 
+let showOnenessMode = false;
+let showLinesMode = false;
+let showDGraphic = false; 
+let showControlsMenu = false;
+let showBgGif = true; 
+let bgBlendMode; 
+
+let colorsPalette = []; 
+let targetPaletteHex = [];
+let paletteLerpRate = 0.01; 
+let lastPaletteChangeTime = 0;
+let nextPaletteChangeDelay = 5000; 
+let bgScrollOffset = 0;
+let globalWavePhase = 0;
+
+let bubbles = [];
+
+const NIGHT_TRANSITION = ["F0EBC0", "9DDDF4", "D92E1B"]; 
+const AFTERNOON_GLOW = ["05C9F9", "E5F61B"]; 
+const SUNSET_IRIS = ["CF414B", "852170"]; 
+const SPECTRAL_CONTRAST = ["3BCFD4", "FC9305", "F1007D"]; 
+const MOSS_PALETTE = ["809B0E", "AEB778"]; 
+const DAY_PALETTE = ["0000FF", "007FFF", "0096c7", "00b4d8", "1E90FF", "4169E1"];
+
+function preload() {
+  img157Abstractia = loadImage("https://dae.transientusercontent.xyz/uploads/f60d36fc-4dcf-4ad6-9e09-30d35c9e9793");
+  imgAbstractLindia = loadImage("https://dae.transientusercontent.xyz/uploads/ee55ee3a-c3c7-4095-b2dc-7baaef466749");
+  imgWifPatronsAbstractia = loadImage("https://dae.transientusercontent.xyz/uploads/01e851eb-76aa-472b-b3ae-3803d37e82dc");
+  fontTiltPrism = loadFont("https://dae.transientusercontent.xyz/uploads/fbe8d03d-566c-4a99-ab70-e26ccff6d538");
+  fontPolloPueblo = loadFont("https://dae.transientusercontent.xyz/uploads/b4cfd44a-04e2-4b77-81ae-34870517a0f2");
+  img12AbstractiaSkelevaggioLovesAbstractiaRed = loadImage("https://dae.transientusercontent.xyz/uploads/c670dfc9-2295-4e42-9c21-53b40ddafddf", img => {
+    img.loadPixels();
+    let leftBound = img.width * 0.38 - 130; 
+    let rightBound = img.width * 0.62 + 190;
+    for (let y = 0; y < img.height; y++) {
+      for (let x = 0; x < img.width; x++) {
+        let i = (x + y * img.width) * 4;
+        let r = img.pixels[i], g = img.pixels[i+1], b = img.pixels[i+2];
+        let isGreen = (g > 70 && g > r * 1.1 && g > b * 1.1);
+        let inCenter = (x > leftBound && x < rightBound && y > img.height * 0.2 && y < img.height * 0.8);
+        if (isGreen) {
+          if (inCenter) img.pixels[i+3] = 51; 
+          else img.pixels[i+3] = 255; 
+        }
+      }
+    }
+    img.updatePixels();
+  });
+  imgBlaqqatTitle = loadImage("https://dae.transientusercontent.xyz/uploads/b4357bf3-68c3-4ed4-a50b-01d254b3d6c3");
+  imgAbstractPanel = loadImage("https://dae.transientusercontent.xyz/uploads/b4036afe-6473-4439-9362-fd0d39f1923d");
+  audioVCurious = loadSound("https://dae.transientusercontent.xyz/uploads/caa54e58-6804-4376-af0d-465427ea0407"); 
+  audioSoftMystical = loadSound("https://dae.transientusercontent.xyz/uploads/09b2ffa5-2290-48e8-8815-eab2430d647e"); 
+}
+
+function getPaletteByTime() {
+  let h = hour(), m = minute();
+  let totalMins = h * 60 + m;
+  if (totalMins >= 1208 || totalMins <= 11) return { colors: NIGHT_TRANSITION };
+  if (totalMins >= 1075 && totalMins <= 1207) return { colors: SUNSET_IRIS }; 
+  if (totalMins >= 1000 && totalMins <= 1074) return { colors: AFTERNOON_GLOW };
+  if (totalMins > 11 && totalMins < 480) return { colors: MOSS_PALETTE };
+  return { colors: DAY_PALETTE };
+}
+
+function setup() {
+  cnv = createCanvas(windowWidth, windowHeight);
+  imageMode(CENTER);
+  isMobile = (('ontouchstart' in window) || navigator.maxTouchPoints > 0) && width < 767;
+  cnv.elt.style.touchAction = 'none';
+  cnv.elt.addEventListener('touchmove', e => { e.preventDefault(); }, { passive: false });
+  bgBlendMode = BLEND;
+  videoIXOpen = createVideo('https://dae.transientusercontent.xyz/uploads/8f034489-6458-4321-b31c-5ca2e23b626a');
+  videoIXOpen.elt.muted = true;
+  videoIXOpen.elt.setAttribute('playsinline', '');
+  videoIXOpen.elt.setAttribute('webkit-playsinline', '');
+  videoIXOpen.loop(); videoIXOpen.hide();
+  if (audioVCurious) { audioVCurious.setLoop(true); audioVCurious.setVolume(0.5); }
+  
+  button = createButton('GET ABSTRACT');
+  button.mousePressed(handleDiveIn);
+  
+  createElement('style', `
+    @font-face { font-family: 'Pollo Pueblo'; src: url('https://dae.transientusercontent.xyz/uploads/b4cfd44a-04e2-4b77-81ae-34870517a0f2'); }
+  `);
+  styleButton();
+  
+  let initial = getPaletteByTime(); 
+  targetPaletteHex = [...initial.colors];
+  for (let hex of targetPaletteHex) colorsPalette.push(color('#' + hex));
+}
+
+function styleButton() {
+  button.style('font-family', "'Pollo Pueblo', sans-serif"); 
+  button.style('font-size', isMobile ? '28px' : '44px'); 
+  button.style('padding', '10px 20px');
+  button.style('border', 'none');
+  button.style('background-color', 'transparent');
+  button.style('cursor', 'pointer');
+  button.style('white-space', 'nowrap');
+  button.style('opacity', '1');
+  button.style('position', 'absolute');
+  button.style('left', '50%');
+  button.style('top', '65%');
+  // Raised by 300px from previous translate(-50%, 40px)
+  button.style('transform', 'translate(-50%, -260px)');
+  button.style('transition', 'color 0.5s ease, text-shadow 0.5s ease');
+}
+
+function updateButtonColor() {
+  if (colorsPalette.length > 0 && scene <= 1) {
+    let c = colorsPalette[0];
+    let colStr = `rgb(${red(c)}, ${green(c)}, ${blue(c)})`;
+    button.style('color', colStr);
+    button.style('text-shadow', `0 0 10px ${colStr}, 0 0 20px rgba(255,255,255,0.3)`);
+  }
+}
+
+function updatePalette() {
+  let now = millis();
+  if (now - lastPaletteChangeTime > nextPaletteChangeDelay) {
+    let result = getPaletteByTime();
+    targetPaletteHex = [...result.colors];
+    lastPaletteChangeTime = now;
+  }
+}
+
+function lerpPalettes() {
+  for (let i = 0; i < targetPaletteHex.length; i++) {
+    let targetColor = color('#' + targetPaletteHex[i]);
+    if (!colorsPalette[i]) colorsPalette[i] = targetColor;
+    colorsPalette[i] = lerpColor(colorsPalette[i], targetColor, paletteLerpRate);
+  }
+}
+
+function keyPressed() {
+  if (key === 'b' || key === 'B') resetToWelcome();
+  else if (scene === 2) {
+    if (key === 'a' || key === 'A') showAlternateView = !showAlternateView;
+    else if (key === 'w' || key === 'W') waveMode = (waveMode + 1) % 4;
+    else if (key === 'o' || key === 'O') showOnenessMode = !showOnenessMode;
+    else if (key === 'l' || key === 'L') showLinesMode = !showLinesMode;
+    else if (key === 'i' || key === 'I') showControlsMenu = !showControlsMenu;
+    else if (key === 'd' || key === 'D') showDGraphic = !showDGraphic;
+    else if (key === 's' || key === 'S') showBgGif = !showBgGif;
+    else if (key === 'c' || key === 'C') {
+        bgBlendMode = (bgBlendMode === BLEND) ? SCREEN : (bgBlendMode === SCREEN ? HARD_LIGHT : BLEND);
+    }
+  }
+}
+
+function resetToWelcome() {
+  scene = 0; 
+  fadeAlpha = 0;
+  showAlternateView = showOnenessMode = showLinesMode = showControlsMenu = false;
+  showBgGif = true; 
+  waveMode = 0; 
+  bgBlendMode = BLEND;
+  videoIXOpen.loop(); 
+  button.show();
+  button.elt.style.pointerEvents = 'auto';
+  button.elt.removeAttribute('disabled');
+}
+
+function drawVibrantBackground() {
+  if (showBgGif) {
+    push();
+    let r = max(width / imgAbstractLindia.width, height / imgAbstractLindia.height);
+    image(imgAbstractLindia, width / 2, height / 2, imgAbstractLindia.width * r, imgAbstractLindia.height * r);
+    pop();
+  }
+
+  bgScrollOffset += 0.0015; 
+  let fear = floor(map(mouseY, height, 0, 5, 25)); 
+  
+  push();
+  blendMode(bgBlendMode);
+  noStroke();
+  translate(width/2, height/2);
+  
+  let maxDim = max(width, height) * 1.6;
+  for (let i = 0; i < fear; i++) {
+    let c = colorsPalette[i % colorsPalette.length];
+    let finalAlpha = (showBgGif && scene === 2) ? 60 : 140;
+    fill(red(c), green(c), blue(c), finalAlpha);
+    
+    beginShape();
+    let ringRadius = (i * (maxDim / fear) + (bgScrollOffset * 100)) % maxDim;
+    for (let a = 0; a < TWO_PI; a += 0.1) {
+      let noiseVal = noise(cos(a) * 0.5, sin(a) * 0.5, bgScrollOffset + i * 0.02);
+      let r = ringRadius + noiseVal * 80;
+      vertex(cos(a) * r, sin(a) * r);
+    }
+    beginContour();
+    for (let a = TWO_PI; a > 0; a -= 0.1) {
+       let r = ringRadius * 0.96;
+       vertex(cos(a) * r, sin(a) * r);
+    }
+    endContour();
+    endShape(CLOSE);
+  }
+
+  let dilation = map(dist(mouseX, mouseY, width/2, height/2), 0, width/2, 100, 240, true);
+  fill(0, 240);
+  ellipse(0, 0, dilation, dilation);
+  fill(255, 40);
+  ellipse(-dilation * 0.2, -dilation * 0.2, dilation * 0.15, dilation * 0.1); 
+  pop();
+}
+
+function handleBubbles() {
+  let bRect = button.elt.getBoundingClientRect();
+  if (mouseX > bRect.left && mouseX < bRect.right && mouseY > bRect.top && mouseY < bRect.bottom) {
+    if (frameCount % 3 === 0) {
+      bubbles.push({ x: mouseX + random(-25, 25), y: mouseY + random(-10, 10), vx: random(-1, 1), vy: random(-1.5, -4), s: random(4, 12), a: 200 });
+    }
+  }
+  for (let i = bubbles.length - 1; i >= 0; i--) {
+    let b = bubbles[i]; b.x += b.vx; b.y += b.vy; b.a -= 2.5;
+    noStroke(); fill(255, 255, 255, b.a); ellipse(b.x, b.y, b.s);
+    if (b.a <= 0) bubbles.splice(i, 1);
+  }
+}
+
+function draw() {
+  updatePalette(); 
+  lerpPalettes(); 
+  background(0);
+  if (scene <= 1) {
+    drawVibrantBackground();
+    drawWelcomeScreen();
+    updateButtonColor();
+    handleBubbles();
+  } else {
+    drawVibrantBackground();
+    if (waveMode > 0) drawTransverseLogic();
+    if (showOnenessMode) drawOneness();
+    if (showLinesMode) drawLinesMode();
+    if (showDGraphic) drawOverlay(imgBlaqqatTitle, BLEND, 240);
+    if (showAlternateView) drawOverlay(img12AbstractiaSkelevaggioLovesAbstractiaRed, BLEND, 255);
+    if (showControlsMenu) drawControlPanel(); 
+  }
+  handleSceneTransitions();
+}
+
+function drawTransverseLogic() {
+  globalWavePhase += 0.003; 
+  push(); 
+  translate(width/2, height/2);
+  let mouseDist = dist(mouseX, mouseY, width/2, height/2);
+  let mouseInfluence = map(mouseDist, 0, width, 1.5, 0.4, true);
+
+  if (waveMode === 1) {
+    blendMode(ADD); noFill();
+    for (let i = 0; i < 15; i++) {
+      let c = colorsPalette[i % colorsPalette.length];
+      let r = (i * 60 + frameCount * (0.8 * mouseInfluence)) % (max(width, height));
+      stroke(red(c), green(c), blue(c), map(r, 0, width, 200, 0));
+      strokeWeight(2); ellipse(0, 0, r, r);
+    }
+  } else if (waveMode === 2) {
+    blendMode(SCREEN);
+    for (let i = 0; i < 8; i++) {
+      let c = colorsPalette[i % colorsPalette.length];
+      let r = (i * 100 + frameCount * 0.7) % (max(width, height));
+      fill(red(c), green(c), blue(c), map(r, 0, width, 140, 0));
+      noStroke();
+      beginShape();
+      for(let a = 0; a < TWO_PI; a += PI/3) {
+        let x = cos(a) * r; let y = sin(a) * r;
+        let vx = lerp(x, mouseX - width/2, 0.03 * mouseInfluence);
+        let vy = lerp(y, mouseY - height/2, 0.03 * mouseInfluence);
+        vertex(vx, vy);
+      }
+      beginContour();
+      for(let a = TWO_PI; a > 0; a -= PI/3) {
+        let x = cos(a) * (r * 0.94); let y = sin(a) * (r * 0.94);
+        let vx = lerp(x, mouseX - width/2, 0.02 * mouseInfluence);
+        let vy = lerp(y, mouseY - height/2, 0.02 * mouseInfluence);
+        vertex(vx, vy);
+      }
+      endContour(); endShape(CLOSE);
+    }
+  } else if (waveMode === 3) {
+    blendMode(ADD);
+    for (let i = 0; i < 20; i++) {
+      let c = colorsPalette[i % colorsPalette.length];
+      let pulse = sin(frameCount * 0.008 + i) * (40 * mouseInfluence);
+      let r = (i * 50 + frameCount * 1.1) % (width);
+      stroke(red(c), green(c), blue(c), map(r, 0, width, 180, 0));
+      strokeWeight(1.2); noFill();
+      let ecc = map(mouseX, 0, width, 0.7, 1.6);
+      ellipse(0, 0, (r + pulse) * ecc, (r - pulse) / ecc);
+    }
+  }
+  pop();
+}
+
+function drawOneness() {
+  let breathe = map(sin(frameCount * 0.008), -1, 1, 0.8, 1.7);
+  push();
+  translate(width/2, height/2);
+  noFill();
+  for(let i = 0; i < 22; i++) {
+    let c = colorsPalette[i % colorsPalette.length];
+    stroke(red(c), green(c), blue(c), 150);
+    strokeWeight(1 + i * 0.1);
+    rotate(frameCount * 0.0002 + i * 0.012);
+    let r = (120 + i * 15) * breathe;
+    beginShape();
+    for(let a = 0; a < TWO_PI; a += PI/12) {
+      let offset = noise(i * 0.6, a, frameCount * 0.003) * 140;
+      vertex(cos(a) * (r + offset), sin(a) * (r + offset));
+    }
+    endShape(CLOSE);
+  }
+  pop();
+}
+
+function drawLinesMode() {
+  push();
+  translate(width / 2, height / 2);
+  blendMode(ADD);
+  let targetX = mouseX - width / 2;
+  let targetY = mouseY - height / 2;
+  let greed = map(mouseX, 0, width, 0.2, 10); 
+
+  for (let i = 0; i < 120; i++) {
+    let c = colorsPalette[i % colorsPalette.length];
+    let angle = i * (TWO_PI / 120) + frameCount * 0.001;
+    let d = dist(targetX, targetY, cos(angle) * 150, sin(angle) * 150);
+    let influence = map(d, 0, width * 0.6, 2.2, 0.4, true);
+
+    stroke(red(c), green(c), blue(c), 120 * influence);
+    strokeWeight(greed * influence);
+    
+    let x1 = cos(angle) * 50; 
+    let y1 = sin(angle) * 50;
+    let x2 = lerp(cos(angle) * (width * 0.8), targetX, 0.12 * influence);
+    let y2 = lerp(sin(angle) * (height * 0.8), targetY, 0.12 * influence);
+    
+    line(x1, y1, x2, y2);
+  }
+  pop();
+}
+
+function drawControlPanel() {
+  push();
+  let r = max(width / imgAbstractPanel.width, height / imgAbstractPanel.height);
+  tint(255, 230);
+  image(imgAbstractPanel, width/2, height/2, imgAbstractPanel.width * r, imgAbstractPanel.height * r);
+  pop();
+}
+
+function handleSceneTransitions() {
+  if (scene === 0) {
+    button.show();
+  } else if (scene === 1) {
+    fadeAlpha += fadeRate; 
+    fill(0, fadeAlpha); rect(0, 0, width, height);
+    if (fadeAlpha >= 255) { scene = 2; }
+    button.hide();
+  } else {
+    fadeAlpha -= fadeRate; 
+    fill(0, max(0, fadeAlpha)); rect(0, 0, width, height);
+  }
+}
+
+function drawWelcomeScreen() {
+  if (!img157Abstractia) return;
+  push();
+  blendMode(SCREEN); 
+  let r = max(width / img157Abstractia.width, height / img157Abstractia.height);
+  image(img157Abstractia, width / 2, height / 2, img157Abstractia.width * r, img157Abstractia.height * r);
+  pop();
+}
+
+function drawOverlay(media, bMode, alphaVal) {
+  if (!media || media.width === 0) return;
+  push(); blendMode(bMode); tint(255, alphaVal);
+  let r = max(width / media.width, height / media.height);
+  image(media, width / 2, height / 2, media.width * r, media.height * r);
+  pop();
+}
+
+function handleDiveIn() {
+  if (getAudioContext().state !== 'running') getAudioContext().resume();
+  scene = 1; 
+  button.elt.setAttribute('disabled', 'true');
+  button.elt.style.pointerEvents = 'none';
+  if (audioSoftMystical) audioSoftMystical.play();
+}
+
+function windowResized() { 
+  resizeCanvas(windowWidth, windowHeight); styleButton();
+}
+  </script>
+
+
+</body></html>
