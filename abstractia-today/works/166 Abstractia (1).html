@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.11.11/lib/p5.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/p5@0.7.0/lib/addons/p5.sound.min.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "mediabunny": "https://cdn.jsdelivr.net/npm/mediabunny@1.25.8/+esm"
+      }
+    }
+  </script>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
+      overflow: auto;
+      background: transparent;
+    }
+
+    main {
+      height: 100%;
+      display: flex;
+      overflow: auto;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #p5_loading {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      animation-delay: 1s;
+      color: #4e5d7b;
+      font-family: "FK Grotesk Regular", sans-serif;
+      font-size: 30px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 30px;
+      letter-spacing: -1.5px;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .5; }
+    }
+  </style>
+  <title>166 Abstractia | Made on juno.transient.xyz</title>
+</head>
+<body>
+  
+    
+  <script>
+    let cnv;
+let isMobile;
+let videoOpeningAdv; 
+let imgWifPatronsAbstractia;
+let imgAbstractLindiaGif;
+let videoEarthAccordingToMermaids;
+let videoBlaqqatDevV;
+let videoUnderbelly; 
+let imgUnderbellyFrame;
+let imgControlsII;
+let imgControlsPanel; 
+let audioHarmonicEtherealCoSunlitRays;
+let audioOpeningIIAbstractia;
+let audioAbstractiaIV;
+let audioWaves27; 
+let audioLines27; 
+let button;
+
+let scene = 0; 
+let fadeAlpha = 0;
+let fadeRate = 6;
+let showAlternateView = false;
+let showCompanionView = false; 
+let showLinesMode = false; 
+let showWavesMode = false;
+let waveCount = 5;
+let showMountainMode = false; 
+const LERP_RATE = 0.05;
+let isQuietMode = false;
+let isDevMuted = false;
+let devVolume = 1.0;
+let showControlsMenu = false;
+let isDeveloperMode = false;
+let isHovering = false;
+
+let particles = [];
+let backgroundBlobs = [];
+let colorsPalette = []; 
+let targetPaletteHex = [];
+let paletteLerpRate = 0.02;
+let lastPaletteType = ""; 
+
+let chromaShader;
+let shaderBuffer;
+
+const DAY_PALETTE = ["03045e", "023e8a", "0077b6", "0096c7", "00b4d8", "48cae4"];
+const NIGHT_PALETTE = ["10002b", "240046", "3c096c", "5a189a", "7b2cbf", "9d4edd"];
+const TWILIGHT_PALETTE = ["ae7981", "543d4f", "2d2c34", "62354c", "36222b", "8b5e83"];
+const LIME_PALETTE = ["004b23", "006400", "007200", "008000", "38b000", "70e000"];
+const DAWN_PALETTE_BASE = ["dfbbb1", "f56476", "e43f6f", "be3e82", "5e4352", "7a5c61"];
+const BRIGHTS_PALETTE = ["35ff69", "42bfdd", "0a090c", "f5b700", "00a1e4", "e63462", "d138bf"];
+const SPECIAL_BLUE_PALETTE = ["03045e", "023e8a", "0077b6", "0096c7", "00b4d8", "48cae4", "90e0ef", "ade8f4", "caf0f8"];
+const GRADIENT_PALETTE = ["AACDA8", "BA6361", "415C90", "3A8762", "8F3A55", "AE463D", "4A0303", "051F58"];
+
+const vert = `
+  precision highp float;
+  attribute vec3 aPosition;
+  attribute vec2 aTexCoord;
+  varying vec2 vTexCoord;
+  void main() {
+    vTexCoord = aTexCoord;
+    vec4 positionVec4 = vec4(aPosition, 1.0);
+    positionVec4.xy = positionVec4.xy * 2.0 - 1.0;
+    gl_Position = positionVec4;
+  }
+`;
+
+const frag = `
+  precision highp float;
+  varying vec2 vTexCoord;
+  uniform sampler2D u_tex;
+  uniform vec3 u_keyColor;
+  uniform float u_threshold;
+  uniform float u_opacity;
+
+  void main() {
+    vec2 correctedCoord = vec2(vTexCoord.x, 1.0 - vTexCoord.y);
+    vec4 texColor = texture2D(u_tex, correctedCoord);
+    float d = distance(texColor.rgb, u_keyColor);
+    if (d < u_threshold) {
+      gl_FragColor = vec4(texColor.rgb, u_opacity);
+    } else {
+      gl_FragColor = vec4(texColor.rgb, 1.0);
+    }
+  }
+`;
+
+function preload() {
+  imgWifPatronsAbstractia = loadImage("https://dae.transientusercontent.xyz/uploads/01e851eb-76aa-472b-b3ae-3803d37e82dc");
+  audioHarmonicEtherealCoSunlitRays = loadSound("https://dae.transientusercontent.xyz/uploads/295133e5-d5e2-4d2c-a968-85ea4a5872c1");
+  imgControlsII = loadImage("https://dae.transientusercontent.xyz/uploads/067b752f-b4bd-41f1-8ab5-3df1f95453b6"); 
+  imgControlsPanel = loadImage("https://dae.transientusercontent.xyz/uploads/77457fdf-7af6-48e2-a543-021968683b78"); 
+  audioOpeningIIAbstractia = loadSound("https://dae.transientusercontent.xyz/uploads/bb00503d-13ad-4177-a995-d6d2c6b13b2c"); 
+  audioAbstractiaIV = loadSound("https://dae.transientusercontent.xyz/uploads/b8517588-e48c-4409-8df2-d866f151a537"); 
+  audioWaves27 = loadSound("https://dae.transientusercontent.xyz/uploads/a2ba9ab0-7ca1-4ea7-b7e2-a7d825f53420");
+  audioLines27 = loadSound("https://dae.transientusercontent.xyz/uploads/7e961528-fae4-434b-a011-b54cb8000c0c");
+  imgUnderbellyFrame = loadImage("https://dae.transientusercontent.xyz/uploads/2c824bf7-91ff-4a71-a014-3964d352943f");
+}
+
+function getPaletteByTime() {
+    let h = hour();
+    let m = minute();
+    let tm = h * 60 + m;
+    if (tm >= 610 && tm <= 933) return { colors: GRADIENT_PALETTE, type: "GRADIENT" };
+    if ((tm >= 600 && tm <= 731) || (tm >= 862 && tm <= 971)) return { colors: SPECIAL_BLUE_PALETTE, type: "SPECIAL_BLUE" };
+    else if (tm >= 213 && tm <= 419) return { colors: DAWN_PALETTE_BASE, type: "DAWN" };
+    else if (tm >= 540 && tm <= 790) return { colors: BRIGHTS_PALETTE, type: "BRIGHTS" };
+    else if ((h === 16 && m >= 20) || (h === 17)) return { colors: LIME_PALETTE, type: "LIME" };
+    else if (h >= 18 && h < 21) return { colors: TWILIGHT_PALETTE, type: "TWILIGHT" };
+    else if (h >= 21 || h < 3) return { colors: NIGHT_PALETTE, type: "NIGHT" };
+    else return { colors: DAY_PALETTE, type: "DAY" };
+}
+
+function setup() {
+  cnv = createCanvas(windowWidth, windowHeight);
+  imageMode(CENTER);
+  isMobile = (('ontouchstart' in window) || navigator.maxTouchPoints > 0) && width < 767;
+  
+  cnv.elt.style.touchAction = 'none';
+  cnv.elt.addEventListener('touchmove', e => { e.preventDefault(); }, { passive: false });
+  
+  let style = document.createElement('style');
+  style.innerHTML = `@font-face { font-family: 'Rock3D-Regular'; src: url('https://dae.transientusercontent.xyz/uploads/fa827533-05e2-4540-b01f-5b7c3bcdeed4') format('truetype'); }`;
+  document.head.appendChild(style);
+
+  shaderBuffer = createGraphics(windowWidth, windowHeight, WEBGL);
+  chromaShader = shaderBuffer.createShader(vert, frag);
+
+  videoOpeningAdv = createVideo('https://dae.transientusercontent.xyz/uploads/fc10bd5e-3ea5-4b89-936e-365c71974639');
+  videoOpeningAdv.elt.muted = true; 
+  videoOpeningAdv.speed(1);
+  videoOpeningAdv.elt.setAttribute('playsinline', '');
+  videoOpeningAdv.elt.setAttribute('webkit-playsinline', '');
+  videoOpeningAdv.loop(); 
+  videoOpeningAdv.hide();
+
+  videoEarthAccordingToMermaids = createVideo('https://dae.transientusercontent.xyz/uploads/6dffff3a-5ce8-4968-9a74-2c2e940d5a25');
+  videoEarthAccordingToMermaids.elt.muted = true;
+  videoEarthAccordingToMermaids.elt.setAttribute('playsinline', '');
+  videoEarthAccordingToMermaids.elt.setAttribute('webkit-playsinline', '');
+  videoEarthAccordingToMermaids.hide(); 
+
+  imgAbstractLindiaGif = createVideo('https://dae.transientusercontent.xyz/uploads/ee55ee3a-c3c7-4095-b2dc-7baaef466749');
+  imgAbstractLindiaGif.elt.muted = true;
+  imgAbstractLindiaGif.elt.setAttribute('playsinline', '');
+  imgAbstractLindiaGif.elt.setAttribute('webkit-playsinline', '');
+  imgAbstractLindiaGif.loop();
+  imgAbstractLindiaGif.hide();
+
+  videoBlaqqatDevV = createVideo('__URL_11__');
+  videoBlaqqatDevV.elt.setAttribute('playsinline', '');
+  videoBlaqqatDevV.elt.setAttribute('webkit-playsinline', '');
+  videoBlaqqatDevV.loop();
+  videoBlaqqatDevV.hide();
+  videoBlaqqatDevV.pause();
+
+  videoUnderbelly = createVideo('https://dae.transientusercontent.xyz/uploads/72053fe3-3cd2-4933-a4c3-80377a36c53e');
+  videoUnderbelly.elt.muted = true; 
+  videoUnderbelly.speed(1);
+  videoUnderbelly.elt.setAttribute('playsinline', '');
+  videoUnderbelly.elt.setAttribute('webkit-playsinline', '');
+  videoUnderbelly.loop();
+  videoUnderbelly.hide();
+  videoUnderbelly.pause();
+
+  if (audioOpeningIIAbstractia) audioOpeningIIAbstractia.setVolume(0.8);
+  if (audioAbstractiaIV) {
+    audioAbstractiaIV.setLoop(true);
+    audioAbstractiaIV.setVolume(0.5);
+  }
+  if (audioWaves27) {
+    audioWaves27.setLoop(true);
+    audioWaves27.setVolume(0);
+  }
+  if (audioLines27) {
+    audioLines27.setLoop(true);
+    audioLines27.setVolume(0);
+  }
+
+  button = createButton('Get Abstract');
+  button.mousePressed(handleDiveIn);
+  button.mouseOver(() => { isHovering = true; });
+  button.mouseOut(() => { isHovering = false; });
+  button.style('font-family', 'Rock3D-Regular, sans-serif'); 
+  button.style('letter-spacing', '2px');
+  button.style('font-size', 'clamp(24px, 4vw, 36px)');
+  button.style('padding', '15px 30px');
+  button.style('border', 'none');
+  button.style('border-radius', '8px');
+  button.style('cursor', 'pointer');
+  button.style('color', 'white'); 
+  button.style('background-color', 'transparent');
+  button.style('position', 'absolute');
+  button.style('white-space', 'nowrap');
+  
+  updateButtonPosition();
+  
+  let initial = getPaletteByTime(); 
+  targetPaletteHex = [...initial.colors];
+  lastPaletteType = initial.type;
+  for (let hex of targetPaletteHex) {
+      colorsPalette.push(color('#' + hex));
+  }
+
+  for(let i=0; i<30; i++) {
+    backgroundBlobs.push({
+      x: random(width),
+      y: random(height),
+      size: random(width * 0.7, width * 1.6),
+      vx: random(-0.4, 0.4),
+      vy: random(-0.4, 0.4),
+      angle: random(TWO_PI),
+      colIndex: i % GRADIENT_PALETTE.length
+    });
+  }
+}
+
+function updateButtonPosition() {
+  let btnW = button.elt.offsetWidth || 250; 
+  let btnH = button.elt.offsetHeight || 60;
+  let targetX = width * 0.15; 
+  let targetY = height * 0.75;
+  button.position(
+    constrain(targetX, 20, width - btnW - 20),
+    constrain(targetY, 20, height - btnH - 20)
+  );
+}
+
+function updatePalette() {
+    let result = getPaletteByTime();
+    if (result.type !== lastPaletteType) {
+        targetPaletteHex = [...result.colors];
+        lastPaletteType = result.type;
+    }
+}
+
+function lerpPalettes() {
+    for (let i = 0; i < targetPaletteHex.length; i++) {
+        let targetColor = color('#' + targetPaletteHex[i]);
+        if (colorsPalette[i]) {
+            colorsPalette[i] = lerpColor(colorsPalette[i], targetColor, paletteLerpRate);
+        } else {
+            colorsPalette[i] = targetColor;
+        }
+    }
+}
+
+function resetModes() {
+  showAlternateView = false;
+  showCompanionView = false;
+  showLinesMode = false;
+  showWavesMode = false;
+  showMountainMode = false;
+  isDeveloperMode = false;
+  videoBlaqqatDevV.pause();
+  videoUnderbelly.pause();
+  if (audioWaves27 && audioWaves27.isPlaying()) audioWaves27.stop();
+  if (audioLines27 && audioLines27.isPlaying()) audioLines27.stop();
+}
+
+function keyPressed() {
+  let k = key.toLowerCase();
+  if (k === 'b') {
+    scene = 0;
+    fadeAlpha = 0;
+    resetModes();
+    waveCount = 5;
+    isQuietMode = false;
+    showControlsMenu = false;
+    videoOpeningAdv.play();
+    if (audioAbstractiaIV && audioAbstractiaIV.isPlaying()) audioAbstractiaIV.stop();
+    button.show();
+    button.removeAttribute('disabled');
+  } else if (k === 'a') {
+    if (scene === 2) { 
+      showAlternateView = !showAlternateView; 
+      if (showAlternateView) {
+        videoUnderbelly.play();
+      } else {
+        videoUnderbelly.pause();
+      }
+    }
+  } else if (k === 'c') {
+    if (scene === 2) showCompanionView = !showCompanionView;
+  } else if (k === 'l') {
+    if (scene === 2) {
+      showLinesMode = !showLinesMode;
+      if (showLinesMode) {
+        if (audioLines27 && !audioLines27.isPlaying()) audioLines27.loop();
+      } else {
+        if (audioLines27) audioLines27.stop();
+      }
+    }
+  } else if (k === 'w') {
+    if (scene === 2) {
+      if (!showWavesMode) { 
+        showWavesMode = true; 
+        waveCount = 5; 
+        if (audioWaves27 && !audioWaves27.isPlaying()) audioWaves27.loop();
+      } else if (waveCount === 5) {
+        waveCount = 30;
+      } else if (waveCount === 30) {
+        waveCount = 55;
+      } else { 
+        showWavesMode = false;
+        waveCount = 5;
+        if (audioWaves27) audioWaves27.stop();
+      }
+    }
+  } else if (k === 's') {
+    if (scene === 2) showMountainMode = !showMountainMode;
+  } else if (k === 'q') {
+    if (scene === 2) isQuietMode = !isQuietMode;
+  } else if (k === 'm') {
+    if (scene === 2) isDevMuted = !isDevMuted; 
+  } else if (k === 'i') {
+    if (scene === 2) showControlsMenu = !showControlsMenu;
+  } else if (k === 'd') { 
+    if (scene === 2) isDeveloperMode = !isDeveloperMode;
+  }
+}
+
+function drawInteractiveDefault() {
+  push();
+  blendMode(SCREEN);
+  noFill();
+  let time = frameCount * 0.01;
+  let density = 45;
+  for (let i = 0; i < density; i++) {
+    let c = colorsPalette[i % colorsPalette.length];
+    stroke(red(c), green(c), blue(c), 70);
+    strokeWeight(2);
+    beginShape();
+    for (let j = 0; j < 15; j++) {
+      let nx = noise(i * 0.1, j * 0.15, time) * width;
+      let ny = noise(i * 0.1, j * 0.15, time + 100) * height;
+      let d = dist(mouseX, mouseY, nx, ny);
+      let influence = map(min(d, 600), 0, 600, 300, 0);
+      let vx = lerp(nx, mouseX, influence * 0.005);
+      let vy = lerp(ny, mouseY, influence * 0.005);
+      curveVertex(vx, vy);
+    }
+    endShape();
+  }
+  pop();
+}
+
+function drawSoftBackground(isBland = false) {
+  push();
+  noStroke();
+  blendMode(BLEND);
+  for (let blob of backgroundBlobs) {
+    blob.angle += isBland ? 0.001 : 0.002;
+    blob.x += blob.vx;
+    blob.y += blob.vy;
+    
+    if (blob.x < -blob.size) blob.x = width + blob.size;
+    if (blob.x > width + blob.size) blob.x = -blob.size;
+    if (blob.y < -blob.size) blob.y = height + blob.size;
+    if (blob.y > height + blob.size) blob.y = -blob.size;
+
+    let c = colorsPalette[blob.colIndex % colorsPalette.length];
+    let d = dist(mouseX, mouseY, blob.x, blob.y);
+    let reactiveScale = map(min(d, 800), 0, 800, 1.4, 1.0);
+    
+    for (let r = blob.size * reactiveScale; r > 0; r -= 200) {
+      let alphaBase = isBland ? 10 : 60; 
+      let alpha = map(r, 0, blob.size * 1.5, alphaBase, 0);
+      let rVal = red(c), gVal = green(c), bVal = blue(c);
+      if (isBland) { 
+        let gray = (rVal + gVal + bVal) / 3;
+        rVal = lerp(rVal, gray, 0.95);
+        gVal = lerp(gVal, gray, 0.95);
+        bVal = lerp(bVal, gray, 0.95);
+      }
+      fill(rVal, gVal, bVal, alpha);
+      ellipse(blob.x + sin(blob.angle) * 80, blob.y + cos(blob.angle) * 80, r, r);
+    }
+  }
+  pop();
+}
+
+function drawMountainPattern() {
+  push();
+  blendMode(SCREEN);
+  noStroke();
+  let layers = 12; 
+  let time = frameCount * 0.007;
+  for (let i = 0; i < layers; i++) {
+    let c = colorsPalette[i % colorsPalette.length];
+    fill(red(c), green(c), blue(c), 60);
+    beginShape();
+    vertex(-100, height * 1.2); 
+    let layerBaseY = height * 0.5 + (i * 35);
+    for (let x = -100; x <= width + 100; x += 40) {
+      let d = dist(x, layerBaseY, mouseX, mouseY);
+      let dip = map(min(d, 300), 0, 300, -80, 0);
+      let n = noise(x * 0.003, i * 0.5, time);
+      let h = map(n, 0, 1, -150, 150) + dip;
+      vertex(x, layerBaseY + h);
+    }
+    vertex(width + 100, height * 1.2);
+    endShape(CLOSE);
+  }
+  pop();
+}
+
+function drawRollingOmbrePattern() {
+  push();
+  blendMode(SCREEN); 
+  noStroke();
+  let layers = 15; 
+  let time = frameCount * 0.008;
+  for (let i = 0; i < layers; i++) {
+    let c = colorsPalette[i % colorsPalette.length];
+    fill(red(c), green(c), blue(c), 80); 
+    beginShape();
+    let baseY = map(i, 0, layers, -height * 0.1, height * 1.1);
+    vertex(-100, height * 1.5); 
+    for (let x = -100; x <= width + 100; x += 60) {
+      let n = noise(x * 0.002, i * 0.2, time);
+      let roll = sin(x * 0.002 + time + i * 0.5) * 120;
+      vertex(x, baseY + roll + (n * 100));
+    }
+    vertex(width + 100, height * 1.5);
+    endShape(CLOSE);
+  }
+  pop();
+}
+
+function drawWaterfallNeon() {
+  push();
+  blendMode(ADD);
+  let time = frameCount * 0.02;
+  let cols = 45;
+  let spacing = width / cols;
+  for (let i = 0; i < cols; i++) {
+    let x = i * spacing + spacing / 2;
+    let c = colorsPalette[i % colorsPalette.length];
+    let weight = 1.8 + sin(time + i * 0.5) * 1.2;
+    stroke(red(c), green(c), blue(c), 120);
+    strokeWeight(weight);
+    let d = abs(mouseX - x);
+    let pull = map(min(d, 300), 0, 300, 80, 0);
+    beginShape();
+    for (let y = -100; y < height + 100; y += 40) {
+      let nx = x + sin(y * 0.015 + time + i) * (25 + pull);
+      curveVertex(nx, y);
+    }
+    endShape();
+    let dropSpeed = 5 + (i % 5);
+    let dropY = (frameCount * dropSpeed + i * 200) % (height + 300) - 150;
+    fill(red(c), green(c), blue(c), 150);
+    noStroke();
+    rect(x + sin(time + i) * 30, dropY, 2, 12);
+  }
+  pop();
+}
+
+function drawCreativeWaves() {
+  push();
+  blendMode(ADD);
+  noFill();
+  let time = frameCount * 0.04;
+  for (let i = 0; i < waveCount; i++) {
+    let c = colorsPalette[i % colorsPalette.length];
+    let alph = map(waveCount, 5, 55, 220, 100);
+    stroke(red(c), green(c), blue(c), alph);
+    strokeWeight(map(i, 0, waveCount, 2, 6));
+    beginShape();
+    let yBase = map(i, 0, waveCount, 0, height);
+    for (let x = -50; x < width + 50; x += 30) {
+      let freq = 0.004 + (i * 0.0002);
+      let angle = x * freq + time + (i * 0.3);
+      let amp = 120 + sin(time * 0.4 + i) * 60;
+      let y = yBase + sin(angle) * amp + cos(angle * 0.6) * (amp * 0.4);
+      let d = dist(x, y, mouseX, mouseY);
+      if (d < 250) y += map(d, 0, 250, -120, 0);
+      curveVertex(x, y);
+    }
+    endShape();
+  }
+  pop();
+}
+
+function drawAlternateView() {
+  if (!videoUnderbelly || videoUnderbelly.elt.readyState < 2) return;
+  shaderBuffer.clear();
+  shaderBuffer.shader(chromaShader);
+  chromaShader.setUniform('u_tex', videoUnderbelly);
+  chromaShader.setUniform('u_keyColor', [0.0, 1.0, 0.0]); 
+  chromaShader.setUniform('u_threshold', 0.55);
+  chromaShader.setUniform('u_opacity', 0.1); 
+  shaderBuffer.rect(-width/2, -height/2, width, height);
+  push();
+  blendMode(BLEND);
+  image(shaderBuffer, width/2, height/2, width, height);
+  if (imgUnderbellyFrame && imgUnderbellyFrame.width > 0) {
+    let fRatio = max(width / imgUnderbellyFrame.width, height / imgUnderbellyFrame.height);
+    image(imgUnderbellyFrame, width / 2, height / 2, imgUnderbellyFrame.width * fRatio, imgUnderbellyFrame.height * fRatio);
+  }
+  pop();
+}
+
+function draw() {
+  updatePalette();
+  lerpPalettes();
+  background(0);
+
+  if (scene === 0 || scene === 1) {
+    drawSoftBackground();
+    drawInteractiveDefault();
+    drawWelcomeScreen();
+  }
+  
+  if (scene === 2) {
+    if (showControlsMenu) {
+        background(0); 
+        drawControlsPanel();
+    } else if (isDeveloperMode) {
+        drawSoftBackground(true);
+        drawCommunityCardGraphic(true);
+    } else {
+        drawVideoScreen(); 
+    }
+    handleAudioVolume();
+  }
+
+  if (scene === 0) {
+    animateButton();
+    handleHoverEffects();
+    button.show();
+  } else if (scene === 1) {
+    handleFadeOut();
+    button.hide();
+  } else if (scene === 2) {
+    handleFadeIn();
+  }
+}
+
+function drawWelcomeScreen() {
+  if (!videoOpeningAdv || videoOpeningAdv.elt.readyState < 2) return;
+  shaderBuffer.clear();
+  shaderBuffer.shader(chromaShader);
+  chromaShader.setUniform('u_tex', videoOpeningAdv);
+  chromaShader.setUniform('u_keyColor', [0.0, 1.0, 0.0]); 
+  chromaShader.setUniform('u_threshold', 0.55);
+  chromaShader.setUniform('u_opacity', 0.1); 
+  shaderBuffer.rect(-width/2, -height/2, width, height);
+  push();
+  blendMode(BLEND);
+  image(shaderBuffer, width/2, height/2, width, height);
+  pop();
+}
+
+function drawVideoScreen() {
+    drawSoftBackground(); 
+    if (showCompanionView) drawRollingOmbrePattern();
+    if (showLinesMode) drawWaterfallNeon();
+    if (showWavesMode) drawCreativeWaves();
+    if (showMountainMode) drawMountainPattern(); 
+
+    if (showAlternateView) {
+      drawAlternateView();
+    } else if (imgAbstractLindiaGif && imgAbstractLindiaGif.width > 0) {
+      imgAbstractLindiaGif.play();
+      push();
+      blendMode(showCompanionView ? SCREEN : BLEND); 
+      let ratioBase = max(width / imgAbstractLindiaGif.width, height / imgAbstractLindiaGif.height);
+      image(imgAbstractLindiaGif, width / 2, height / 2, imgAbstractLindiaGif.width * ratioBase, imgAbstractLindiaGif.height * ratioBase);
+      pop();
+    }
+}
+
+function drawCommunityCardGraphic(isEdgeToEdge = false) {
+  if (imgControlsII && imgControlsII.width > 0) {
+    push();
+    if (isEdgeToEdge) {
+      blendMode(SCREEN); 
+      tint(255, 217); 
+      let ratio = max(width / imgControlsII.width, height / imgControlsII.height);
+      image(imgControlsII, width / 2, height / 2, imgControlsII.width * ratio, imgControlsII.height * ratio);
+    } else {
+      blendMode(BLEND);
+      let fitRatio = min(width / imgControlsII.width, height / imgControlsII.height) * 0.8;
+      image(imgControlsII, width / 2, height / 2, imgControlsII.width * fitRatio, imgControlsII.height * fitRatio);
+    }
+    pop(); 
+  }
+}
+
+function drawControlsPanel() {
+  if (imgControlsPanel && imgControlsPanel.width > 0) {
+    push();
+    blendMode(BLEND);
+    tint(255, 217); 
+    let ratio = max(width / imgControlsPanel.width, height / imgControlsPanel.height);
+    image(imgControlsPanel, width / 2, height / 2, imgControlsPanel.width * ratio, imgControlsPanel.height * ratio);
+    pop();
+  }
+}
+
+function handleHoverEffects() {
+  if (isHovering) {
+    let btnElt = button.elt;
+    let centerX = btnElt.offsetLeft + (btnElt.offsetWidth / 2);
+    let centerY = btnElt.offsetTop + (btnElt.offsetHeight / 2);
+    for (let i = 0; i < 2; i++) particles.push(new Particle(centerX + random(-10, 10), centerY + random(-10, 10)));
+  }
+  for (let i = particles.length - 1; i >= 0; i--) {
+    particles[i].update();
+    particles[i].display();
+    if (particles[i].isDead()) particles.splice(i, 1);
+  }
+}
+
+function handleAudioVolume() {
+  if (audioAbstractiaIV && audioAbstractiaIV.isPlaying()) {
+    let targetVolume = isQuietMode ? 0.0 : 0.5; 
+    audioAbstractiaIV.setVolume(lerp(audioAbstractiaIV.getVolume(), targetVolume, LERP_RATE));
+  }
+  if (videoBlaqqatDevV) {
+    let targetDev = isDevMuted ? 0 : 1;
+    devVolume = lerp(devVolume, targetDev, 0.05); 
+    videoBlaqqatDevV.volume(devVolume);
+  }
+  if (audioWaves27 && audioWaves27.isPlaying()) {
+    let targetWaveVol = (isQuietMode || !showWavesMode) ? 0.0 : 0.6;
+    audioWaves27.setVolume(lerp(audioWaves27.getVolume(), targetWaveVol, LERP_RATE));
+  }
+  if (audioLines27 && audioLines27.isPlaying()) {
+    let targetLineVol = (isQuietMode || !showLinesMode) ? 0.0 : 0.6;
+    audioLines27.setVolume(lerp(audioLines27.getVolume(), targetLineVol, LERP_RATE));
+  }
+}
+
+function animateButton() {
+  let sF = map(sin(frameCount * 0.05), -1, 1, 1, 1.05);
+  button.style('transform', `scale(${sF})`);
+}
+
+function handleDiveIn() {
+  if (getAudioContext().state !== 'running') getAudioContext().resume();
+  if (audioOpeningIIAbstractia) audioOpeningIIAbstractia.play();
+  if (scene === 0) {
+    scene = 1;
+    button.attribute('disabled', '');
+    videoOpeningAdv.play();
+  }
+}
+
+function handleFadeOut() {
+  fadeAlpha += fadeRate;
+  fill(0, fadeAlpha);
+  rect(0, 0, width, height);
+  if (fadeAlpha >= 255) {
+    fadeAlpha = 255; scene = 2;
+    videoOpeningAdv.pause();
+    if (audioAbstractiaIV && !audioAbstractiaIV.isPlaying()) audioAbstractiaIV.play();
+  }
+}
+
+function handleFadeIn() {
+  fadeAlpha -= fadeRate;
+  fill(0, fadeAlpha);
+  rect(0, 0, width, height);
+  if (fadeAlpha <= 0) fadeAlpha = 0;
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  updateButtonPosition();
+  shaderBuffer.resizeCanvas(windowWidth, windowHeight);
+}
+
+class Particle {
+  constructor(x, y) {
+    this.pos = createVector(x, y);
+    this.vel = p5.Vector.fromAngle(random(TWO_PI), random(2, 5));
+    this.lifespan = 255;
+    this.size = random(10, 20);
+  }
+  update() {
+    this.pos.add(this.vel);
+    this.lifespan -= 4; 
+  }
+  display() {
+    push();
+    noStroke();
+    let c = colorsPalette[frameCount % colorsPalette.length];
+    fill(red(c), green(c), blue(c), this.lifespan);
+    ellipse(this.pos.x, this.pos.y, this.size);
+    pop();
+  }
+  isDead() { return this.lifespan < 0; }
+}
+  </script>
+
+
+</body></html>
