@@ -247,6 +247,7 @@ body{background:var(--void);color:var(--txt);font-family:var(--fb)}
     <div id="savedList"></div>
     <div class="sheet-actions" id="sheetActions">
       <button class="sheet-cta" onclick="startCapture('saved')">Email me my collection</button>
+      <button class="sheet-cta ghost" onclick="startGift()">Send it to someone else</button>
       <button class="sheet-cta ghost" onclick="startCapture('onboarding')">Show me how these are made</button>
     </div>
     <div class="capture" id="captureBox" style="display:none">
@@ -265,6 +266,15 @@ body{background:var(--void);color:var(--txt);font-family:var(--fb)}
         </div>
         <div class="capture-skip" onclick="submitName(true)">skip for now</div>
       </div>
+    </div>
+    <div class="capture" id="giftBox" style="display:none">
+      <div class="capture-q">Send this collection</div>
+      <div class="capture-row">
+        <input class="capture-input" type="email" id="giftEmail" placeholder="their@email.com" onkeydown="if(event.key==='Enter')submitGift()">
+        <button class="capture-btn" id="giftSendBtn" onclick="submitGift()">&rarr;</button>
+      </div>
+      <input class="capture-input" type="text" id="giftNote" placeholder="Add a note (optional)" style="margin-top:8px;border-right:1px solid var(--bdr);width:100%">
+      <div class="capture-skip" onclick="resetCapture()">back</div>
     </div>
   </div>
 </div>
@@ -315,6 +325,23 @@ function getDayOfYear(){
   return Math.floor((n-s)/86400000);
 }
 
+// Resolve a ?w= deep link to a work number. Accepts a number (?w=45) or a
+// slug/title (?w=heartstrings). Returns null when absent or unmatched.
+function getDeepLink(){
+  try{
+    const p=new URLSearchParams(location.search).get('w');
+    if(!p)return null;
+    if(/^\d+$/.test(p))return parseInt(p,10);
+    const s=decodeURIComponent(p).toLowerCase();
+    const hit=works.find(function(w){
+      const slug=(w.slug||'').toLowerCase();
+      const title=(w.title||'').toLowerCase();
+      return slug===s||title===s||title.replace(/\s+/g,'-')===s;
+    });
+    return hit?hit.number:null;
+  }catch(e){return null;}
+}
+
 let works=[];
 let currentIdx=0;
 let currentNumber=0;
@@ -329,10 +356,22 @@ getUID();
 /* ---------- BOOT ---------- */
 async function boot(){
   try{
-    const r=await fetch(SB_URL+'/rest/v1/works?select=number,numeral,title,html_github_url,collect_url,description,article_url,social_urls&published=eq.true&number=lte.'+today+'&order=number.asc',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+    const r=await fetch(SB_URL+'/rest/v1/works?select=number,numeral,title,slug,html_github_url,collect_url,description,article_url,social_urls&published=eq.true&number=lte.'+today+'&order=number.asc',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
     works=await r.json();
   }catch(e){works=[];}
   if(!Array.isArray(works))works=[];
+
+  // Deep link from emails / shares: ?w=45 or ?w=heartstrings opens that exact piece.
+  const dl=getDeepLink();
+  if(dl!==null){
+    const di=works.findIndex(function(w){return w.number===dl;});
+    if(di>=0){
+      sessionStorage.setItem(ENTERED_KEY,'1'); // arrived from a link with intent — skip the entry gate
+      prepareEntry();
+      showWork(di,false);
+      return;
+    }
+  }
 
   const todayWork=works.find(w=>w.number===today);
   if(!todayWork){showNoWork();return;}
@@ -536,6 +575,7 @@ function renderSavedList(){
 function resetCapture(){
   document.getElementById('sheetActions').style.display='flex';
   document.getElementById('captureBox').style.display='none';
+  document.getElementById('giftBox').style.display='none';
   document.getElementById('emailStep').style.display='block';
   document.getElementById('nameStep').style.display='none';
   const e=localStorage.getItem(EMAIL_KEY);
@@ -544,16 +584,43 @@ function resetCapture(){
 function startCapture(src){
   captureSource=src;
   document.getElementById('sheetActions').style.display='none';
+  document.getElementById('giftBox').style.display='none';
   document.getElementById('captureBox').style.display='block';
   document.getElementById('captureQ').textContent=(src==='onboarding')?'Where should we send the walkthroughs?':'Where should we send your collection?';
   setTimeout(function(){document.getElementById('captureEmail').focus();},50);
 }
+function startGift(){
+  if(!getBookmarks().length){receipt('Save one first',false);return;}
+  document.getElementById('sheetActions').style.display='none';
+  document.getElementById('captureBox').style.display='none';
+  document.getElementById('giftBox').style.display='block';
+  setTimeout(function(){document.getElementById('giftEmail').focus();},50);
+}
 function validEmail(e){return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e);}
+
+/* ---------- SEND COLLECTION (calls the edge function) ---------- */
+async function sendCollection(to,note,isSelf){
+  const numbers=getBookmarks();
+  if(!numbers.length)return false;
+  try{
+    const res=await fetch(SB_URL+'/functions/v1/send-collection',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY},
+      body:JSON.stringify({to:to,numbers:numbers,note:note||'',isSelf:!!isSelf,senderName:localStorage.getItem(NAME_KEY)||''})
+    });
+    return res.ok;
+  }catch(e){return false;}
+}
+
 function submitCaptureEmail(){
   const email=document.getElementById('captureEmail').value.trim();
   if(!validEmail(email)){buzz(24);document.getElementById('captureEmail').focus();return;}
   localStorage.setItem(EMAIL_KEY,email);
   postSubscriber(email,captureSource);
+  if(captureSource==='saved'){
+    sendCollection(email,'',true);
+    receipt('On its way to your inbox');
+  }
   buzz(14);
   document.getElementById('emailStep').style.display='none';
   document.getElementById('nameStep').style.display='block';
@@ -569,6 +636,18 @@ function submitName(skip){
   buzz(16);
   closeSaved();
   receipt(name?('You\'re good, '+name+'.'):'You\'re good.');
+}
+async function submitGift(){
+  const to=document.getElementById('giftEmail').value.trim();
+  const note=document.getElementById('giftNote').value.trim();
+  if(!validEmail(to)){buzz(24);document.getElementById('giftEmail').focus();return;}
+  const btn=document.getElementById('giftSendBtn');
+  btn.textContent='\u2026';
+  buzz(14);
+  const ok=await sendCollection(to,note,false);
+  btn.innerHTML='&rarr;';
+  closeSaved();
+  receipt(ok?'Sent. It is on the way.':'Saved. We will send once the mailer is live.',ok);
 }
 
 /* ---------- SUBSCRIBER WRITES ---------- */
@@ -618,7 +697,7 @@ function checkMirror(frame){
     const doc=frame.contentDocument;
     if(!doc)return;
     const title=(doc.title||'').toUpperCase();
-    const looksLikeSite=(title.indexOf('ABSTRACTIA TODAY')!==-1)||!!(doc.getElementById&&doc.getElementById('art-frame'));
+    const looksLikeSite=(title.indexOf('ABSTRACTIA TODAY')!==-1);
     if(looksLikeSite){
       // Cloudflare served a copy of the site = the real file for this slot isn't deployed yet.
       if(currentNumber===today){
