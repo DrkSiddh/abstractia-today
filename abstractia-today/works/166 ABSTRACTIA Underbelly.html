@@ -48,7 +48,7 @@
       50% { opacity: .5; }
     }
   </style>
-  <title>167 Abstractia | Made on juno.transient.xyz</title>
+  <title>166 ABSTRACTIA Underbelly | Made on juno.transient.xyz</title>
 </head>
 <body>
   
@@ -63,7 +63,6 @@ let videoEarthAccordingToMermaids;
 let videoBlaqqatDevV;
 let videoUnderbelly; 
 let imgUnderbellyFrame;
-let imgControlsII;
 let imgControlsPanel; 
 let audioHarmonicEtherealCoSunlitRays;
 let audioOpeningIIAbstractia;
@@ -86,7 +85,6 @@ let isQuietMode = false;
 let isDevMuted = false;
 let devVolume = 1.0;
 let showControlsMenu = false;
-let isDeveloperMode = false;
 let isHovering = false;
 
 let particles = [];
@@ -144,7 +142,6 @@ const frag = `
 function preload() {
   imgWifPatronsAbstractia = loadImage("https://dae.transientusercontent.xyz/uploads/01e851eb-76aa-472b-b3ae-3803d37e82dc");
   audioHarmonicEtherealCoSunlitRays = loadSound("https://dae.transientusercontent.xyz/uploads/295133e5-d5e2-4d2c-a968-85ea4a5872c1");
-  imgControlsII = loadImage("https://dae.transientusercontent.xyz/uploads/067b752f-b4bd-41f1-8ab5-3df1f95453b6"); 
   imgControlsPanel = loadImage("https://dae.transientusercontent.xyz/uploads/77457fdf-7af6-48e2-a543-021968683b78"); 
   audioOpeningIIAbstractia = loadSound("https://dae.transientusercontent.xyz/uploads/bb00503d-13ad-4177-a995-d6d2c6b13b2c"); 
   audioAbstractiaIV = loadSound("https://dae.transientusercontent.xyz/uploads/b8517588-e48c-4409-8df2-d866f151a537"); 
@@ -176,7 +173,9 @@ function setup() {
   cnv.elt.addEventListener('touchmove', e => { e.preventDefault(); }, { passive: false });
   
   let style = document.createElement('style');
-  style.innerHTML = `@font-face { font-family: 'Rock3D-Regular'; src: url('https://dae.transientusercontent.xyz/uploads/fa827533-05e2-4540-b01f-5b7c3bcdeed4') format('truetype'); }`;
+  style.innerHTML = `
+    @font-face { font-family: 'TakeCover'; src: url('https://dae.transientusercontent.xyz/uploads/635b388e-cb64-40a9-9a95-06caf6380fe7') format('truetype'); }
+  `;
   document.head.appendChild(style);
 
   shaderBuffer = createGraphics(windowWidth, windowHeight, WEBGL);
@@ -233,21 +232,21 @@ function setup() {
     audioLines27.setVolume(0);
   }
 
-  button = createButton('Get Abstract');
+  button = createButton('GET ABSTRACT');
   button.mousePressed(handleDiveIn);
   button.mouseOver(() => { isHovering = true; });
   button.mouseOut(() => { isHovering = false; });
-  button.style('font-family', 'Rock3D-Regular, sans-serif'); 
-  button.style('letter-spacing', '2px');
-  button.style('font-size', 'clamp(24px, 4vw, 36px)');
-  button.style('padding', '15px 30px');
+  button.style('font-family', "'TakeCover', sans-serif"); 
+  button.style('letter-spacing', '-0.12em');
+  button.style('font-size', 'clamp(68px, 10vw, 110px)');
+  button.style('padding', '10px 20px');
   button.style('border', 'none');
-  button.style('border-radius', '8px');
   button.style('cursor', 'pointer');
-  button.style('color', 'white'); 
+  button.style('color', 'black'); 
   button.style('background-color', 'transparent');
   button.style('position', 'absolute');
   button.style('white-space', 'nowrap');
+  button.style('line-height', '0.8');
   
   updateButtonPosition();
   
@@ -272,8 +271,8 @@ function setup() {
 }
 
 function updateButtonPosition() {
-  let btnW = button.elt.offsetWidth || 250; 
-  let btnH = button.elt.offsetHeight || 60;
+  let btnW = button.elt.offsetWidth || 400; 
+  let btnH = button.elt.offsetHeight || 120;
   let targetX = width * 0.15; 
   let targetY = height * 0.75;
   button.position(
@@ -307,7 +306,6 @@ function resetModes() {
   showLinesMode = false;
   showWavesMode = false;
   showMountainMode = false;
-  isDeveloperMode = false;
   videoBlaqqatDevV.pause();
   videoUnderbelly.pause();
   if (audioWaves27 && audioWaves27.isPlaying()) audioWaves27.stop();
@@ -331,7 +329,7 @@ function keyPressed() {
     if (scene === 2) { 
       showAlternateView = !showAlternateView; 
       if (showAlternateView) {
-        videoUnderbelly.play();
+        videoUnderbelly.loop();
       } else {
         videoUnderbelly.pause();
       }
@@ -371,8 +369,6 @@ function keyPressed() {
     if (scene === 2) isDevMuted = !isDevMuted; 
   } else if (k === 'i') {
     if (scene === 2) showControlsMenu = !showControlsMenu;
-  } else if (k === 'd') { 
-    if (scene === 2) isDeveloperMode = !isDeveloperMode;
   }
 }
 
@@ -544,7 +540,7 @@ function drawAlternateView() {
   shaderBuffer.clear();
   shaderBuffer.shader(chromaShader);
   chromaShader.setUniform('u_tex', videoUnderbelly);
-  chromaShader.setUniform('u_keyColor', [0.0, 1.0, 0.0]); 
+  chromaShader.setUniform('u_keyColor', [0.05, 0.9, 0.05]); 
   chromaShader.setUniform('u_threshold', 0.55);
   chromaShader.setUniform('u_opacity', 0.1); 
   shaderBuffer.rect(-width/2, -height/2, width, height);
@@ -573,9 +569,6 @@ function draw() {
     if (showControlsMenu) {
         background(0); 
         drawControlsPanel();
-    } else if (isDeveloperMode) {
-        drawSoftBackground(true);
-        drawCommunityCardGraphic(true);
     } else {
         drawVideoScreen(); 
     }
@@ -599,7 +592,7 @@ function drawWelcomeScreen() {
   shaderBuffer.clear();
   shaderBuffer.shader(chromaShader);
   chromaShader.setUniform('u_tex', videoOpeningAdv);
-  chromaShader.setUniform('u_keyColor', [0.0, 1.0, 0.0]); 
+  chromaShader.setUniform('u_keyColor', [0.05, 0.9, 0.05]); 
   chromaShader.setUniform('u_threshold', 0.55);
   chromaShader.setUniform('u_opacity', 0.1); 
   shaderBuffer.rect(-width/2, -height/2, width, height);
@@ -626,23 +619,6 @@ function drawVideoScreen() {
       image(imgAbstractLindiaGif, width / 2, height / 2, imgAbstractLindiaGif.width * ratioBase, imgAbstractLindiaGif.height * ratioBase);
       pop();
     }
-}
-
-function drawCommunityCardGraphic(isEdgeToEdge = false) {
-  if (imgControlsII && imgControlsII.width > 0) {
-    push();
-    if (isEdgeToEdge) {
-      blendMode(SCREEN); 
-      tint(255, 217); 
-      let ratio = max(width / imgControlsII.width, height / imgControlsII.height);
-      image(imgControlsII, width / 2, height / 2, imgControlsII.width * ratio, imgControlsII.height * ratio);
-    } else {
-      blendMode(BLEND);
-      let fitRatio = min(width / imgControlsII.width, height / imgControlsII.height) * 0.8;
-      image(imgControlsII, width / 2, height / 2, imgControlsII.width * fitRatio, imgControlsII.height * fitRatio);
-    }
-    pop(); 
-  }
 }
 
 function drawControlsPanel() {
