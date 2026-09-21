@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>ABSTRACTIA CCXVIII — Summer Breeze</title>
+<title>ABSTRACTIA</title>
 <style>
   /* ============================================================
      FONT POOL — served from the shared library, cached across
@@ -62,43 +62,28 @@
    ============================================================ */
 
 const WORK = {
-  number: 218,
-  numeral: "CCXVIII",
-  title: "Summer Breeze",
-  series: "ABSTRACTIA",       // the series name — leads the splash, above the work title
+  number: 0,
+  numeral: "",
+  title: "MORNING GLORY",
   credit1: "INTERACTIVE FINE ART",
   credit2: "by Maxximillian",
   telegram: "t.me/abstractians",
 
-  // ---- TITLE FONT — pick one from the pool -------------------
-  // Options: "ZY Harmony" | "ZY Twinkle" | "Pollo Pueblo" |
-  //          "AlphaMusicMan" | "Atomic Marker" | "Shizuru" |
-  //          "Kingthings Pique" | "ZY Superb" (once the file lands)
-  titleFont: "Atomic Marker",
+  titleFont: "Futura Light",
 
-  // ---- SOUND STEMS — layered, with hierarchy ------------------
-  // Oneness is the floor, always present. Waves and Lines fade in
-  // when their mode wakes. All optional — "" skips gracefully.
   sounds: {
     base:    "library/sounds/",
-    oneness: "",              // e.g. "oneness/floor-01.mp3"
-    waves:   "",              // e.g. "waves/stem-03.mp3"
-    lines:   ""               // e.g. "lines/stem-02.mp3"
+    oneness: "",
+    waves:   "",
+    lines:   ""
   },
 
-  // ---- TIME PALETTES (8 hexes each) ---------------------------
-  // DAY    — the base colorway (warm coral → violet), F09A5D…980DE8
-  // GRASS  — the "4:20 → sunset" colorway (green → violet), 5DF062…980DE8,
-  //          both share the #980DE8 landing color so GRASS eases into SUNSET
-  // SUNSET — dedicated coral → deep maroon colorway, FFA994…770606
-  // NIGHT  — dedicated coral-red → deep indigo colorway, FD7959…280678
-  // MORNING — no colorway supplied yet; template default pastel kept as a placeholder
   palettes: {
-    MORNING: ["dff6ff","caf0f8","ade8f4","90e0ef","bde0fe","a2d2ff","cdb4db","ffc8dd"],
-    DAY:     ["f09a5d","e38671","d77285","ca5e98","be49ad","b135c0","a521d4","980de8"],
-    SUNSET:  ["ffa994","ec9280","d87a6b","c56357","b14c43","9e352f","8a1d1a","770606"],
-    NIGHT:   ["fd7959","de685e","c05862","a24866","83376b","65276f","471773","280678"],
-    GRASS:   ["5df062","65d075","6eaf88","768f9c","7f6eae","874ec2","902dd5","980de8"]
+    MORNING: ["69617a","797c8b","927c92","878f93","a5858e","959599","c88496","bba1a5"],
+    DAY:     ["221622","4a4053","62474f","59596b","956d55","78737d","e18e55","c4ab94"],
+    SUNSET:  ["253541","364c4f","3b405d","4b655f","8e6345","627476","e97e2e","bf9976"],
+    NIGHT:   ["1c0d15","2f1b2d","371d1e","36263c","215428","463244","06951b","2f7d3e"],
+    GRASS:   ["004b23","006400","007200","008000","38b000","70e000","9ef01a","ccff33"]
   },
   schedule: [
     { from:"05:00", to:"10:59", palette:"MORNING" },
@@ -106,12 +91,8 @@ const WORK = {
     { from:"18:00", to:"20:59", palette:"SUNSET"  },
     { from:"21:00", to:"04:59", palette:"NIGHT"   }
   ],
-  grassWindow: { from:"16:20", to:"16:43" },  // Touching Grass Mode
+  grassWindow: { from:"16:20", to:"16:43" },
 
-  // ---- LAGNIAPPE (typographic) --------------------------------
-  // key -> lines of hidden text, drawn in the title font over the
-  // living gradient. Never listed in the menu. Sauce stays secret.
-  // Example: "s": ["FOR THE ONES", "WHO STAYED"]
   lagniappe: {}
 };
 
@@ -305,114 +286,37 @@ function drawLines(){
   ctx.restore();
 }
 
-/* ---------- OPENING — the title IS the opening movie ---------
-   The title is set BIG and wraps by word to whatever width the
-   screen gives it — square, portrait, landscape, tiny phone or
-   giant install wall, it always finds the largest size that still
-   sits pretty within the frame. ---------------------------------- */
-function fitTitleLines(){
-  const words = WORK.title.split(" ");
-  const maxWidth = W * 0.86;
-  const TITLE_TOP = H * 0.11;                              // fixed top margin — stable regardless of line count
-  const reservedBottom = Math.max(H * 0.16 + 110, 200);     // headroom kept clear for the CTA button (bottom:16%) + hint
-  const safeBottomY = H - reservedBottom;
-  let size = Math.min(W * 0.17, H * 0.26, 230);         // BIG — the cap the shrink loop backs off from
-  let lines = [words.join(" ")];
-  let lineHeight, startY, baseY, credSize, bottomY, seriesSize, seriesY;
-
-  while(size > 36){
-    ctx.font = size + "px '" + WORK.titleFont + "',Georgia,serif";
-    const spaceW = ctx.measureText(" ").width;
-    lines = [];
-    let cur = [], curW = 0;
-    for(const w of words){
-      const ww = ctx.measureText(w).width;
-      if(cur.length && curW + spaceW + ww > maxWidth){
-        lines.push(cur.join(" "));
-        cur = [w]; curW = ww;
-      } else {
-        curW = cur.length ? curW + spaceW + ww : ww;
-        cur.push(w);
-      }
-    }
-    if(cur.length) lines.push(cur.join(" "));
-
-    const widest = Math.max.apply(null, lines.map(function(l){ return ctx.measureText(l).width; }));
-
-    // lay the whole block out top-down (title lines, then credit stack) so we
-    // can check it actually fits above the CTA before committing to this size
-    seriesSize = WORK.series ? Math.max(26, size * 0.34) : 0;
-    seriesY = TITLE_TOP + seriesSize/2;
-    lineHeight = size * 1.08;
-    startY = TITLE_TOP + seriesSize*1.35 + lineHeight/2;
-    baseY = startY + (lines.length-1)*lineHeight;
-    credSize = Math.max(24, size * 0.2);
-    bottomY = baseY + size*0.72 + credSize*3.6 + credSize*0.6;
-
-    if(widest <= maxWidth && bottomY <= safeBottomY) break;
-    size -= 3;
-  }
-  return { size: size, lines: lines, lineHeight: lineHeight, startY: startY, baseY: baseY, credSize: credSize, seriesSize: seriesSize, seriesY: seriesY };
-}
-
+/* ---------- OPENING — the title IS the opening movie --------- */
 function drawOpening(){
   drawOmbre(ctx, W, H);
+  const title = WORK.title;
+  const size = Math.min(W * 0.115, H * 0.2, 160);
 
   ctx.save();
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
 
-  const fit = fitTitleLines();
-  const size = fit.size, lines = fit.lines, startY = fit.startY, baseY = fit.baseY;
-  let credSize = fit.credSize;
-  const lineHeight = fit.lineHeight;
-
-  // the series — ABSTRACTIA leads, in the title font, tracked wide and glowing
-  if(WORK.series){
-    const serSize = fitTrackedFontSize(WORK.series, fit.seriesSize, 0.22, W*0.86, WORK.titleFont);
-    ctx.font = serSize + "px '" + WORK.titleFont + "',Georgia,serif";
-    const sTrack = serSize * 0.22;
-    const sChars = WORK.series.split("");
-    const sW = sChars.map(function(ch){ return ctx.measureText(ch).width; });
-    const sTotal = sW.reduce(function(a,b){return a+b;},0) + sTrack*(sChars.length-1);
-    let sx = W/2 - sTotal/2;
-    for(let i=0;i<sChars.length;i++){
-      const sc = currentPalette[(i*2 + Math.floor(frame*0.02)) % 8];
-      ctx.shadowColor = rgba(sc, 0.9);
-      ctx.shadowBlur = 22 + Math.sin(frame*0.05 + i)*8;
-      ctx.fillStyle = "rgba(255,255,255,0.94)";
-      ctx.fillText(sChars[i], sx + sW[i]/2, fit.seriesY + Math.sin(frame*0.03 + i*0.7)*serSize*0.05);
-      sx += sW[i] + sTrack;
-    }
-  }
-
   ctx.font = size + "px '" + WORK.titleFont + "',Georgia,serif";
+  const letters = title.split("");
+  const widths = letters.map(function(ch){ return ctx.measureText(ch).width; });
   const spacing = size * 0.05;
+  const total = widths.reduce(function(a,b){return a+b;},0) + spacing*(letters.length-1);
+  let x = W/2 - total/2;
+  const baseY = H * 0.38;
 
-  let gi = 0; // continuous letter index — keeps the shimmer flowing across wrapped lines
-  for(let li=0; li<lines.length; li++){
-    const letters = lines[li].split("");
-    const widths = letters.map(function(ch){ return ctx.measureText(ch).width; });
-    const total = widths.reduce(function(a,b){return a+b;},0) + spacing*(letters.length-1);
-    let x = W/2 - total/2;
-    const y = startY + li*lineHeight;
-    for(let i=0;i<letters.length;i++){
-      const c = currentPalette[(gi + Math.floor(frame*0.02)) % 8];
-      const yOff = Math.sin(frame*0.03 + gi*0.7) * size*0.06;
-      ctx.shadowColor = rgba(c, 0.9);
-      ctx.shadowBlur = 28 + Math.sin(frame*0.05 + gi)*10;
-      ctx.fillStyle = "rgba(255,255,255,0.96)";
-      ctx.fillText(letters[i], x + widths[i]/2, y + yOff);
-      x += widths[i] + spacing;
-      gi++;
-    }
+  for(let i=0;i<letters.length;i++){
+    const c = currentPalette[(i + Math.floor(frame*0.02)) % 8];
+    const yOff = Math.sin(frame*0.03 + i*0.7) * size*0.06;
+    ctx.shadowColor = rgba(c, 0.9);
+    ctx.shadowBlur = 28 + Math.sin(frame*0.05 + i)*10;
+    ctx.fillStyle = "rgba(255,255,255,0.96)";
+    ctx.fillText(letters[i], x + widths[i]/2, baseY + yOff);
+    x += widths[i] + spacing;
   }
 
   // the credit — Interactive Fine Art by Maxximillian
-  // credit1 has the widest tracking of the block, so its fit governs the
-  // shared credit font size too — keeps it legible and on-screen at any width
   ctx.shadowBlur = 0;
-  credSize = fitTrackedFontSize(WORK.credit1, credSize, 0.35, W*0.92);
+  const credSize = Math.max(24, size * 0.2);
   ctx.font = credSize + "px '" + UI_FONT + "',Georgia,serif";
   ctx.fillStyle = "rgba(255,255,255,0.85)";
   drawTracked(WORK.credit1, W/2, baseY + size*0.72, credSize*0.35);
@@ -421,29 +325,14 @@ function drawOpening(){
   drawTracked(WORK.credit2, W/2, baseY + size*0.72 + credSize*1.7, credSize*0.18);
 
   if(WORK.numeral){
-    const numSize = Math.max(16, credSize*0.72);       // the numeral steps back — a quiet footnote to the series
-    ctx.font = numSize + "px '" + UI_FONT + "',Georgia,serif";
-    ctx.fillStyle = "rgba(255,255,255,0.4)";
-    drawTracked(WORK.numeral, W/2, baseY + size*0.72 + credSize*3.2, numSize*0.4);
+    ctx.font = (size*0.34) + "px '" + UI_FONT + "',Georgia,serif";
+    ctx.fillStyle = "rgba(255,255,255,0.55)";
+    drawTracked(WORK.numeral, W/2, baseY + size*0.72 + credSize*3.6, credSize*0.3);
   }
   ctx.restore();
 
   const s = 1 + Math.sin(frame*0.05)*0.025;
   beginBtn.style.transform = "translateX(-50%) scale(" + s + ")";
-}
-// shrinks a font size until `text`, tracked at `trackRatio * size`, fits maxW —
-// used to keep the credit line legible and on-screen at any viewport width
-function fitTrackedFontSize(text, size, trackRatio, maxW, family){
-  let s = size;
-  while(s > 14){
-    ctx.font = s + "px '" + (family || UI_FONT) + "',Georgia,serif";
-    const chars = text.split("");
-    const widths = chars.map(function(ch){ return ctx.measureText(ch).width; });
-    const total = widths.reduce(function(a,b){return a+b;},0) + (s*trackRatio)*(chars.length-1);
-    if(total <= maxW) break;
-    s -= 1;
-  }
-  return s;
 }
 // letterspaced centered text — canvas has no letter-spacing of its own
 function drawTracked(text, cx, y, track){
