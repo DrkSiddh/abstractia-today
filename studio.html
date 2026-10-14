@@ -127,6 +127,13 @@ h1{font-family:var(--fd);font-size:56px;letter-spacing:0.03em;margin-bottom:4px}
   <h2>Drop your work folders here</h2>
   <p>HTML files, MP4s, GIFs, PNGs, TXTs — all detected automatically by leading number<br>Everything merges with what's already here — nothing gets wiped</p>
 </div>
+<div style="margin-bottom:24px;display:flex;align-items:center;gap:12px">
+  <label style="font-family:var(--fm);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mut)">HTML files greyed out?</label>
+  <label style="font-family:var(--fm);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;padding:8px 20px;background:var(--surf);border:1px solid var(--bdr);color:var(--txt);cursor:pointer;transition:border-color 0.2s" onmouseover="this.style.borderColor='var(--mag)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'">
+    + Add HTML files directly
+    <input type="file" id="htmlInput" multiple accept=".html,.htm" style="position:absolute;opacity:0;pointer-events:none">
+  </label>
+</div>
 
 <div class="stats-row" id="statsRow" style="display:none">
   <div class="stat"><div class="stat-num" id="statTotal">0</div><div class="stat-label">Works</div></div>
@@ -558,6 +565,7 @@ function initStudio(){
   dz.addEventListener('dragleave',()=>dz.classList.remove('over'));
   dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('over');processFiles(e.dataTransfer.files);});
   document.getElementById('fileInput').addEventListener('change',e=>processFiles(e.target.files));
+  document.getElementById('htmlInput').addEventListener('change',e=>processFiles(e.target.files));
 }
 
 // Auto-init if already unlocked
