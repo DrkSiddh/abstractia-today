@@ -127,6 +127,13 @@ h1{font-family:var(--fd);font-size:56px;letter-spacing:0.03em;margin-bottom:4px}
   <h2>Drop your work folders here</h2>
   <p>HTML files, MP4s, GIFs, PNGs, TXTs — all detected automatically by leading number<br>Everything merges with what's already here — nothing gets wiped</p>
 </div>
+<div style="margin-bottom:24px;display:flex;align-items:center;gap:12px">
+  <label style="font-family:var(--fm);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--mut)">HTML files greyed out?</label>
+  <label style="font-family:var(--fm);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;padding:8px 20px;background:var(--surf);border:1px solid var(--bdr);color:var(--txt);cursor:pointer;transition:border-color 0.2s" onmouseover="this.style.borderColor='var(--mag)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'">
+    + Add HTML files directly
+    <input type="file" id="htmlInput" multiple accept=".html,.htm" style="position:absolute;opacity:0;pointer-events:none">
+  </label>
+</div>
 
 <div class="stats-row" id="statsRow" style="display:none">
   <div class="stat"><div class="stat-num" id="statTotal">0</div><div class="stat-label">Works</div></div>
@@ -558,6 +565,7 @@ function initStudio(){
   dz.addEventListener('dragleave',()=>dz.classList.remove('over'));
   dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('over');processFiles(e.dataTransfer.files);});
   document.getElementById('fileInput').addEventListener('change',e=>processFiles(e.target.files));
+  document.getElementById('htmlInput').addEventListener('change',e=>processFiles(e.target.files));
 }
 
 // Auto-init if already unlocked
@@ -571,10 +579,11 @@ async function sbSend(chunk){
   try{
     const res=await fetch(`${SUPA_URL}/rest/v1/works?on_conflict=number`,{
       method:'POST',
-      headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':`Bearer ${SUPA_KEY}`,'Prefer':'resolution=merge-duplicates,return=minimal'},
+      headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':`Bearer ${SUPA_KEY}`,'Prefer':'resolution=merge-duplicates,return=representation'},
       body:JSON.stringify(chunk)
     });
-    return {ok:res.ok, body: res.ok ? '' : await res.text()};
+    const body = await res.text();
+    return {ok:res.ok, rows: res.ok ? (JSON.parse(body)||[]) : [], body: res.ok ? '' : body};
   }catch(e){ return {ok:false, body:String((e&&e.message)||e)}; }
 }
 
@@ -620,15 +629,22 @@ async function pushToSupabase(){
     const batch=rows.slice(i,i+20);
     status.textContent=`Sending ${i+1}–${Math.min(i+20,rows.length)} of ${rows.length}…`;
     const res=await sbSend(batch);
-    if(res.ok){ ok+=batch.length; continue; }
+    if(res.ok){
+      ok+=batch.length;
+      // merge returned rows back into works so display reflects what Supabase saved
+      (res.rows||[]).forEach(r=>{ if(r.number && works[r.number]){ Object.assign(works[r.number], r); works[r.number].states=new Set(Array.isArray(r.states)?r.states:(works[r.number].states||[])); } });
+      continue;
+    }
     // batch hit a bad row — retry one at a time so the good ones still land
     for(const row of batch){
       const r1=await sbSend([row]);
-      if(r1.ok) ok++;
+      if(r1.ok){ ok++; (r1.rows||[]).forEach(r=>{ if(r.number && works[r.number]){ Object.assign(works[r.number], r); works[r.number].states=new Set(Array.isArray(r.states)?r.states:(works[r.number].states||[])); } }); }
       else failures.push({number:row.number, reason:cleanErr(r1.body)});
     }
   }
 
+  saveWork();
+  renderWorks();
   if(!failures.length){
     status.style.borderColor='rgba(76,175,118,0.5)';status.style.color='var(--grn)';
     status.textContent=`✓ ${ok} works sent to Supabase. The good ones are live.`;
