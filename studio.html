@@ -571,10 +571,11 @@ async function sbSend(chunk){
   try{
     const res=await fetch(`${SUPA_URL}/rest/v1/works?on_conflict=number`,{
       method:'POST',
-      headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':`Bearer ${SUPA_KEY}`,'Prefer':'resolution=merge-duplicates,return=minimal'},
+      headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':`Bearer ${SUPA_KEY}`,'Prefer':'resolution=merge-duplicates,return=representation'},
       body:JSON.stringify(chunk)
     });
-    return {ok:res.ok, body: res.ok ? '' : await res.text()};
+    const body = await res.text();
+    return {ok:res.ok, rows: res.ok ? (JSON.parse(body)||[]) : [], body: res.ok ? '' : body};
   }catch(e){ return {ok:false, body:String((e&&e.message)||e)}; }
 }
 
@@ -620,15 +621,22 @@ async function pushToSupabase(){
     const batch=rows.slice(i,i+20);
     status.textContent=`Sending ${i+1}–${Math.min(i+20,rows.length)} of ${rows.length}…`;
     const res=await sbSend(batch);
-    if(res.ok){ ok+=batch.length; continue; }
+    if(res.ok){
+      ok+=batch.length;
+      // merge returned rows back into works so display reflects what Supabase saved
+      (res.rows||[]).forEach(r=>{ if(r.number && works[r.number]){ Object.assign(works[r.number], r); works[r.number].states=new Set(Array.isArray(r.states)?r.states:(works[r.number].states||[])); } });
+      continue;
+    }
     // batch hit a bad row — retry one at a time so the good ones still land
     for(const row of batch){
       const r1=await sbSend([row]);
-      if(r1.ok) ok++;
+      if(r1.ok){ ok++; (r1.rows||[]).forEach(r=>{ if(r.number && works[r.number]){ Object.assign(works[r.number], r); works[r.number].states=new Set(Array.isArray(r.states)?r.states:(works[r.number].states||[])); } }); }
       else failures.push({number:row.number, reason:cleanErr(r1.body)});
     }
   }
 
+  saveWork();
+  renderWorks();
   if(!failures.length){
     status.style.borderColor='rgba(76,175,118,0.5)';status.style.color='var(--grn)';
     status.textContent=`✓ ${ok} works sent to Supabase. The good ones are live.`;
