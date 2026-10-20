@@ -265,6 +265,17 @@ body.splashing #kiosk-prompt { display: none; }
   font: 800 10px var(--font-ui); letter-spacing: 2px; text-transform: uppercase; transition: color .3s ease; }
 .radio-mode button[aria-pressed="true"] { color: #0a0c10; }
 .share-card > * { flex-shrink: 0; }   /* the card scrolls; its sections never squash */
+.radio-vol { display: grid; grid-template-columns: auto 1fr 2.4em; align-items: center; gap: 10px; }
+.radio-vol label, .radio-vol output { font: 800 9.5px var(--font-ui); letter-spacing: 2px; text-transform: uppercase; color: #f4f7fb; text-shadow: 0 1px 1px rgba(0,0,0,.7); }
+.radio-vol output { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; color: var(--accent-color); text-shadow: 0 0 6px var(--accent-color); }
+#r-vol { -webkit-appearance: none; appearance: none; width: 100%; height: 8px; border-radius: 999px; outline: none; cursor: pointer;
+  background: linear-gradient(90deg, var(--accent-color) 0 var(--v, 80%), #0d0f12 var(--v, 80%)); box-shadow: inset 0 2px 4px rgba(0,0,0,.8), 0 1px 0 rgba(255,255,255,.15); }
+#r-vol::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; border: 1px solid rgba(0,0,0,.5);
+  background: repeating-conic-gradient(rgba(255,255,255,.08) 0 6deg, rgba(0,0,0,.08) 6deg 12deg), radial-gradient(circle at 35% 30%, #f2f4f7, #8a919b 55%, #3a3f47);
+  box-shadow: 0 2px 6px rgba(0,0,0,.6), inset 0 1px 1px rgba(255,255,255,.6); }
+#r-vol::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; border: 1px solid rgba(0,0,0,.5);
+  background: radial-gradient(circle at 35% 30%, #f2f4f7, #8a919b 55%, #3a3f47); box-shadow: 0 2px 6px rgba(0,0,0,.6); }
+#r-vol:focus-visible::-webkit-slider-thumb { outline: 2px solid var(--accent-color); outline-offset: 2px; }
 /* card entrance */
 #kiosk-card:not([hidden]) .share-card { animation: cardIn .45s cubic-bezier(.2,.8,.2,1) both; }
 #kiosk-card:not([hidden]) .share-card > * { animation: rise .5s cubic-bezier(.2,.8,.2,1) both; }
@@ -308,7 +319,7 @@ body.splashing #kiosk-prompt { display: none; }
   <div class="row"><div><span class="lbl">Waves</span><span class="sub">Key W</span></div><label class="sw"><input type="checkbox" id="sw-waves" checked><span></span></label></div>
   <div class="row"><div><span class="lbl">Lines</span><span class="sub">Key L</span></div><label class="sw"><input type="checkbox" id="sw-lines"><span></span></label></div>
   <div class="row"><div><span class="lbl">Sauce</span><span class="sub">Key S</span></div><label class="sw"><input type="checkbox" id="sw-sauce"><span></span></label></div>
-  <div class="row"><div><span class="lbl">Sea sound</span><span class="sub">Key M · louder near the shore</span></div><label class="sw"><input type="checkbox" id="sw-sound" checked><span></span></label></div>
+  <div class="row"><div><span class="lbl">Sea sound</span><span class="sub">Key M · the radio has its own volume</span></div><label class="sw"><input type="checkbox" id="sw-sound" checked><span></span></label></div>
 
   <div class="divider"></div>
   <div class="section-title">Scale</div>
@@ -367,6 +378,7 @@ body.splashing #kiosk-prompt { display: none; }
         <button class="rpower" id="r-power" type="button" aria-pressed="false"><span>Turn on<br>the radio</span></button>
         <button class="rbtn" id="r-newer" type="button">Newer ›</button>
       </div>
+      <div class="radio-vol"><label for="r-vol">Volume</label><input type="range" id="r-vol" min="0" max="1" step="0.01" value="0.8"><output id="r-vol-out">80</output></div>
       <div class="radio-mode" id="r-mode" role="group" aria-label="Play mode">
         <button id="r-one" type="button" aria-pressed="true">One episode</button><button id="r-all" type="button" aria-pressed="false">All episodes</button>
       </div>
@@ -5552,7 +5564,7 @@ function updateConsole() {
 }
 
 /* ================= Sound: the Sovereign Engine's built-in water, air and pad ================= */
-let actx = null, master = null, layers = {}, soundOn = true, soundBuilt = false, whiteBuf = null;
+let actx = null, master = null, seaBus = null, radioBus = null, layers = {}, soundOn = true, soundBuilt = false, whiteBuf = null, radioVol = 0.8;
 function bq(type, f, q) { const n = actx.createBiquadFilter(); n.type = type; n.frequency.value = f; n.Q.value = q; return n; }
 function gainNode(v) { const g = actx.createGain(); g.gain.value = v; return g; }
 function lfo(freq, amount, param) { const o = actx.createOscillator(); o.frequency.value = freq; const a = gainNode(amount); o.connect(a); a.connect(param); o.start(); return o; }
@@ -5593,21 +5605,26 @@ function genPad(out) {
 function buildSound() {
   const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
   try {
+    // two buses into one master: the sea (its own switch, ducks under the radio) and the radio (its own volume)
     actx = new AC(); master = gainNode(0); master.connect(actx.destination);
-    for (const k of ['water', 'air', 'music']) { layers[k] = gainNode(0); layers[k].connect(master); }
+    seaBus = gainNode(soundOn ? 1 : 0); seaBus.connect(master);
+    radioBus = gainNode(radioVol); radioBus.connect(master);
+    for (const k of ['water', 'air', 'music']) { layers[k] = gainNode(0); layers[k].connect(seaBus); }
     genWater(layers.water); genAir(layers.air); genPad(layers.music);
     soundBuilt = true;
-    master.gain.setTargetAtTime(soundOn ? 1 : 0, actx.currentTime, 1.3);   // 4 s fade in
+    master.gain.setTargetAtTime(1, actx.currentTime, 1.3);   // 4 s fade in
   } catch (_) { soundBuilt = false; }
 }
-function setSound(v) { soundOn = v; if (soundBuilt) { if (v && actx.state !== 'running') actx.resume(); master.gain.setTargetAtTime(v ? 1 : 0, actx.currentTime, v ? 1.3 : 1.0); } }
+function setSound(v) { soundOn = v; if (soundBuilt) { if (v && actx.state !== 'running') actx.resume(); seaBus.gain.setTargetAtTime(v ? 1 : 0, actx.currentTime, v ? 1.3 : 1.0); } }
 function mixSound() {
   if (!soundBuilt) return;
   const near = 1 - THREE.MathUtils.smoothstep(player.pos.z, -262, -70);   // 1 at the waterline, 0 back up the nave
   const t = actx.currentTime;
-  layers.water.gain.setTargetAtTime(0.55 * 1.4 * near, t, 0.5);
-  layers.air.gain.setTargetAtTime(0.35 * 1.8 * (0.25 + 0.75 * near), t, 0.5);
-  layers.music.gain.setTargetAtTime(0.45 * 0.9 * (0.35 + 0.65 * near), t, 0.8);
+  // the sea ducks under the broadcast: waves stay alive, the pad steps back further so voices stay clear
+  const duck = radioOn ? 1 : 0;
+  layers.water.gain.setTargetAtTime(0.55 * 1.4 * near * (1 - 0.55 * duck), t, duck ? 0.6 : 1.4);
+  layers.air.gain.setTargetAtTime(0.35 * 1.8 * (0.25 + 0.75 * near) * (1 - 0.6 * duck), t, duck ? 0.6 : 1.4);
+  layers.music.gain.setTargetAtTime(0.45 * 0.9 * (0.35 + 0.65 * near) * (1 - 0.85 * duck), t, duck ? 0.6 : 1.4);
 }
 
 /* ================= Movement: arrows walk, mouse/drag looks ================= */
@@ -5712,7 +5729,7 @@ const splash = document.getElementById('splash');
 function enter() {
   if (started) return; started = true;
   splash.classList.add('gone'); document.body.classList.remove('splashing');
-  if (!soundBuilt) buildSound(); else if (soundOn) { actx.resume(); master.gain.setTargetAtTime(1, actx.currentTime, 1.3); }
+  if (!soundBuilt) buildSound(); else { actx.resume(); master.gain.setTargetAtTime(1, actx.currentTime, 1.3); }
   if (!isTouch) { try { const r = canvas.requestPointerLock(); if (r && r.catch) r.catch(() => {}); } catch (_) {} }
 }
 splash.addEventListener('click', enter);
@@ -5821,7 +5838,8 @@ function ensureGraph() {
   });
   const src = actx.createMediaElementSource(radioEl);
   radioPanner = new PannerNode(actx, { panningModel: 'HRTF', distanceModel: 'inverse', refDistance: 3, maxDistance: 400, rolloffFactor: 0.9 });
-  src.connect(radioPanner); radioPanner.connect(master);
+  const near = gainNode(0.55), carry = gainNode(0.6);   // 'carry' follows you down the arcade; 'near' places the speaker at the kiosk
+  src.connect(radioPanner); radioPanner.connect(near); near.connect(radioBus); src.connect(carry); carry.connect(radioBus);
   radioAnalyser = actx.createAnalyser(); radioAnalyser.fftSize = 64; radioAnalyser.smoothingTimeConstant = 0.75; src.connect(radioAnalyser);
 }
 // level meter on the display: live from the broadcast when on, a faint idle shimmer on standby
@@ -5857,10 +5875,9 @@ rPower.addEventListener('click', async () => {
     if (radioOn) { radioEl.pause(); radioOn = false; kcStatus.textContent = ''; }
     else {
       if (actx.state !== 'running') await actx.resume();
-      if (!soundOn) setSound(true);
       if (radioLoaded !== radioIdx) { radioEl.src = radioList[radioIdx].url; radioLoaded = radioIdx; }
       await radioEl.play(); radioOn = true;
-      kcStatus.textContent = 'Playing from the kiosk speaker. It fades as you walk away.';
+      kcStatus.textContent = 'On air. It stays with you as you stroll; the sea steps back while it plays.';
     }
   } catch (_) { radioOn = false; kcStatus.textContent = 'The broadcast didn’t start here. Try again in a moment.'; }
   renderRadio();
@@ -5868,6 +5885,11 @@ rPower.addEventListener('click', async () => {
 rOlder.addEventListener('click', () => tune(radioIdx + 1, radioOn));
 rNewer.addEventListener('click', () => tune(radioIdx - 1, radioOn));
 rOne.addEventListener('click', () => { radioMode = 'one'; renderRadio(); });
+const rVol = document.getElementById('r-vol'), rVolOut = document.getElementById('r-vol-out');
+rVol.addEventListener('input', () => {
+  radioVol = +rVol.value; rVolOut.textContent = Math.round(radioVol * 100); rVol.style.setProperty('--v', (radioVol * 100) + '%');
+  if (radioBus) radioBus.gain.setTargetAtTime(radioVol, actx.currentTime, 0.05);
+});
 rAll.addEventListener('click', () => { radioMode = 'all'; renderRadio(); });
 
 /* ================= Record your walk =================
