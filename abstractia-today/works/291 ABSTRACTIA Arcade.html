@@ -1,3 +1,10 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+</head>
+<body>
 <title>ABSTRACTIA ARCADE</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
@@ -184,38 +191,87 @@ body.splashing #kiosk-prompt { display: none; }
 .kc-poster { display: flex; gap: 14px; align-items: center; }
 .kc-poster img { width: 84px; border-radius: 6px; border: 1px solid var(--border-color); flex: none; }
 .kc-poster p { margin: 0; font-size: 12px; line-height: 1.6; color: var(--text-soft); }
-.radio { border: 1px solid var(--border-color); border-radius: 14px; padding: 14px; display: grid; gap: 12px;
-  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.01)), #0c0e12; box-shadow: inset 0 1px 0 rgba(255,255,255,.08), inset 0 -10px 24px rgba(0,0,0,.45); }
-.radio-lcd { position: relative; border-radius: 8px; padding: 10px 12px 9px; background: #07090a; border: 1px solid rgba(0,0,0,.6);
-  box-shadow: inset 0 0 18px rgba(0,0,0,.9); font-family: var(--font-mono); color: var(--accent-color); text-shadow: 0 0 8px var(--accent-color); overflow: hidden; }
-.radio-lcd::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(0,0,0,.28) 0 1px, transparent 1px 3px); }
-.lcd-row { display: flex; justify-content: space-between; gap: 10px; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; opacity: .8; font-variant-numeric: tabular-nums; }
-.lcd-title { font-size: 15px; letter-spacing: 1px; margin: 6px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.lcd-prog { height: 2px; margin-top: 7px; background: rgba(255,255,255,.08); }
-.lcd-prog i { display: block; height: 100%; width: 0; background: var(--accent-color); box-shadow: 0 0 6px var(--accent-color); }
-.radio-dial { position: relative; height: 44px; border-radius: 6px; background: linear-gradient(180deg, #15181d, #0b0d10); border: 1px solid var(--border-color); overflow: hidden; }
-.dial-scale { position: absolute; inset: 0 14px; background: repeating-linear-gradient(90deg, rgba(226,232,240,.35) 0 1px, transparent 1px 8px) bottom / 100% 9px no-repeat; }
-.dial-scale button { position: absolute; top: 7px; transform: translateX(-50%); background: none; border: none; padding: 2px 3px; cursor: pointer;
-  font: 700 9px var(--font-mono); letter-spacing: 1px; color: var(--text-muted); white-space: nowrap; }
-.dial-scale button[aria-current="true"], .dial-scale button:hover { color: var(--text-main); }
-.dial-needle { position: absolute; top: 4px; bottom: 4px; width: 2px; margin-left: -1px; left: 50%; background: #ff4d4d; box-shadow: 0 0 8px rgba(255,77,77,.8); transition: left .6s cubic-bezier(.2,.8,.2,1); }
-.radio-controls { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; }
-.rbtn { border: 1px solid var(--border-color); background: rgba(255,255,255,.04); color: var(--text-main); border-radius: 999px; padding: 9px 10px;
-  font: 700 9px var(--font-ui); letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: border-color .25s ease; }
-.rbtn:hover, .rbtn:focus-visible { border-color: var(--accent-color); outline: none; }
-.rbtn:disabled { opacity: .35; cursor: default; }
-.rpower { --on: 0; width: 86px; height: 86px; border-radius: 50%; border: none; cursor: pointer; position: relative; padding: 0;
-  background: conic-gradient(from 210deg, var(--accent-color) 0deg, var(--accent-color) calc(var(--on) * 300deg), rgba(255,255,255,.16) calc(var(--on) * 300deg), rgba(255,255,255,.16) 300deg, transparent 300deg);
-  transition: transform .2s ease; }
-.rpower::before { content: ""; position: absolute; inset: 4px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #2a2f38, #0b0d11 70%); box-shadow: inset 0 2px 6px rgba(255,255,255,.08); }
-.rpower span { position: relative; font: 700 8.5px/1.35 var(--font-ui); letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-main); }
-.rpower[aria-pressed="true"] { --on: 1; box-shadow: 0 0 22px var(--accent-color); }
-.rpower[aria-pressed="true"] span { color: var(--accent-color); }
-.rpower:hover, .rpower:focus-visible { transform: scale(1.04); outline: none; }
-.radio-mode { display: grid; grid-template-columns: 1fr 1fr; padding: 3px; border-radius: 999px; background: rgba(255,255,255,.06); border: 1px solid var(--border-color); }
-.radio-mode button { border: none; background: none; border-radius: 999px; padding: 8px 6px; cursor: pointer; color: var(--text-muted);
-  font: 700 9px var(--font-ui); letter-spacing: 2px; text-transform: uppercase; transition: background .3s ease, color .3s ease; }
-.radio-mode button[aria-pressed="true"] { background: var(--accent-color); color: #0a0c10; }
+/* Radio: brushed-metal faceplate, phosphor display, live level meter */
+.radio { position: relative; border-radius: 16px; padding: 16px; display: grid; gap: 13px; overflow: hidden;
+  background:
+    linear-gradient(115deg, rgba(255,255,255,0) 30%, rgba(255,255,255,.16) 46%, rgba(255,255,255,0) 60%) 0 0 / 260% 100%,
+    repeating-linear-gradient(90deg, rgba(255,255,255,.035) 0 1px, rgba(0,0,0,.05) 1px 3px),
+    linear-gradient(180deg, #4b515b 0%, #2a2e35 46%, #1a1d22 100%);
+  border: 1px solid rgba(255,255,255,.18);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.35), inset 0 -2px 0 rgba(0,0,0,.5), 0 14px 30px rgba(0,0,0,.45);
+  animation: sheen 9s ease-in-out infinite; }
+@keyframes sheen { 0%, 100% { background-position: 120% 0, 0 0, 0 0; } 50% { background-position: -20% 0, 0 0, 0 0; } }
+.radio::before, .radio::after { content: ""; position: absolute; top: 7px; width: 7px; height: 7px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #e9edf2, #6b717b 60%, #2b2f36); box-shadow: 0 1px 1px rgba(0,0,0,.6); }
+.radio::before { left: 7px; } .radio::after { right: 7px; }
+.radio-lcd { position: relative; border-radius: 10px; padding: 12px 14px 11px; background: radial-gradient(ellipse at 50% 0%, #10161a, #050708 75%);
+  border: 2px solid #0b0c0e; box-shadow: inset 0 0 22px rgba(0,0,0,.95), 0 1px 0 rgba(255,255,255,.18);
+  font-family: var(--font-mono); color: #f4f7fb; overflow: hidden; }
+.radio-lcd::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(0,0,0,.22) 0 1px, transparent 1px 3px), linear-gradient(180deg, rgba(255,255,255,.07), transparent 40%); }
+.lcd-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 10.5px; font-weight: 600; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--accent-color); text-shadow: 0 0 6px var(--accent-color); font-variant-numeric: tabular-nums; }
+.onair { display: inline-flex; align-items: center; gap: 6px; }
+.onair i { width: 8px; height: 8px; border-radius: 50%; background: #3a1414; box-shadow: inset 0 0 2px #000; transition: background .3s ease; }
+.radio.on .onair i { background: #ff3b3b; box-shadow: 0 0 10px #ff3b3b, 0 0 2px #fff; animation: blink 1.6s ease-in-out infinite; }
+@keyframes blink { 50% { opacity: .35; } }
+.lcd-title { font-size: 19px; font-weight: 600; letter-spacing: .5px; margin: 8px 0 6px; white-space: nowrap; overflow: hidden;
+  color: #ffffff; text-shadow: 0 0 6px var(--accent-color), 0 0 18px var(--accent-color); }
+.lcd-title span { display: inline-block; }
+.radio.on .lcd-title span.scroll { animation: marquee 12s linear infinite; padding-left: 100%; }
+@keyframes marquee { to { transform: translateX(-100%); } }
+#r-eq { display: block; width: 100%; height: 28px; margin: 4px 0 2px; }
+.lcd-prog { height: 3px; margin-top: 8px; border-radius: 2px; background: rgba(255,255,255,.1); overflow: hidden; }
+.lcd-prog i { display: block; height: 100%; width: 0; background: var(--accent-color); box-shadow: 0 0 8px var(--accent-color); transition: width .4s linear; }
+.radio-dial { position: relative; height: 50px; border-radius: 8px; overflow: hidden; border: 2px solid #0b0c0e;
+  background: linear-gradient(180deg, #1b1712, #0c0a08); box-shadow: inset 0 0 18px rgba(0,0,0,.9); transition: background .6s ease; }
+.radio.on .radio-dial { background: radial-gradient(ellipse at 50% 120%, rgba(255,190,90,.38), rgba(40,28,12,.95) 70%); }
+.dial-scale { position: absolute; inset: 0 14px; background: repeating-linear-gradient(90deg, rgba(240,232,214,.55) 0 1px, transparent 1px 8px) bottom 4px left 0 / 100% 9px no-repeat; }
+.dial-scale button { position: absolute; top: 8px; transform: translateX(-50%); background: none; border: none; padding: 2px 4px; cursor: pointer;
+  font: 700 10.5px var(--font-mono); letter-spacing: 1px; color: rgba(240,232,214,.62); white-space: nowrap; transition: color .3s ease, text-shadow .3s ease; }
+.dial-scale button[aria-current="true"], .dial-scale button:hover { color: #fff8e8; text-shadow: 0 0 8px rgba(255,200,120,.9); }
+.dial-needle { position: absolute; top: 3px; bottom: 3px; width: 3px; margin-left: -1.5px; left: 50%; border-radius: 2px; background: #ff4040;
+  box-shadow: 0 0 10px rgba(255,64,64,.9); transition: left .8s cubic-bezier(.2,.9,.25,1.15); }
+.radio.on .dial-needle { animation: sway 2.8s ease-in-out infinite; }
+@keyframes sway { 0%, 100% { transform: translateX(-1.5px); } 50% { transform: translateX(1.5px); } }
+.radio-controls { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; }
+.rbtn { border: 1px solid rgba(255,255,255,.22); color: #f4f7fb; border-radius: 999px; padding: 10px 10px; cursor: pointer;
+  background: linear-gradient(180deg, #5a616c, #2c3038); box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 3px 8px rgba(0,0,0,.45);
+  font: 700 10px var(--font-ui); letter-spacing: 2px; text-transform: uppercase; text-shadow: 0 1px 1px rgba(0,0,0,.6); transition: transform .15s ease, border-color .25s ease; }
+.rbtn:hover, .rbtn:focus-visible { border-color: var(--accent-color); outline: none; transform: translateY(-1px); }
+.rbtn:active { transform: translateY(1px); box-shadow: inset 0 2px 4px rgba(0,0,0,.5); }
+.rbtn:disabled { opacity: .35; cursor: default; transform: none; }
+.rpower { --on: 0; width: 92px; height: 92px; border-radius: 50%; border: none; cursor: pointer; position: relative; padding: 0;
+  background: conic-gradient(from 210deg, var(--accent-color) 0deg, var(--accent-color) calc(var(--on) * 300deg), rgba(255,255,255,.18) calc(var(--on) * 300deg), rgba(255,255,255,.18) 300deg, transparent 300deg);
+  transition: transform .2s ease, box-shadow .4s ease; }
+.rpower::before { content: ""; position: absolute; inset: 5px; border-radius: 50%;
+  background: repeating-conic-gradient(from 0deg, rgba(255,255,255,.06) 0 4deg, rgba(0,0,0,.06) 4deg 8deg), radial-gradient(circle at 35% 28%, #8c939e, #3a3f47 45%, #15181c 85%);
+  box-shadow: inset 0 2px 3px rgba(255,255,255,.45), inset 0 -3px 6px rgba(0,0,0,.6), 0 4px 10px rgba(0,0,0,.55); }
+.rpower span { position: relative; font: 800 9px/1.35 var(--font-ui); letter-spacing: 1.5px; text-transform: uppercase; color: #ffffff; text-shadow: 0 1px 2px rgba(0,0,0,.8); }
+.rpower[aria-pressed="true"] { --on: 1; animation: glow 2.4s ease-in-out infinite; }
+.rpower[aria-pressed="true"]::before { animation: spin 14s linear infinite; }
+.rpower[aria-pressed="true"] span { color: #fff; text-shadow: 0 0 8px var(--accent-color), 0 1px 2px rgba(0,0,0,.8); }
+@keyframes glow { 0%, 100% { box-shadow: 0 0 14px var(--accent-color); } 50% { box-shadow: 0 0 30px var(--accent-color); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+.rpower:hover, .rpower:focus-visible { transform: scale(1.05); outline: none; }
+.rpower:active { transform: scale(.97); }
+.radio-mode { position: relative; display: grid; grid-template-columns: 1fr 1fr; padding: 4px; border-radius: 999px; background: #121418;
+  border: 1px solid rgba(255,255,255,.14); box-shadow: inset 0 2px 5px rgba(0,0,0,.7); }
+.radio-mode::before { content: ""; position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px); border-radius: 999px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent-color) 75%, #fff), var(--accent-color)); box-shadow: 0 0 14px var(--accent-color);
+  transition: transform .35s cubic-bezier(.2,.8,.2,1); }
+.radio-mode.all::before { transform: translateX(100%); }
+.radio-mode button { position: relative; border: none; background: none; border-radius: 999px; padding: 9px 6px; cursor: pointer; color: rgba(244,247,251,.75);
+  font: 800 10px var(--font-ui); letter-spacing: 2px; text-transform: uppercase; transition: color .3s ease; }
+.radio-mode button[aria-pressed="true"] { color: #0a0c10; }
+.share-card > * { flex-shrink: 0; }   /* the card scrolls; its sections never squash */
+/* card entrance */
+#kiosk-card:not([hidden]) .share-card { animation: cardIn .45s cubic-bezier(.2,.8,.2,1) both; }
+#kiosk-card:not([hidden]) .share-card > * { animation: rise .5s cubic-bezier(.2,.8,.2,1) both; }
+#kiosk-card .share-card > *:nth-child(2) { animation-delay: .05s } #kiosk-card .share-card > *:nth-child(3) { animation-delay: .1s }
+#kiosk-card .share-card > *:nth-child(4) { animation-delay: .15s } #kiosk-card .share-card > *:nth-child(n+5) { animation-delay: .2s }
+@keyframes cardIn { from { opacity: 0; transform: translateY(16px) scale(.97); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .radio, .rpower, .rpower::before, .dial-needle, .onair i, .lcd-title span, #kiosk-card .share-card, #kiosk-card .share-card > * { animation: none !important; } }
 .kc-section { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-top: 4px; }
 .kc-list { display: grid; gap: 6px; }
 .kc-link { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border-color);
@@ -299,8 +355,9 @@ body.splashing #kiosk-prompt { display: none; }
     <div class="kc-section">ArtVision broadcast</div>
     <div class="radio" id="radio">
       <div class="radio-lcd" aria-live="polite">
-        <div class="lcd-row"><span>ArtVision</span><span>108 FM</span></div>
-        <div class="lcd-title" id="r-title">Tuning…</div>
+        <div class="lcd-row"><span class="onair"><i></i>ArtVision</span><span>108 FM</span></div>
+        <div class="lcd-title"><span id="r-title">Tuning…</span></div>
+        <canvas id="r-eq" aria-hidden="true"></canvas>
         <div class="lcd-row"><span id="r-state">Standby</span><span id="r-time">--:-- / --:--</span></div>
         <div class="lcd-prog"><i id="r-prog"></i></div>
       </div>
@@ -310,15 +367,16 @@ body.splashing #kiosk-prompt { display: none; }
         <button class="rpower" id="r-power" type="button" aria-pressed="false"><span>Turn on<br>the radio</span></button>
         <button class="rbtn" id="r-newer" type="button">Newer ›</button>
       </div>
-      <div class="radio-mode" role="group" aria-label="Play mode">
+      <div class="radio-mode" id="r-mode" role="group" aria-label="Play mode">
         <button id="r-one" type="button" aria-pressed="true">One episode</button><button id="r-all" type="button" aria-pressed="false">All episodes</button>
       </div>
     </div>
     <div class="kc-section">The collection</div>
     <div class="kc-list">
+      <a class="kc-link" href="https://www.transient.xyz/nfts/base/0x9078e4ae045d0ecc28f5fdf32c8aee5763993a2a" target="_blank" rel="noopener"><b>Base</b><span>ABSTRACTIA on BASE</span></a>
+      <a class="kc-link" href="https://radio.artvision.today" target="_blank" rel="noopener"><b>Bitcoin</b><span>ABSTRACTIA on Bitcoin</span></a>
       <a class="kc-link" href="https://abstractia.today" target="_blank" rel="noopener"><b>Ethereum</b><span>abstractia.today</span></a>
-      <a class="kc-link" href="https://radio.artvision.today" target="_blank" rel="noopener"><b>Art on Bitcoin</b><span>with ArtVision · radio.artvision.today</span></a>
-      <a class="kc-link" href="https://tezos.abstractia.today" target="_blank" rel="noopener"><b>Tezos Portals</b><span>tezos.abstractia.today</span></a>
+      <a class="kc-link" href="https://portals.abstractia.today" target="_blank" rel="noopener"><b>Tezos</b><span>Portals · portals.abstractia.today</span></a>
     </div>
     <div class="kc-section">Follow</div>
     <div class="kc-socials">
@@ -345,7 +403,7 @@ body.splashing #kiosk-prompt { display: none; }
     <h1 class="line l2">Abstractia</h1>
     <div class="rule line l3"></div>
     <h2 class="line l4">Arcade</h2>
-    <h3 class="line l5">Sherbet runs live on every wall. New Sensation waits at the sea. The colors keep your time.</h3>
+    <h3 class="line l5">Sherbet runs live on the arcade walls. New Sensation waits at the sea. The colors keep your time.</h3>
   </div>
   <div class="enter">Click to enter</div>
 </div>
@@ -5738,6 +5796,9 @@ function renderRadio() {
   if (!radioList) return;
   const n = radioList.length, ep = radioList[radioIdx];
   rTitle.textContent = ep ? ep.title : 'No episodes';
+  rTitle.classList.toggle('scroll', rTitle.parentElement.clientWidth > 0 && rTitle.scrollWidth > rTitle.parentElement.clientWidth);
+  document.getElementById('radio').classList.toggle('on', radioOn);
+  document.getElementById('r-mode').classList.toggle('all', radioMode === 'all');
   rState.textContent = radioOn ? (radioMode === 'all' ? 'On air · all episodes' : 'On air · one episode') : 'Standby';
   rNeedle.style.left = `calc(14px + (100% - 28px) * ${(n === 1 ? 50 : 9 + 82 * (n - 1 - radioIdx) / (n - 1)) / 100})`;
   [...rScale.children].forEach((b, i) => b.setAttribute('aria-current', String(i === radioIdx)));
@@ -5761,7 +5822,27 @@ function ensureGraph() {
   const src = actx.createMediaElementSource(radioEl);
   radioPanner = new PannerNode(actx, { panningModel: 'HRTF', distanceModel: 'inverse', refDistance: 3, maxDistance: 400, rolloffFactor: 0.9 });
   src.connect(radioPanner); radioPanner.connect(master);
+  radioAnalyser = actx.createAnalyser(); radioAnalyser.fftSize = 64; radioAnalyser.smoothingTimeConstant = 0.75; src.connect(radioAnalyser);
 }
+// level meter on the display: live from the broadcast when on, a faint idle shimmer on standby
+let radioAnalyser = null; const eqCv = document.getElementById('r-eq'), eqCtx = eqCv.getContext('2d'); let eqBins = null;
+function drawEq() {
+  requestAnimationFrame(drawEq);
+  if (kioskCard.hidden) return;
+  const w = eqCv.clientWidth, h = eqCv.clientHeight, dpr = Math.min(devicePixelRatio, 2);
+  if (eqCv.width !== Math.round(w * dpr)) { eqCv.width = Math.round(w * dpr); eqCv.height = Math.round(h * dpr); }
+  eqCtx.setTransform(dpr, 0, 0, dpr, 0, 0); eqCtx.clearRect(0, 0, w, h);
+  const N = 28, gap = 3, bw = (w - gap * (N - 1)) / N, accent = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim() || '#d4a629';
+  if (radioAnalyser && radioOn) { if (!eqBins) eqBins = new Uint8Array(radioAnalyser.frequencyBinCount); radioAnalyser.getByteFrequencyData(eqBins); }
+  const t = performance.now() / 1000;
+  eqCtx.fillStyle = accent; eqCtx.shadowColor = accent; eqCtx.shadowBlur = 6;
+  for (let i = 0; i < N; i++) {
+    const v = (radioOn && eqBins) ? eqBins[Math.min(eqBins.length - 1, Math.floor(i * eqBins.length / N * 0.8))] / 255 : 0.06 + 0.04 * Math.sin(t * 2 + i * 0.6);
+    const segs = Math.max(1, Math.round(v * 7));
+    for (let k = 0; k < segs; k++) eqCtx.fillRect(i * (bw + gap), h - (k + 1) * (h / 7) + 1, bw, h / 7 - 2);
+  }
+}
+requestAnimationFrame(drawEq);
 function tune(i, play) {
   if (!radioList || !radioList[i]) return;
   radioIdx = i;
@@ -5878,3 +5959,6 @@ function returnToStart() {
   splash.classList.remove('gone'); document.body.classList.add('splashing');
 }
 </script>
+
+</body>
+</html>
