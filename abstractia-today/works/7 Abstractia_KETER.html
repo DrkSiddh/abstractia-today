@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ABSTRACTIA</title>
+<style>
+  /* FONTS — embedded, slimmed, sovereign. No folder, no network. */
+  @font-face{font-family:'Ethnocentric Regular';src:url(data:font/woff2;base64,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) format('woff2')}
+  @font-face{font-family:'Game Of Squids';src:url(data:font/woff2;base64,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) format('woff2')}
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden;background:#000}
+  canvas{display:block;position:fixed;inset:0;touch-action:none}
+
+  /* CTA — Rock3D unless the Forge says otherwise. Place and size come from the sizing brain. */
+  #beginBtn{
+    position:fixed;left:50%;top:80%;transform:translate(-50%,-50%);
+    font-family:'Game Of Squids',Georgia,serif;font-size:40px;letter-spacing:4px;
+    padding:0.4em 0.95em;border:none;border-radius:8px;cursor:pointer;
+    color:#fff;background:transparent;white-space:nowrap;z-index:10;
+    text-shadow:0 0 24px rgba(255,255,255,0.55);
+    transition:text-shadow 0.3s;
+  }
+  #beginBtn:hover{text-shadow:0 0 46px rgba(255,255,255,0.95)}
+
+  #hint{
+    position:fixed;left:50%;bottom:10%;transform:translateX(-50%);
+    font-family:'Futura Light',Georgia,serif;font-size:24px;letter-spacing:3px;
+    width:86vw;line-height:1.3;
+    color:rgba(255,255,255,0.9);z-index:10;pointer-events:none;
+    opacity:0;transition:opacity 1.2s ease;text-align:center;
+    text-shadow:0 0 18px rgba(0,0,0,0.6);
+  }
+  #hint.on{opacity:1}
+</style>
+</head>
+<body>
+<canvas id="art"></canvas>
+<button id="beginBtn">Get Abstract</button>
+<div id="hint">PRESS I FOR THE MENU &middot; OR TAP WITH TWO FINGERS</div>
+
+<script>
+"use strict";
+/* ============================================================
+   ABSTRACTIA — LITE TEMPLATE
+   Zero external graphics. Pure code, pure typography, pure
+   gradient. The ultra-lightweight member of the family.
+   ============================================================ */
+
+const WORK = {
+  number: 7,
+  numeral: "VII",
+  title: "KETER",
+  credit1: "INTERACTIVE FINE ART",
+  credit2: "by Maxximillian",
+  telegram: "t.me/abstractians",
+
+  titleFont: "Ethnocentric Regular",
+  h2Font: "Game Of Squids",
+
+  // preset: classic | wall | swiss | poster | film | masthead | spine
+  typography: { preset:"spine", finish:"metallic", transparency:0.52 },
+  frame: { top:0.11, bottom:0.25, sides:0.17, letterbox:false },
+
+  palettes: {
+    DAYBREAK: ["ffb10a","d67373","dc8686","b5a5a5","80dada","c0d4d4","f6e209","8fa8f5"],
+    GM:       ["a37a0a","340000","690000","fbb1cf","005959","469194","efcfd9","88a5c3"],
+    SUNSET:   ["a21c01","661100","661100","3f2b27","b3e5b9","000a01","ccd1f5","d7f4e4"],
+    GN:       ["161712","1f2900","273500","1a1d0f","001a2d","1a3a53","bd2287","0d39d1"],
+    GRASS:    ["004b23","006400","007200","008000","38b000","70e000","9ef01a","ccff33"]
+  },
+  schedule: [
+    { palette:"DAYBREAK", at:"sunrise", offset:-30 },
+    { palette:"GM", at:"sunrise", offset:45 },
+    { palette:"SUNSET", at:"sunset", offset:-45 },
+    { palette:"GN", at:"sunset", offset:40 }
+  ],
+  sun: { lat:36.17, lon:-115.14, follow:"viewer" },
+  grassWindow: { from:"16:20", to:"16:43" },
+
+  btc: false,  // neutral / on / off
+
+  // speed 0.1-3 · regularity 0-1 · breath 0-1 · variation 0-2
+  motion: {
+    lines:   { speed:1, regularity:1, breath:0.48, variation:1 },
+    waves:   { speed:0.35, regularity:1, breath:0.86, variation:1 },
+    oneness: { speed:1, regularity:1, breath:0.7, variation:0.65 }
+  },
+
+  patterns: [],
+
+  lagniappe: {}
+};
+
+/* ============================================================
+   ENGINE
+   ============================================================ */
+
+const cv = document.getElementById("art");
+const ctx = cv.getContext("2d");
+const beginBtn = document.getElementById("beginBtn");
+const hintEl = document.getElementById("hint");
+
+const UI_FONT = "Futura Light";
+const CTA_FONT = "Game Of Squids";
+const MIN_TYPE = 24;          // nothing in a work is ever smaller than this
+
+let W = 0, H = 0, frame = 0;
+let scene = 0;
+let fadeAlpha = 0;
+const FADE_RATE = 6;
+
+let modeLines = false;       // L
+let modeWaves = false;       // W
+let modeMenu = false;        // I
+let modeDev = false;         // D — typographic community card
+let modeOneness = false;     // O — every layer, one breath
+let activeLagniappe = null;
+
+// C — Color shift: the collector holds the remote.
+// -1 = live time. Otherwise locked to a palette of their choosing.
+let colorShiftIdx = -1;
+const SHIFT_ORDER = ["DAYBREAK","GM","SUNSET","GN","GRASS"];
+
+let currentPalette = [];
+let targetKey = "";
+const LERP_RATE = 0.015;
+
+let menuHits = [];
+let devHits = [];
+let ombreScroll = 0;
+let lastT = 0, DT = 1/60;
+
+/* ---------- helpers ---------- */
+function hexToRgb(h){
+  return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)];
+}
+/*@shared:lerp*/function lerp(a, b, t){ return a + (b - a) * t; }/*@end*/
+function clamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
+function rgba(c, a){ return "rgba(" + (c[0]|0) + "," + (c[1]|0) + "," + (c[2]|0) + "," + a + ")"; }
+function lerpRgb(c1, c2, t){
+  return [lerp(c1[0],c2[0],t), lerp(c1[1],c2[1],t), lerp(c1[2],c2[2],t)];
+}
+function fontStack(f){ return "'" + f + "',Georgia,serif"; }
+function rgbToHsl(c){
+  const r = c[0]/255, g = c[1]/255, b = c[2]/255;
+  const mx = Math.max(r,g,b), mn = Math.min(r,g,b), l = (mx+mn)/2;
+  if(mx === mn) return [0, 0, l];
+  const d = mx - mn, s = l > 0.5 ? d/(2-mx-mn) : d/(mx+mn);
+  let h = mx === r ? (g-b)/d + (g < b ? 6 : 0) : (mx === g ? (b-r)/d + 2 : (r-g)/d + 4);
+  return [h*60, s, l];
+}
+function hslToRgb(h, s, l){
+  h = ((h % 360) + 360) % 360 / 360;
+  if(s === 0) return [l*255, l*255, l*255];
+  const q = l < 0.5 ? l*(1+s) : l+s-l*s, p = 2*l-q;
+  function f(t){ t = (t+1)%1; return t < 1/6 ? p+(q-p)*6*t : t < 1/2 ? q : t < 2/3 ? p+(q-p)*(2/3-t)*6 : p; }
+  return [f(h+1/3)*255, f(h)*255, f(h-1/3)*255];
+}
+
+/* ---------- THE SKY — sun-aware schedule ----------
+   Daybreak and Sunset ride the real sun. Everything stays on the
+   viewer's own clock; nothing asks for their location. */
+/*@shared:makeSky*/function makeSky(work){
+  function mins(s){ const p = String(s).split(":"); return (parseInt(p[0],10)||0)*60 + (parseInt(p[1],10)||0); }
+  function wrap(m){ m = Math.round(m) % 1440; return m < 0 ? m + 1440 : m; }
+  function inWin(now, from, to){ const f = mins(from), t = mins(to); return f <= t ? (now >= f && now <= t) : (now >= f || now <= t); }
+  function lonGuess(){
+    const y = new Date().getFullYear();
+    const std = Math.max(new Date(y,0,1).getTimezoneOffset(), new Date(y,6,1).getTimezoneOffset());
+    return -std / 4;
+  }
+  let memoKey = "", memo = null;
+  function sun(date){
+    const key = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate();
+    if(key === memoKey) return memo;
+    const sc = work.sun || {}, rad = Math.PI/180;
+    const lat = isFinite(+sc.lat) ? +sc.lat : 36.17;
+    const lon = sc.follow === "fixed" && isFinite(+sc.lon) ? +sc.lon : lonGuess();
+    const N = Math.floor((date - new Date(date.getFullYear(),0,0)) / 86400000);
+    const g = 2*Math.PI/365*(N - 1);
+    const eqt = 229.18*(0.000075 + 0.001868*Math.cos(g) - 0.032077*Math.sin(g) - 0.014615*Math.cos(2*g) - 0.040849*Math.sin(2*g));
+    const decl = 0.006918 - 0.399912*Math.cos(g) + 0.070257*Math.sin(g) - 0.006758*Math.cos(2*g) + 0.000907*Math.sin(2*g) - 0.002697*Math.cos(3*g) + 0.00148*Math.sin(3*g);
+    const cosH = (Math.cos(90.833*rad) - Math.sin(lat*rad)*Math.sin(decl)) / (Math.cos(lat*rad)*Math.cos(decl));
+    const tz = -date.getTimezoneOffset();
+    if(cosH > 1 || cosH < -1) memo = { rise:360, set:1080 };   // polar day or night: a plain 6 to 6
+    else {
+      const ha = Math.acos(cosH) / rad;
+      memo = { rise: wrap(720 - 4*(lon + ha) - eqt + tz), set: wrap(720 - 4*(lon - ha) - eqt + tz) };
+    }
+    memoKey = key;
+    return memo;
+  }
+  function start(e, s){
+    const base = e.at === "sunrise" ? s.rise : (e.at === "sunset" ? s.set : mins(e.at || "00:00"));
+    return wrap(base + (+e.offset || 0));
+  }
+  function active(date){
+    const now = date.getHours()*60 + date.getMinutes();
+    const gw = work.grassWindow;
+    if(gw && inWin(now, gw.from, gw.to)) return "GRASS";
+    const s = sun(date);
+    let best = null, bs = -1, last = null, ls = -1;
+    (work.schedule || []).forEach(function(e){
+      const st = start(e, s);
+      if(st <= now && st > bs){ best = e; bs = st; }
+      if(st > ls){ last = e; ls = st; }
+    });
+    const pick = best || last;
+    return pick && work.palettes[pick.palette] ? pick.palette : "GM";
+  }
+  return { sun:sun, start:start, active:active };
+}/*@end*/
+const SKY = makeSky(WORK);
+let skyMinute = -1, skyKey = "GM";
+function paletteKeyForNow(){
+  const d = new Date(), m = d.getHours()*60 + d.getMinutes();
+  if(m !== skyMinute){ skyMinute = m; skyKey = SKY.active(d); }
+  return skyKey;
+}
+function activePaletteKey(){
+  return colorShiftIdx >= 0 ? SHIFT_ORDER[colorShiftIdx] : paletteKeyForNow();
+}
+function paletteRgb(key){ return (WORK.palettes[key] || WORK.palettes.GM).map(hexToRgb); }
+
+/* ---------- palette lifecycle (the one palette lerp) ---------- */
+function snapPalette(key){
+  targetKey = key;
+  currentPalette = paletteRgb(key);
+}
+function updatePalette(){
+  const key = activePaletteKey();
+  if(key !== targetKey) targetKey = key;
+  const target = paletteRgb(targetKey);
+  for(let i=0;i<8;i++){
+    currentPalette[i] = lerpRgb(currentPalette[i], target[i], LERP_RATE);
+  }
+}
+
+/* ---------- MOTION — speed, regularity, breath, variation ----------
+   Every layer keeps its own clocks, so turning a dial mid-flight bends
+   the motion smoothly instead of jumping. None of it touches colour. */
+const MOTION_DEFAULT = { speed:1, regularity:1, breath:0, variation:1 };
+function mo(layer){ return (WORK.motion && WORK.motion[layer]) || MOTION_DEFAULT; }
+const LAYER_N = { lines:150, waves:50 };
+const SEED = {}, LCLOCK = {}, SWELL = { lines:0, waves:0 };
+["lines","waves"].forEach(function(k){
+  // fresh scatter every time the work opens: ABSTRACTIA improvises
+  SEED[k] = []; LCLOCK[k] = [];
+  for(let i=0;i<LAYER_N[k];i++){
+    SEED[k].push([Math.random()*2-1, Math.random()*2-1, Math.random()*2-1]);
+    LCLOCK[k].push(0);
+  }
+});
+function tickMotion(){
+  ["lines","waves"].forEach(function(k){
+    const m = mo(k), irr = 1 - m.regularity, s = SEED[k], c = LCLOCK[k];
+    for(let i=0;i<c.length;i++) c[i] += m.speed * (1 + s[i][2] * irr * 0.5);
+    SWELL[k] += m.speed;
+  });
+}
+function swell(k){
+  const m = mo(k), s = Math.sin(SWELL[k] * 0.012);
+  return { amp: 1 + m.breath * 0.6 * s, alpha: 1 - m.breath * 0.35 * (0.5 - 0.5 * s) };
+}
+
+/* ---------- PATTERNS — made in the Forge, run here ----------
+   A pattern that throws is switched off quietly. The work never stops. */
+const PATTERNS = (WORK.patterns || []).map(function(p){
+  return { id:p.id, name:p.name || "Pattern", kind:p.kind || "layer", key:String(p.key || "").toLowerCase(),
+           fn:p.fn || {}, motion:p.motion || { speed:1, variation:1 },
+           on:p.kind === "trigger" || p.kind === "breath", state:{}, t:0, ready:false, dead:false };
+});
+/*@shared:patternApi*/function patternApi(p, env){
+  const m = p.motion || {};
+  return {
+    ctx: env.ctx, W: env.W, H: env.H, frame: env.frame,
+    t: p.t, dt: env.dt * (m.speed || 1),
+    palette: env.palette,
+    rgba: function(c, a){ return "rgba(" + (c[0]|0) + "," + (c[1]|0) + "," + (c[2]|0) + "," + a + ")"; },
+    mix: function(c1, c2, k){ return [c1[0]+(c2[0]-c1[0])*k, c1[1]+(c2[1]-c1[1])*k, c1[2]+(c2[2]-c1[2])*k]; },
+    breath: env.breath, oneness: env.oneness,
+    speed: m.speed || 1, variation: m.variation == null ? 1 : m.variation,
+    safe: env.safe, state: p.state, random: Math.random
+  };
+}/*@end*/
+function patternEnv(){
+  return { ctx:ctx, W:W, H:H, frame:frame, dt:DT, palette:currentPalette,
+           breath:oneAmt * Math.sin(oneT), oneness:oneAmt, safe:TYPE.safe || { x:0, y:0, w:W, h:H } };
+}
+function runPattern(p, phase, x, y){
+  if(p.dead) return undefined;
+  try{
+    const a = patternApi(p, patternEnv());
+    if(!p.ready){ p.ready = true; if(p.fn.setup) p.fn.setup(a); }
+    if(phase === "draw" && p.fn.draw){ ctx.save(); p.fn.draw(a); ctx.restore(); }
+    else if(phase === "tap" && p.fn.tap){ p.fn.tap(a, x, y); }
+    else if(phase === "breath" && p.fn.breath){ return p.fn.breath(a, x); }
+  }catch(e){ p.dead = true; }
+  return undefined;
+}
+function breathPattern(){
+  for(let i=PATTERNS.length-1;i>=0;i--){ const p = PATTERNS[i]; if(p.kind === "breath" && p.on && !p.dead) return p; }
+  return null;
+}
+
+/* ---------- ONENESS — one shared breath for every layer ----------
+   Breath is opacity, amplitude and phase. It never reads or writes a
+   single RGB value. Layers: 0 ombre, 1 lines, 2 waves, 3 lagniappe. */
+const BREATH_MS = 8000;
+let oneAmt = 0, oneT = 0;
+function updateBreath(){
+  oneAmt = lerp(oneAmt, modeOneness ? 1 : 0, 0.02);
+  if(!modeOneness && oneAmt < 0.002) oneAmt = 0;
+  oneT += DT * 1000 / BREATH_MS * Math.PI * 2 * mo("oneness").speed;
+}
+function breathOf(li){
+  const bp = breathPattern();
+  if(bp){
+    const v = runPattern(bp, "breath", li);
+    if(typeof v === "number" && isFinite(v)) return clamp(v, -1, 1);
+  }
+  return Math.sin(oneT + (1 - mo("oneness").regularity) * li * 1.3);
+}
+function breathAlpha(depth, li){ return 1 - oneAmt * Math.min(1, depth * mo("oneness").breath) * (0.5 - 0.5 * breathOf(li)); }
+function breathAmp(depth, li){ const m = mo("oneness"); return 1 + oneAmt * depth * m.breath * m.variation * breathOf(li); }
+function breathPhase(li){ return oneAmt * breathOf(li) * 1.4 * mo("oneness").variation; }
+
+/* ---------- FONT TRUTH — did the face really land? ---------- */
+/*@shared:fontIsReal*/function fontIsReal(family){
+  if(!fontIsReal.cv) fontIsReal.cv = document.createElement("canvas");
+  const c = fontIsReal.cv.getContext("2d");
+  const probe = "ABSTRACTIA wmQ@#08&";
+  for(const fb of ["serif", "monospace"]){
+    c.font = "72px " + fb;
+    const bare = c.measureText(probe).width;
+    c.font = "72px '" + family + "'," + fb;
+    if(Math.abs(c.measureText(probe).width - bare) > 0.5) return true;
+  }
+  return false;
+}/*@end*/
+
+/* ============================================================
+   ONE SIZING BRAIN
+   Measures once per resize or font arrival. Every preset lays out
+   inside the frame, so the host site's header and footer and the
+   film-style edges stay clear of type.
+   ============================================================ */
+const TYPE = { dirty:true, unit:16, title:null, items:[], rules:[], menu:null, card:null, lag:{}, titleTrue:false, safe:null, ctaTf:"translate(-50%,-50%)" };
+const PROBE = 100;
+
+function makeRow(text, font, size, trackFrac){
+  const f = size + "px " + fontStack(font);
+  ctx.font = f;
+  const chars = Array.from(text || "");
+  const widths = chars.map(function(ch){ return ctx.measureText(ch).width; });
+  const track = size * trackFrac;
+  const total = widths.reduce(function(a,b){ return a+b; }, 0) + track * Math.max(0, chars.length-1);
+  return { font:f, size:size, chars:chars, widths:widths, track:track, total:total };
+}
+// draw a measured row with its left edge at x
+function drawRow(r, x, y){
+  ctx.font = r.font;
+  for(let i=0;i<r.chars.length;i++){
+    ctx.fillText(r.chars[i], x + r.widths[i]/2, y);
+    x += r.widths[i] + r.track;
+  }
+}
+function unitsOf(text, font, track){ return makeRow(text, font, PROBE, track).total / PROBE; }
+function fitLine(text, font, ideal, maxW, trackFrac){
+  const u = unitsOf(text, font, trackFrac);
+  return u > 0 ? Math.min(ideal, maxW / u) : ideal;
+}
+function splitsInto(words, k){
+  if(k === 1) return [[words.join(" ")]];
+  const out = [];
+  for(let i=1;i<=words.length-k+1;i++){
+    const head = words.slice(0,i).join(" ");
+    splitsInto(words.slice(i), k-1).forEach(function(rest){ out.push([head].concat(rest)); });
+  }
+  return out;
+}
+function wordsOf(t){ return String(t || "").split(/\s+/).filter(Boolean); }
+
+// balanced stack: the biggest type that fits maxW x maxH
+function fitStack(text, font, maxW, maxH, o){
+  const words = wordsOf(text), cache = {};
+  function u(s){ if(cache[s] === undefined) cache[s] = unitsOf(s, font, o.track); return cache[s]; }
+  const maxL = Math.max(1, Math.min(o.maxLines || 4, words.length));
+  const minL = Math.min(o.minLines || 1, maxL);
+  let best = null;
+  for(let k=minL;k<=maxL;k++){
+    const rhythm = [];
+    for(let i=0;i<k;i++) rhythm.push(o.rhythm && i % 2 === 1 ? 0.9 : 1);
+    const stackH = rhythm.reduce(function(a,r){ return a+r; }, 0) * o.lineH;
+    splitsInto(words, k).forEach(function(lines){
+      let size = maxH / stackH;
+      for(let i=0;i<k;i++){ const w = u(lines[i]); if(w > 0) size = Math.min(size, maxW / (w * rhythm[i])); }
+      if(!best || size > best.size * 1.02) best = { lines:lines, sizes:rhythm.map(function(r){ return size * r; }), size:size };
+    });
+  }
+  return best || { lines:[String(text)], sizes:[maxH / o.lineH], size:maxH / o.lineH };
+}
+// force-justified: every line runs the full measure, sizes differ per line
+function fitJustified(text, font, maxW, maxH, o){
+  const words = wordsOf(text), cache = {};
+  function u(s){ if(cache[s] === undefined) cache[s] = unitsOf(s, font, o.track); return cache[s]; }
+  let best = null;
+  const maxL = Math.max(1, Math.min(o.maxLines || 5, words.length));
+  for(let k=1;k<=maxL;k++){
+    splitsInto(words, k).forEach(function(lines){
+      const sizes = lines.map(function(l){ return maxW / Math.max(0.01, u(l)); });
+      const h = sizes.reduce(function(a,s){ return a + s * o.lineH; }, 0);
+      const f = Math.min(1, maxH / h);
+      const mn = Math.min.apply(null, sizes), mx = Math.max.apply(null, sizes);
+      const score = f * Math.sqrt(mn / mx) * Math.min(1, (h * f) / maxH + 0.15);
+      if(!best || score > best.score) best = { score:score, lines:lines, sizes:sizes.map(function(s){ return s * f; }), size:mx * f };
+    });
+  }
+  return best || { lines:[String(text)], sizes:[maxH / o.lineH], size:maxH / o.lineH };
+}
+// museum-label text: as big as the room allows, never under MIN_TYPE; wraps instead of shrinking
+function labelRows(text, font, ideal, maxW, track){
+  text = String(text || "").trim();
+  if(!text) return [];
+  const size = Math.max(MIN_TYPE, Math.min(ideal, maxW / Math.max(0.01, unitsOf(text, font, track))));
+  const one = makeRow(text, font, size, track);
+  if(one.total <= maxW + 0.5) return [one];
+  const tight = makeRow(text, font, MIN_TYPE, 0);
+  if(tight.total <= maxW + 0.5) return [tight];
+  const rows = []; let line = "";
+  wordsOf(text).forEach(function(w){
+    const test = line ? line + " " + w : w;
+    if(line && makeRow(test, font, MIN_TYPE, 0).total > maxW){ rows.push(makeRow(line, font, MIN_TYPE, 0)); line = w; }
+    else line = test;
+  });
+  if(line) rows.push(makeRow(line, font, MIN_TYPE, 0));
+  return rows;
+}
+// stack groups of label rows; returns items with left x and centre y
+function stackItems(groups, align, x0, x1, yTop){
+  const items = []; let y = yTop;
+  groups.forEach(function(g, gi){
+    if(!g.rows.length) return;
+    g.rows.forEach(function(r){
+      const h = r.size * (g.lead || 1.3);
+      const x = align === "left" ? x0 : (align === "right" ? x1 - r.total : (x0 + x1) / 2 - r.total / 2);
+      items.push({ row:r, x:x, y:y + h / 2, tone:g.tone || "main" });
+      y += h;
+    });
+    if(gi < groups.length - 1) y += g.gap || 0;
+  });
+  return { items:items, h:y - yTop, w:items.reduce(function(a,it){ return Math.max(a, it.row.total); }, 0) };
+}
+function shift(list, dy){ list.forEach(function(it){ it.y += dy; }); return list; }
+function titleRows(fit, font, track, align, x0, x1, yTop, lineH){
+  const rows = []; let y = yTop;
+  fit.lines.forEach(function(line, i){
+    const r = makeRow(line, font, fit.sizes[i], track);
+    const h = r.size * lineH;
+    const x = align === "left" ? x0 : (align === "right" ? x1 - r.total : (x0 + x1) / 2 - r.total / 2);
+    rows.push({ row:r, x:x, y:y + h / 2 });
+    y += h;
+  });
+  return { rows:rows, h:y - yTop, w:rows.reduce(function(a,o){ return Math.max(a, o.row.total); }, 0) };
+}
+function creditBits(){
+  const artist = String(WORK.credit2 || "").replace(/^\s*(by|art by|created by)\s+/i, "").trim();
+  return {
+    medium: WORK.credit1 || "",
+    byline: WORK.credit2 || "",
+    artist: artist,
+    numeral: WORK.numeral || "",
+    series: "ABSTRACTIA" + (WORK.numeral ? " " + WORK.numeral : "")
+  };
+}
+function frameRect(){
+  const f = WORK.frame || {};
+  const top = Math.round(H * clamp(+f.top || 0, 0, 0.3));
+  const bottom = Math.round(H * clamp(+f.bottom || 0, 0, 0.3));
+  const side = Math.round(W * clamp(+f.sides || 0, 0, 0.25));
+  return { x:side, y:top, w:W - 2 * side, h:H - top - bottom, top:top, bottom:bottom };
+}
+
+/* ---------- THE PRESETS — masthead + museum label ----------
+   Each one lays the title, the label and the doorway inside the frame. */
+const PRESETS = {
+  // Center Stage: the title holds the middle, credits stack beneath
+  classic: function(L){
+    const S = L.S, B = creditBits(), F = WORK.titleFont, G = WORK.h2Font;
+    const areaH = S.h - L.ctaH * 1.3;
+    const fit = fitStack(WORK.title, F, S.w, areaH * 0.62, { track:0.05, lineH:1.1, rhythm:true });
+    const t = titleRows(fit, F, 0.05, "center", S.x, S.x + S.w, 0, 1.1);
+    const cs = Math.max(MIN_TYPE, Math.min(L.lab * 1.4, fit.size * 0.22));
+    const lb = stackItems([
+      { rows:labelRows(B.medium, G, cs, S.w, 0.3), tone:"main", lead:1.5 },
+      { rows:labelRows(B.byline, G, cs, S.w, 0.14), tone:"accent", lead:1.5, gap:cs * 0.15 },
+      { rows:labelRows(B.numeral, UI_FONT, cs * 1.1, S.w, 0.3), tone:"dim", lead:1.4 }
+    ], "center", S.x, S.x + S.w, 0);
+    const gap = fit.size * 0.28, total = t.h + gap + lb.h;
+    const y0 = S.y + Math.max(0, (areaH - total) / 2);
+    shift(t.rows, y0); shift(lb.items, y0 + t.h + gap);
+    return { title:{ rows:t.rows, tf:{ x:0, y:0, rot:0 } }, items:lb.items, rules:[],
+             cta:{ x:S.x + S.w / 2, y:S.y + S.h - L.ctaH / 2, align:"center" } };
+  },
+
+  // Wall Label: the title owns the wall, the label sits low-left like a gallery card
+  wall: function(L){
+    const S = L.S, B = creditBits(), F = WORK.titleFont, G = WORK.h2Font;
+    const narrow = S.w < 640;
+    const labW = narrow ? S.w : Math.min(S.w * 0.55, Math.max(S.w * 0.38, 460));
+    const lb = stackItems([
+      { rows:labelRows(B.artist || B.byline, G, L.lab * 1.35, labW, 0.03), tone:"main", lead:1.3 },
+      { rows:labelRows(B.series, UI_FONT, L.lab, labW, 0.14), tone:"accent", lead:1.4 },
+      { rows:labelRows(B.medium, G, L.lab, labW, 0.06), tone:"dim", lead:1.4 }
+    ], "left", S.x, S.x + labW, 0);
+    const labTop = S.y + S.h - lb.h;
+    shift(lb.items, labTop);
+    const ruleH = Math.max(2, L.lab * 0.08), ruleY = labTop - L.lab * 0.55;
+    const rules = [{ x:S.x, y:ruleY, w:Math.max(lb.w, S.w * 0.22), h:ruleH }];
+    const cta = narrow ? { x:S.x, y:ruleY - L.lab * 0.6 - L.ctaH / 2, align:"left" }
+                       : { x:S.x + S.w, y:S.y + S.h - L.ctaH / 2, align:"right" };
+    const areaBot = (narrow ? cta.y - L.ctaH / 2 : ruleY) - L.lab;
+    const areaH = Math.max(L.lab * 3, areaBot - S.y);
+    const fit = fitStack(WORK.title, F, S.w, areaH, { track:0.03, lineH:1.04 });
+    const t = titleRows(fit, F, 0.03, "center", S.x, S.x + S.w, 0, 1.04);
+    shift(t.rows, S.y + Math.max(0, (areaH - t.h) / 2));
+    return { title:{ rows:t.rows, tf:{ x:0, y:0, rot:0 } }, items:lb.items, rules:rules, cta:cta };
+  },
+
+  // Swiss Grid: flush-left, tight leading, a hard rule and a label column
+  swiss: function(L){
+    const S = L.S, B = creditBits(), F = WORK.titleFont, G = WORK.h2Font;
+    const lb = stackItems([
+      { rows:labelRows(B.series, UI_FONT, L.lab * 1.15, S.w, 0.06), tone:"main", lead:1.3 },
+      { rows:labelRows(B.medium, G, L.lab, S.w, 0.04), tone:"dim", lead:1.35 },
+      { rows:labelRows(B.byline, G, L.lab, S.w, 0.02), tone:"accent", lead:1.35 }
+    ], "left", S.x, S.x + S.w, 0);
+    const labTop = S.y + S.h - lb.h;
+    shift(lb.items, labTop);
+    const ruleH = Math.max(3, L.lab * 0.12), ruleY = labTop - L.lab * 0.7;
+    const sideBySide = lb.w + L.ctaW + L.lab * 2 <= S.w;
+    const cta = sideBySide ? { x:S.x + S.w, y:S.y + S.h - L.ctaH / 2, align:"right" }
+                           : { x:S.x + S.w, y:ruleY - L.lab * 0.5 - L.ctaH / 2, align:"right" };
+    const areaBot = (sideBySide ? ruleY : cta.y - L.ctaH / 2) - L.lab * 0.8;
+    const areaH = Math.max(L.lab * 3, areaBot - S.y);
+    const fit = fitStack(WORK.title, F, S.w, areaH, { track:0, lineH:0.92, minLines:2, maxLines:5 });
+    const t = titleRows(fit, F, 0, "left", S.x, S.x + S.w, S.y, 0.92);
+    return { title:{ rows:t.rows, tf:{ x:0, y:0, rot:0 } }, items:lb.items,
+             rules:[{ x:S.x, y:ruleY, w:S.w, h:ruleH }], cta:cta };
+  },
+
+  // Poster Stack: force-justified, every line the full measure
+  poster: function(L){
+    const S = L.S, B = creditBits(), F = WORK.titleFont, G = WORK.h2Font;
+    const line = [B.medium, B.byline, B.numeral].filter(Boolean).join("  ·  ");
+    const lb = stackItems([{ rows:labelRows(line, G, L.lab * 1.1, S.w, 0.16), tone:"main", lead:1.4 }], "center", S.x, S.x + S.w, 0);
+    const gap = L.lab * 0.8;
+    const areaH = S.h - L.ctaH * 1.25;
+    const fit = fitJustified(WORK.title, F, S.w, areaH - lb.h - gap, { track:0.02, lineH:0.98 });
+    const t = titleRows(fit, F, 0.02, "center", S.x, S.x + S.w, 0, 0.98);
+    const y0 = S.y + Math.max(0, (areaH - t.h - gap - lb.h) / 2);
+    shift(t.rows, y0); shift(lb.items, y0 + t.h + gap);
+    return { title:{ rows:t.rows, tf:{ x:0, y:0, rot:0 } }, items:lb.items, rules:[],
+             cta:{ x:S.x + S.w / 2, y:S.y + S.h - L.ctaH / 2, align:"center" } };
+  },
+
+  // Title Card: an opening credit — wide tracking, a line above, a line below
+  film: function(L){
+    const S = L.S, B = creditBits(), F = WORK.titleFont, G = WORK.h2Font;
+    const top = stackItems([{ rows:labelRows(B.medium, UI_FONT, L.lab, S.w, 0.45), tone:"dim", lead:1.4 }], "center", S.x, S.x + S.w, 0);
+    const bottom = stackItems([{ rows:labelRows([B.byline, B.numeral].filter(Boolean).join("  ·  "), G, L.lab * 1.15, S.w, 0.22), tone:"accent", lead:1.4 }], "center", S.x, S.x + S.w, 0);
+    const areaH = S.h - L.ctaH * 1.3;
+    const gap = L.lab * 0.9;
+    const room = areaH - top.h - bottom.h - gap * 2;
+    const fit = fitStack(WORK.title, F, S.w * 0.94, room * 0.85, { track:0.16, lineH:1.12 });
+    const t = titleRows(fit, F, 0.16, "center", S.x, S.x + S.w, 0, 1.12);
+    const total = top.h + gap + t.h + gap + bottom.h;
+    const y0 = S.y + Math.max(0, (areaH - total) / 2);
+    shift(top.items, y0); shift(t.rows, y0 + top.h + gap); shift(bottom.items, y0 + top.h + gap + t.h + gap);
+    return { title:{ rows:t.rows, tf:{ x:0, y:0, rot:0 } }, items:top.items.concat(bottom.items), rules:[],
+             cta:{ x:S.x + S.w / 2, y:S.y + S.h - L.ctaH / 2, align:"center" } };
+  },
+
+  // Masthead: a nameplate across the top, double rule, a dateline
+  masthead: function(L){
+    const S = L.S, B = creditBits(), F = WORK.titleFont, G = WORK.h2Font;
+    const fit = fitJustified(WORK.title, F, S.w, S.h * 0.42, { track:0, lineH:0.95, maxLines:wordsOf(WORK.title).length > 3 ? 2 : 1 });
+    const t = titleRows(fit, F, 0, "center", S.x, S.x + S.w, S.y, 0.95);
+    const thick = Math.max(4, fit.size * 0.05), thin = Math.max(2, thick * 0.35);
+    let y = S.y + t.h + L.lab * 0.35;
+    const rules = [{ x:S.x, y:y, w:S.w, h:thick }, { x:S.x, y:y + thick + thin * 1.6, w:S.w, h:thin }];
+    y += thick + thin * 2.6 + L.lab * 0.4;
+    const pieces = [WORK.numeral ? "No. " + WORK.numeral : "ABSTRACTIA", B.medium, B.byline].filter(Boolean);
+    const rows = pieces.map(function(p){ return makeRow(p, G, L.lab, 0.1); });
+    const sum = rows.reduce(function(a,r){ return a + r.total; }, 0);
+    let items = [];
+    if(sum + L.lab * 2 * (rows.length - 1) <= S.w){
+      rows.forEach(function(r, i){
+        const x = rows.length === 1 ? S.x + S.w / 2 - r.total / 2
+          : (i === 0 ? S.x : (i === rows.length - 1 ? S.x + S.w - r.total : S.x + S.w / 2 - r.total / 2));
+        items.push({ row:r, x:x, y:y + r.size * 0.7, tone:i === 2 ? "accent" : "main" });
+      });
+    } else {
+      items = stackItems(pieces.map(function(p, i){ return { rows:labelRows(p, G, L.lab, S.w, 0.06), tone:i === 2 ? "accent" : "main", lead:1.35 }; }),
+                         "left", S.x, S.x + S.w, y).items;
+    }
+    return { title:{ rows:t.rows, tf:{ x:0, y:0, rot:0 } }, items:items, rules:rules,
+             cta:{ x:S.x + S.w / 2, y:S.y + S.h - L.ctaH / 2, align:"center" } };
+  },
+
+  // Spine: the title climbs the left edge like a book spine
+  spine: function(L){
+    const S = L.S, B = creditBits(), F = WORK.titleFont, G = WORK.h2Font;
+    const across = S.w * (S.w < 640 ? 0.48 : 0.42);
+    const fit = fitStack(WORK.title, F, S.h, across, { track:0.04, lineH:0.95, maxLines:3 });
+    const t = titleRows(fit, F, 0.04, "center", 0, S.h, 0, 0.95);   // local coords: x runs up the spine
+    const labX0 = S.x + t.h + L.lab, labX1 = S.x + S.w;
+    const lb = stackItems([
+      { rows:labelRows(B.series, UI_FONT, L.lab * 1.1, labX1 - labX0, 0.1), tone:"accent", lead:1.35 },
+      { rows:labelRows(B.byline, G, L.lab, labX1 - labX0, 0.04), tone:"main", lead:1.35 },
+      { rows:labelRows(B.medium, G, L.lab, labX1 - labX0, 0.04), tone:"dim", lead:1.35 }
+    ], "right", labX0, labX1, 0);
+    const labTop = S.y + S.h - lb.h;
+    shift(lb.items, labTop);
+    return { title:{ rows:t.rows, tf:{ x:S.x, y:S.y + S.h, rot:-Math.PI / 2 } }, items:lb.items,
+             rules:[{ x:labX1 - Math.max(lb.w, 120), y:labTop - L.lab * 0.5, w:Math.max(lb.w, 120), h:Math.max(2, L.lab * 0.08) }],
+             cta:{ x:labX1, y:labTop - L.lab * 1.1 - L.ctaH / 2, align:"right" } };
+  }
+};
+
+function computeType(){
+  TYPE.dirty = false;
+  TYPE.lag = {};
+  const S = frameRect();
+  TYPE.safe = S;
+  const unit = Math.max(16, Math.min(W, H) * 0.032);
+  TYPE.unit = unit;
+  const lab = Math.max(MIN_TYPE, unit * 1.05);
+
+  // the doorway first: every layout leaves it room
+  const ctaS = Math.max(MIN_TYPE, fitLine("Get Abstract", CTA_FONT, Math.min(46, Math.max(MIN_TYPE, unit * 1.5)), S.w * 0.8, 0.1));
+  beginBtn.style.fontSize = ctaS.toFixed(1) + "px";
+  beginBtn.style.letterSpacing = (ctaS * 0.1).toFixed(1) + "px";
+  const ctaW = makeRow("Get Abstract", CTA_FONT, ctaS, 0.1).total + ctaS * 1.9;
+  const ctaH = ctaS * 1.9;
+
+  const T = WORK.typography || {};
+  const lay = (PRESETS[T.preset] || PRESETS.classic)({ S:S, unit:unit, lab:lab, ctaS:ctaS, ctaW:ctaW, ctaH:ctaH });
+  TYPE.title = lay.title;
+  TYPE.items = lay.items;
+  TYPE.rules = lay.rules || [];
+  const c = lay.cta;
+  beginBtn.style.left = c.x.toFixed(1) + "px";
+  beginBtn.style.top = c.y.toFixed(1) + "px";
+  TYPE.ctaTf = "translate(" + (c.align === "left" ? "0" : (c.align === "right" ? "-100%" : "-50%")) + ",-50%)";
+  beginBtn.style.transformOrigin = c.align === "left" ? "left center" : (c.align === "right" ? "right center" : "center");
+
+  // the hint rides inside the frame
+  hintEl.style.fontSize = Math.max(MIN_TYPE, unit * 0.85).toFixed(1) + "px";
+  hintEl.style.letterSpacing = Math.max(1, unit * 0.1).toFixed(1) + "px";
+  hintEl.style.bottom = (S.bottom + H * 0.03).toFixed(0) + "px";
+  hintEl.style.width = S.w + "px";
+
+  // menu — never under MIN_TYPE
+  const rowsN = MENU_ROWS.length + 1;
+  const rowH = Math.min(Math.max(MIN_TYPE * 2.2, unit * 2.6), S.h / rowsN);
+  const fs = Math.max(MIN_TYPE, Math.min(unit * 1.25, rowH / 2.1));
+  TYPE.menu = { fs:fs, rowH:Math.max(rowH, fs * 1.9), rowW:Math.min(S.w, 640), tag:Math.max(MIN_TYPE, fs * 0.8) };
+
+  // community card
+  const big = Math.max(MIN_TYPE, fitLine("ABSTRACTIANS", WORK.titleFont, Math.min(S.w * 0.12, S.h * 0.13, 130), S.w, 0));
+  const subRows = labelRows("THE DAILY RITUAL, DELIVERED", UI_FONT, Math.max(MIN_TYPE, big * 0.3), S.w, 0.25);
+  const linkS = Math.max(MIN_TYPE, fitLine(WORK.telegram, UI_FONT, Math.min(unit * 1.9, 48), S.w * 0.7, 0));
+  ctx.font = linkS + "px " + fontStack(UI_FONT);
+  const linkW = ctx.measureText(WORK.telegram).width;
+  TYPE.card = { big:big, sub:subRows, linkS:linkS, linkW:linkW,
+                foot:labelRows("tap to join", UI_FONT, MIN_TYPE, S.w, 0).concat(labelRows("tap anywhere else to return", UI_FONT, MIN_TYPE, S.w, 0)) };
+
+  TYPE.titleTrue = fontIsReal(WORK.titleFont);
+}
+function lagSize(linesArr){
+  if(TYPE.lag[activeLagniappe]) return TYPE.lag[activeLagniappe];
+  const S = TYPE.safe;
+  let s = Math.min(S.h * 0.8 / (linesArr.length * 1.3), S.w * 0.14);
+  linesArr.forEach(function(l){ s = fitLine(l, WORK.titleFont, s, S.w, 0); });
+  s = Math.max(MIN_TYPE, s);
+  TYPE.lag[activeLagniappe] = s;
+  return s;
+}
+function markType(){ TYPE.dirty = true; }
+
+/* ---------- THE OMBRE — smooth mode, the serene default ------ */
+const strip = document.createElement("canvas");
+const stripCtx = strip.getContext("2d");
+function drawOmbre(targetCtx, w, h){
+  strip.width = 1;
+  strip.height = h;
+  const id = stripCtx.createImageData(1, h);
+  const d = id.data;
+  const n = 8;
+  const dNow = new Date();
+  const timeFactor = (dNow.getHours() + dNow.getMinutes()/60) * 0.1;
+  for(let y=0; y<h; y++){
+    let pos = (y/h) * (n - 1.001) + ombreScroll + timeFactor * 0.5;
+    pos = pos % n; if(pos < 0) pos += n; if(pos >= n) pos = 0;
+    const i1 = Math.floor(pos), i2 = (i1+1) % n, t = pos % 1;
+    const c = lerpRgb(currentPalette[i1], currentPalette[i2], t);
+    const k = y*4;
+    d[k]=c[0]; d[k+1]=c[1]; d[k+2]=c[2]; d[k+3]=255;
+  }
+  stripCtx.putImageData(id, 0, 0);
+  targetCtx.imageSmoothingEnabled = false;
+  targetCtx.drawImage(strip, 0, 0, w, h);
+  targetCtx.imageSmoothingEnabled = true;
+}
+
+/* ---------- WAVES — the original motion, tunable and breathing ---------- */
+function drawWaves(){
+  ctx.save();
+  ctx.globalCompositeOperation = "lighter";
+  ctx.lineWidth = 2;
+  const numLines = LAYER_N.waves, m = mo("waves"), sw = swell("waves"), irr = 1 - m.regularity;
+  const amp = breathAmp(0.5, 2) * m.variation * sw.amp, ph = breathPhase(2);
+  const a = (0.7 * breathAlpha(0.4, 2) * sw.alpha).toFixed(3);
+  for(let i=0; i<numLines; i++){
+    const s = SEED.waves[i], t = LCLOCK.waves[i];
+    const y = (i/numLines) * H + s[0] * irr * (H/numLines) * 0.8;
+    const lp = ph + s[1] * irr * Math.PI;
+    const ci = Math.floor((i/numLines)*8) % 8;
+    const c1 = currentPalette[ci], c2 = currentPalette[(ci+2)%8];
+    const rise = Math.sin(t*0.025 + y*0.01 + lp)*50;
+    for(let x=0; x<W; x+=10){
+      const c = lerpRgb(c1, c2, x / W);
+      const y1 = y + (rise + Math.sin(t*0.015 + x*0.02 + lp)*20) * amp;
+      const y2 = y + (rise + Math.sin(t*0.015 + (x+10)*0.02 + lp)*20) * amp;
+      ctx.strokeStyle = rgba(c, a);
+      ctx.beginPath(); ctx.moveTo(x, y1); ctx.lineTo(x+10, y2); ctx.stroke();
+    }
+  }
+  ctx.restore();
+}
+
+/* ---------- LINES — the original shimmer, tunable and breathing ---------- */
+function drawLines(){
+  ctx.save();
+  ctx.globalCompositeOperation = "lighter";
+  ctx.lineWidth = 1.5;
+  const numLines = LAYER_N.lines, m = mo("lines"), sw = swell("lines"), irr = 1 - m.regularity;
+  const amp = breathAmp(0.6, 1) * m.variation * sw.amp, ph = breathPhase(1);
+  const a = (0.7 * breathAlpha(0.4, 1) * sw.alpha).toFixed(3);
+  for(let i=0; i<numLines; i++){
+    const s = SEED.lines[i], t = LCLOCK.lines[i];
+    const y = i * (H/numLines) + s[0] * irr * (H/numLines) * 0.8;
+    const lp = ph + s[1] * irr * Math.PI;
+    const ci = Math.floor((i/numLines)*8) % 8;
+    const c1 = currentPalette[ci], c2 = currentPalette[(ci+2)%8];
+    const rise = Math.sin(t*0.03 + y*0.01 + lp)*10;
+    for(let x=0; x<W; x+=20){
+      const c = lerpRgb(c1, c2, x / W);
+      const y1 = y + (rise + Math.sin(t*0.01 + x*0.02 + lp)*5) * amp;
+      const y2 = y + (rise + Math.sin(t*0.01 + (x+20)*0.02 + lp)*5) * amp;
+      ctx.strokeStyle = rgba(c, a);
+      ctx.beginPath(); ctx.moveTo(x, y1); ctx.lineTo(x+20, y2); ctx.stroke();
+    }
+  }
+  ctx.restore();
+}
+
+/* ---------- FINISHES — solid, iridescent, metallic, see-through ---------- */
+function paletteTone(){
+  let r = 0, g = 0, b = 0;
+  currentPalette.forEach(function(c){ r += c[0]; g += c[1]; b += c[2]; });
+  return rgbToHsl([r/8, g/8, b/8]);
+}
+function titlePaint(r, x, y, ri){
+  const fin = (WORK.typography || {}).finish || "solid", s = r.size;
+  if(fin === "iridescent"){
+    const ph = frame * 0.006 + ri * 0.7;
+    const g = ctx.createLinearGradient(x - Math.cos(ph) * s, y - s * 0.6, x + r.total + Math.cos(ph) * s, y + s * 0.6);
+    for(let k=0;k<=8;k++){
+      const hsl = rgbToHsl(currentPalette[(k + ri) % 8]);
+      g.addColorStop(k / 8, rgba(hslToRgb(hsl[0] + Math.sin(ph * 2 + k * 0.9) * 55, Math.min(1, hsl[1] * 0.7 + 0.35), clamp(hsl[2] * 0.4 + 0.52, 0, 0.9)), 1));
+    }
+    return { fill:g, glint:null, glow:true };
+  }
+  if(fin === "metallic"){
+    const tone = paletteTone();
+    function t(l){ return rgba(hslToRgb(tone[0], 0.22, l), 1); }
+    const g = ctx.createLinearGradient(0, y - s * 0.55, 0, y + s * 0.55);
+    g.addColorStop(0, t(0.96)); g.addColorStop(0.3, t(0.8)); g.addColorStop(0.47, t(0.42));
+    g.addColorStop(0.5, t(0.24)); g.addColorStop(0.57, t(0.55)); g.addColorStop(0.82, t(0.88)); g.addColorStop(1, t(0.97));
+    const p = ((frame * 0.004 + ri * 0.21) % 1.6) - 0.3;
+    let glint = null;
+    if(p > 0.02 && p < 0.98){
+      glint = ctx.createLinearGradient(x, 0, x + r.total, 0);
+      glint.addColorStop(Math.max(0, p - 0.1), "rgba(255,255,255,0)");
+      glint.addColorStop(p, "rgba(255,255,255,0.9)");
+      glint.addColorStop(Math.min(1, p + 0.1), "rgba(255,255,255,0)");
+    }
+    return { fill:g, glint:glint, glow:false };
+  }
+  return { fill:"rgba(255,255,255,0.96)", glint:null, glow:true };
+}
+function drawTitle(){
+  const T = TYPE.title;
+  if(!T) return;
+  const tr = clamp(+(WORK.typography || {}).transparency || 0, 0, 0.9);
+  const alpha = 1 - tr;
+  ctx.save();
+  ctx.translate(T.tf.x, T.tf.y);
+  ctx.rotate(T.tf.rot);
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  let li = 0;
+  T.rows.forEach(function(o, ri){
+    const r = o.row, paint = titlePaint(r, o.x, o.y, ri);
+    ctx.font = r.font;
+    let x = o.x;
+    for(let i=0;i<r.chars.length;i++){
+      const cx = x + r.widths[i] / 2;
+      const cy = o.y + Math.sin(frame * 0.03 + li * 0.7 + ri * 0.9) * r.size * 0.05;
+      if(paint.glow){
+        ctx.shadowColor = rgba(currentPalette[(li + Math.floor(frame * 0.02)) % 8], 0.9 * alpha);
+        ctx.shadowBlur = 28 + Math.sin(frame * 0.05 + li) * 10;
+        ctx.shadowOffsetY = 0;
+      } else {
+        ctx.shadowColor = "rgba(0,0,0," + (0.5 * alpha) + ")";
+        ctx.shadowBlur = r.size * 0.06;
+        ctx.shadowOffsetY = r.size * 0.035;
+      }
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = paint.fill;
+      ctx.fillText(r.chars[i], cx, cy);
+      ctx.shadowBlur = 0; ctx.shadowOffsetY = 0;
+      if(paint.glint){ ctx.fillStyle = paint.glint; ctx.fillText(r.chars[i], cx, cy); }
+      if(tr > 0.3){
+        ctx.globalAlpha = 1;
+        ctx.strokeStyle = "rgba(255,255,255," + (0.35 + tr * 0.55).toFixed(3) + ")";
+        ctx.lineWidth = Math.max(1, r.size * 0.014);
+        ctx.strokeText(r.chars[i], cx, cy);
+      }
+      x += r.widths[i] + r.track;
+      li++;
+    }
+  });
+  ctx.restore();
+}
+/* ---------- INK — label text reads the gradient behind it ----------
+   The ombre never stops moving, so every label checks what it sits on
+   each frame and eases between light ink and dark ink. */
+function bgAt(y){
+  const n = 8, d = new Date();
+  let pos = (y / H) * (n - 1.001) + ombreScroll + (d.getHours() + d.getMinutes() / 60) * 0.05;
+  pos = pos % n; if(pos < 0) pos += n; if(pos >= n) pos = 0;
+  const i1 = Math.floor(pos);
+  return lerpRgb(currentPalette[i1], currentPalette[(i1 + 1) % n], pos % 1);
+}
+function lum(c){ return (0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]) / 255; }
+// 0 = light ink, 1 = dark ink. Picks a side outright (grey reads on nothing),
+// then eases over a few frames so a crossing never flickers.
+function inkTarget(y){ return lum(bgAt(y)) > 0.58 ? 1 : 0; }
+function eased(obj, y){
+  const t = inkTarget(y);
+  obj._k = obj._k === undefined ? t : obj._k + (t - obj._k) * 0.12;
+  return obj._k;
+}
+function paletteEnds(){
+  let lo = currentPalette[0], hi = currentPalette[0];
+  currentPalette.forEach(function(c){ if(lum(c) < lum(lo)) lo = c; if(lum(c) > lum(hi)) hi = c; });
+  return { lo:lo, hi:hi };
+}
+function inkFor(tone, k, ends){
+  const light = tone === "accent" ? lerpRgb(ends.hi, [255,255,255], 0.45) : [255,255,255];
+  const dark = tone === "accent" ? lerpRgb(ends.lo, [0,0,0], 0.35) : [14,10,24];
+  const a = tone === "dim" ? 0.74 : 0.95;
+  return rgba(lerpRgb(light, dark, k), a);
+}
+function drawLabels(){
+  const ends = paletteEnds();
+  ctx.save();
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.shadowBlur = 12;
+  TYPE.items.forEach(function(it){
+    const k = eased(it, it.y);
+    ctx.shadowColor = k > 0.5 ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.45)";
+    ctx.fillStyle = inkFor(it.tone, k, ends);
+    drawRow(it.row, it.x, it.y);
+  });
+  ctx.shadowBlur = 0;
+  TYPE.rules.forEach(function(r){ ctx.fillStyle = inkFor("main", eased(r, r.y), ends); ctx.fillRect(r.x, r.y, r.w, r.h); });
+  ctx.restore();
+}
+/* the DOM type (doorway, hint) follows the same rule, a few times a second */
+function inkDom(el, y){
+  const k = eased(el, y);
+  const c = lerpRgb([255,255,255], [14,10,24], k);
+  el.style.color = rgba(c, 1);
+  el.style.textShadow = k > 0.5 ? "0 0 22px rgba(255,255,255,0.7)" : "0 0 24px rgba(0,0,0,0.5), 0 0 30px rgba(255,255,255,0.35)";
+}
+function drawLetterbox(){
+  if(!(WORK.frame && WORK.frame.letterbox)) return;
+  const S = TYPE.safe;
+  ctx.save();
+  ctx.fillStyle = "rgba(0,0,0,0.94)";
+  if(S.top) ctx.fillRect(0, 0, W, S.top);
+  if(S.bottom) ctx.fillRect(0, H - S.bottom, W, S.bottom);
+  ctx.restore();
+}
+
+/* ---------- OPENING — the title IS the opening movie --------- */
+function drawOpening(){
+  drawOmbre(ctx, W, H);
+  drawTitle();
+  drawLabels();
+  drawLetterbox();
+  const s = 1 + Math.sin(frame*0.05)*0.025;
+  beginBtn.style.transform = TYPE.ctaTf + " scale(" + s + ")";
+  inkDom(beginBtn, parseFloat(beginBtn.style.top) || H * 0.8);
+}
+
+/* ---------- COMMUNITY CARD (D) — typography only ---------- */
+function drawCommunityCard(){
+  devHits = [];
+  const K = TYPE.card, S = TYPE.safe;
+  const cx = S.x + S.w / 2;
+  ctx.save();
+  ctx.fillStyle = "rgba(0,0,0,0.68)";
+  ctx.fillRect(0,0,W,H);
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+
+  const topY = S.y + S.h * 0.3;
+  ctx.font = K.big + "px " + fontStack(WORK.titleFont);
+  const c = currentPalette[5];
+  ctx.shadowColor = rgba(c, 0.9);
+  ctx.shadowBlur = 30;
+  ctx.fillStyle = "rgba(255,255,255,0.96)";
+  ctx.fillText("ABSTRACTIANS", cx, topY);
+
+  ctx.shadowBlur = 0;
+  ctx.fillStyle = "rgba(255,255,255,0.88)";
+  let y = topY + K.big * 0.75;
+  K.sub.forEach(function(r){ y += r.size * 0.75; drawRow(r, cx - r.total / 2, y); y += r.size * 0.55; });
+
+  ctx.font = K.linkS + "px " + fontStack(UI_FONT);
+  const boxW = K.linkW + K.linkS*2.2, boxH = K.linkS*2.4;
+  const boxY = Math.max(y + K.linkS * 0.8, S.y + S.h * 0.58 - boxH / 2), boxX = cx - boxW/2;
+  ctx.fillStyle = rgba(c, 0.18);
+  ctx.fillRect(boxX, boxY, boxW, boxH);
+  ctx.strokeStyle = rgba(c, 0.95);
+  ctx.lineWidth = 2;
+  ctx.strokeRect(boxX, boxY, boxW, boxH);
+  ctx.fillStyle = "rgba(255,255,255,0.98)";
+  ctx.fillText(WORK.telegram, cx, boxY + boxH / 2);
+  devHits.push({ x:boxX, y:boxY, w:boxW, h:boxH, act:"link" });
+
+  ctx.fillStyle = "rgba(255,255,255,0.65)";
+  y = boxY + boxH + MIN_TYPE * 0.6;
+  K.foot.forEach(function(r){ y += r.size * 0.7; drawRow(r, cx - r.total / 2, y); y += r.size * 0.6; });
+  ctx.restore();
+}
+
+/* ---------- LAGNIAPPE — typographic, from the config ---------- */
+function drawLagniappe(){
+  const linesArr = WORK.lagniappe[activeLagniappe];
+  if(!linesArr) return;
+  const size = lagSize(linesArr), S = TYPE.safe;
+  ctx.save();
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.font = size + "px " + fontStack(WORK.titleFont);
+  const startY = S.y + S.h/2 - ((linesArr.length-1)*size*1.3)/2;
+  const a = (0.97 * breathAlpha(0.3, 3)).toFixed(3), blur = 34 * breathAmp(0.6, 3);
+  for(let i=0;i<linesArr.length;i++){
+    const c = currentPalette[(i*2+1) % 8];
+    ctx.shadowColor = rgba(c, 0.95);
+    ctx.shadowBlur = blur;
+    ctx.fillStyle = "rgba(255,255,255," + a + ")";
+    ctx.fillText(linesArr[i], S.x + S.w/2, startY + i*size*1.3);
+  }
+  ctx.restore();
+}
+
+/* ---------- INTERACTIVE MENU ---------- */
+const MENU_ROWS = [
+  { k:"w", label:"Waves" },
+  { k:"l", label:"Lines" },
+  { k:"o", label:"Oneness" }
+].concat(PATTERNS.filter(function(p){ return p.key; }).map(function(p){ return { k:p.key, label:p.name, pattern:p }; }))
+ .concat([
+  { k:"c", label:"Color shift" },
+  { k:"d", label:"Community" },
+  { k:"b", label:"Begin again" },
+  { k:"x", label:"Close menu" }
+]);
+const SHIFT_NAMES = { DAYBREAK:"DAYBREAK", GM:"GM", SUNSET:"SUNSET", GN:"GN", GRASS:"4:20" };
+function stateOf(row){
+  if(row.pattern) return row.pattern.on && !row.pattern.dead;
+  if(row.k==="w") return modeWaves;
+  if(row.k==="l") return modeLines;
+  if(row.k==="o") return modeOneness;
+  if(row.k==="c") return colorShiftIdx >= 0;
+  return null;
+}
+function stateText(row){
+  if(row.k==="c" && !row.pattern) return colorShiftIdx >= 0 ? SHIFT_NAMES[SHIFT_ORDER[colorShiftIdx]] : "LIVE";
+  const s = stateOf(row);
+  return s === null ? "" : (s ? "ON" : "OFF");
+}
+function drawMenu(){
+  menuHits = [];
+  const M = TYPE.menu, S = TYPE.safe;
+  ctx.save();
+  ctx.fillStyle = "rgba(0,0,0,0.62)";
+  ctx.fillRect(0,0,W,H);
+
+  ctx.textBaseline = "middle";
+  const fs = M.fs, rowH = M.rowH, rowW = M.rowW;
+  const startY = S.y + S.h/2 - ((MENU_ROWS.length + 1) * rowH)/2;
+  const rowX = S.x + S.w/2 - rowW/2;
+
+  for(let i=0;i<MENU_ROWS.length;i++){
+    const r = MENU_ROWS[i];
+    const y = startY + i*rowH;
+    const on = !!stateOf(r);
+    const c = currentPalette[i % 8];
+
+    ctx.fillStyle = on ? rgba(c, 0.38) : "rgba(255,255,255,0.07)";
+    ctx.fillRect(rowX, y + rowH*0.08, rowW, rowH*0.84);
+    if(on){
+      ctx.strokeStyle = rgba(c, 0.95);
+      ctx.lineWidth = 2;
+      ctx.strokeRect(rowX, y + rowH*0.08, rowW, rowH*0.84);
+    }
+
+    ctx.font = fs + "px " + fontStack(UI_FONT);
+    ctx.textAlign = "left";
+    ctx.fillStyle = rgba(c, 1);
+    ctx.fillText(r.k === "x" ? "✕" : r.k.toUpperCase(), rowX + rowW*0.05, y + rowH/2);
+
+    ctx.fillStyle = "rgba(255,255,255,0.92)";
+    ctx.fillText(r.label, rowX + rowW*0.15, y + rowH/2);
+
+    const st = stateText(r);
+    if(st){
+      ctx.textAlign = "right";
+      ctx.fillStyle = on ? rgba(c,1) : "rgba(255,255,255,0.35)";
+      ctx.fillText(st, rowX + rowW*0.95, y + rowH/2);
+    }
+    menuHits.push({ x:rowX, y:y, w:rowW, h:rowH, k:r.k });
+  }
+
+  ctx.textAlign = "center";
+  ctx.font = M.tag + "px " + fontStack(UI_FONT);
+  ctx.fillStyle = "rgba(255,255,255,0.55)";
+  ctx.fillText("ABSTRACTIA" + (WORK.numeral ? " " + WORK.numeral : ""), S.x + S.w/2, startY + MENU_ROWS.length*rowH + rowH*0.5);
+  ctx.restore();
+}
+
+/* ---------- LIVE SCENE ---------- */
+function drawLive(){
+  ctx.globalAlpha = breathAlpha(0.22, 0);   // the ombre inhales too — opacity only
+  drawOmbre(ctx, W, H);
+  ctx.globalAlpha = 1;
+  if(modeLines) drawLines();
+  if(modeWaves) drawWaves();
+  PATTERNS.forEach(function(p){
+    if(p.kind === "breath" || !p.on || p.dead) return;
+    p.t += DT * (p.motion.speed || 1);
+    runPattern(p, "draw");
+  });
+  if(activeLagniappe) drawLagniappe();
+  drawLetterbox();
+  if(modeDev) drawCommunityCard();
+  if(modeMenu) drawMenu();
+}
+
+/* ---------- main loop ---------- */
+function loop(now){
+  frame++;
+  now = now || performance.now();
+  DT = lastT ? Math.min(0.1, (now - lastT) / 1000) : 1/60;
+  lastT = now;
+  if(TYPE.dirty) computeType();
+  else if(!TYPE.titleTrue && frame % 30 === 0 && fontIsReal(WORK.titleFont)) markType();
+  updatePalette();
+  updateBreath();
+  tickMotion();
+  ombreScroll -= 0.01 * breathAmp(0.8, 0);
+  ctx.clearRect(0,0,W,H);
+
+  if(scene === 0){
+    drawOpening();
+  } else if(scene === 1){
+    drawOpening();
+    fadeAlpha += FADE_RATE;
+    ctx.fillStyle = "rgba(0,0,0," + Math.min(1, fadeAlpha/255) + ")";
+    ctx.fillRect(0,0,W,H);
+    if(fadeAlpha >= 255){
+      fadeAlpha = 255;
+      scene = 2;
+      beginBtn.style.display = "none";
+      showHint();
+    }
+  } else {
+    drawLive();
+    if(hintEl.classList.contains("on")) inkDom(hintEl, H - (TYPE.safe ? TYPE.safe.bottom : 0) - H * 0.05);
+    if(fadeAlpha > 0){
+      fadeAlpha -= FADE_RATE;
+      ctx.fillStyle = "rgba(0,0,0," + Math.max(0, fadeAlpha/255) + ")";
+      ctx.fillRect(0,0,W,H);
+    }
+  }
+  requestAnimationFrame(loop);
+}
+
+/* ---------- hint: after Begin, gone in eight seconds ---------- */
+let hintTimer = null;
+function showHint(){
+  hintEl.classList.add("on");
+  clearTimeout(hintTimer);
+  hintTimer = setTimeout(function(){ hintEl.classList.remove("on"); }, 8000);
+}
+
+/* ---------- one brain for keyboard AND touch ---------- */
+function resetToOpening(){
+  scene = 0; fadeAlpha = 0;
+  modeLines = modeWaves = modeMenu = modeDev = modeOneness = false;
+  oneAmt = 0;
+  activeLagniappe = null;
+  colorShiftIdx = -1;
+  PATTERNS.forEach(function(p){ p.on = p.kind === "trigger" || p.kind === "breath"; p.t = 0; });
+  beginBtn.style.display = "block";
+  hintEl.classList.remove("on");
+  snapPalette(paletteKeyForNow());
+}
+function toggleMode(k){
+  if(k === "b"){ if(scene > 0) resetToOpening(); return; }
+  if(scene !== 2) return;
+  if(k === "c"){
+    colorShiftIdx++;
+    if(colorShiftIdx >= SHIFT_ORDER.length) colorShiftIdx = -1;
+  }
+  else if(k === "l"){ modeLines = !modeLines; }
+  else if(k === "w"){ modeWaves = !modeWaves; }
+  else if(k === "o"){ modeOneness = !modeOneness; }
+  else if(k === "i"){ modeMenu = !modeMenu; if(modeMenu){ modeDev = false; hintEl.classList.remove("on"); } }
+  else if(k === "d"){ modeDev = !modeDev; if(modeDev) modeMenu = false; }
+  else if(k === "x"){ modeMenu = false; }
+  else {
+    const p = PATTERNS.find(function(q){ return q.key === k; });
+    if(p){ p.on = !p.on; return; }
+    if(WORK.lagniappe[k]) activeLagniappe = (activeLagniappe === k) ? null : k;
+  }
+}
+
+document.addEventListener("keydown", function(e){
+  if(e.metaKey || e.ctrlKey || e.altKey) return;
+  toggleMode(e.key.toLowerCase());
+});
+
+/* ---------- touch + mouse ---------- */
+document.addEventListener("touchstart", function(e){
+  if(scene === 2 && e.touches.length === 2 && !modeMenu && !modeDev){
+    modeMenu = true;
+    hintEl.classList.remove("on");
+  }
+}, {passive:true});
+
+cv.addEventListener("pointerdown", function(e){
+  if(scene !== 2) return;
+  const x = e.clientX, y = e.clientY;
+
+  if(modeMenu){
+    for(const h of menuHits){
+      if(x >= h.x && x <= h.x + h.w && y >= h.y && y <= h.y + h.h){
+        toggleMode(h.k);
+        return;
+      }
+    }
+    modeMenu = false;
+    return;
+  }
+
+  if(modeDev){
+    for(const h of devHits){
+      if(x >= h.x && x <= h.x + h.w && y >= h.y && y <= h.y + h.h && h.act === "link"){
+        window.open("https://" + WORK.telegram, "_blank", "noopener");
+        return;
+      }
+    }
+    modeDev = false;
+    return;
+  }
+
+  PATTERNS.forEach(function(p){ if(p.on && p.fn.tap) runPattern(p, "tap", x, y); });
+});
+
+/* ---------- begin ---------- */
+beginBtn.addEventListener("click", function(){
+  if(scene === 0) scene = 1;
+});
+
+/* ---------- resize: square, portrait, landscape — re-fit live, no reload */
+function fit(){
+  W = window.innerWidth; H = window.innerHeight;
+  cv.width = W; cv.height = H;
+  markType();
+}
+window.addEventListener("resize", fit);
+window.addEventListener("orientationchange", function(){ setTimeout(fit, 80); });
+
+/* ---------- boot ---------- */
+fit();
+snapPalette(paletteKeyForNow());
+if(document.fonts){
+  if(document.fonts.ready) document.fonts.ready.then(markType);
+  if(document.fonts.addEventListener) document.fonts.addEventListener("loadingdone", markType);
+  [WORK.titleFont, WORK.h2Font, UI_FONT, CTA_FONT].forEach(function(f){
+    document.fonts.load("100px '" + f + "'").then(markType, markType);
+  });
+}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
