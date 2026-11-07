@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ABSTRACTIA</title>
+<style>
+  /* FONTS — embedded, slimmed, sovereign. No folder, no network. */
+  @font-face{font-family:'Dune Rise';src:url(data:font/woff2;base64,d09GMgABAAAAAAucAA4AAAAAH+gAAAtHAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAG4ZCHCgGYABQCAQRCAqtWKQYC4E8AAE2AiQDgnQEIAWCMAcgG3sZIwP1cpJqTfbPBNuY2UOhEYrRRmjnNCpMFaq020C78Bk+gy1sCX2EJLM8/Lff7/eZuYgmaKKJxepErWL1JdRDNMk0QoRKaESy1v9LeWP0tOnvSciFEAPq/ObFnTZSeZdQ0SjlC8kcKdEjWjGqQlJ1am6QL0q/m//f3Nt7M4Fz3g20znWBhaHAAvKYpHVJ1/gPQi2wsAOLJBzmvz/A/82VNikBuAoNZPsqXI2Zmb+ZSWZ2FnKcA9wDzHGyhwsFJkeuKrdXAHamRlW42goHw9iFxch5rXSzIYqtI3PhGkFuaSXl8fIHBWgVLh07UzCkGP57FS0y/PHAVeG9diubZAgggcCm7yiGpwvYuIiHtMP8Qk2lUzXOuDtQzZZ3h4m4Csm9Haqsm4px37KGM5VQfRXqNaGYOLeZDjX0h1Na7en6Kv6LKVF+k/oW43hNyDtgT90dYv0Gm8D3irfEmcA4ZyI930Fvg3iYmLD4t8JyMrn/3RNBiCgwKoW3NJkC6PWm0VeBzgYa4R2FSkQoM0oMRgg9BqTPXDItbOYzDbT+u+wGaONNtramxQi1iDuVm8gL+nWNlPz4UuF440DwEkAAnXwEwlYmrMfHMVQwqOqujECMoDL77JkcKXKwWgU9g2D3zJzMOHhBuk1nwD17cPxJCRZIvDLe1g/vt7CRb8FFEJMz+V/PlC0QyVGE+nLAQLbAe6OLC4aO5+X8+VsJWKxwUcwml//BgEjRKsr//38C5aPyIQY0A2jCCEnjAVEgAWqAd3AOjcdAC4BYqabKqtzOmPedsYPk1OAZOJMk1oTPJN+TljE7icFW8QLP63CUIPQQlEq1SvQOVCl0wYHaTr7e3VUqjtIotit4XqEWdDIUrj6wZ++s4jX+vsFDpUodpNXlvNWKYFVXQckrvXlFF5St1QZUB6uyBaVyzdQKr18dzAebVWZQKzHejdNuMsx6AxJh0DkCyecI4YkVtygaD1YpDeWUKYyusyLrO+Ncy+D7ALDSVbZzqGFV6L18tOimIiHKqjq3oXUPODkqQjKcoY0NLHW15JBW3LhKQvQ54Wpr22yr3Wuzpao3N+ecsRi80Hwf5xT6udtOc1vMLUc9IWvwjJ09uj1C91OIqI8eg0EisZw6tEoqZOMxhiLJOL+FX1hy7f4PEcFjSxiMycifuXbeYlAwxr5U72NbZLqk4lQu8AWpgyuzRCdknEJE9ch1uVVY2VEyAQaML4sfpkcOB3y54afSCnJdtT63cplPzvM8APG2cPnz0ZZQbeXboektHD8hJ/dFfB8u6RBOHJdTv0sWRJjyl2LLsBKQR5mtbAWtK63tnIsVkqcqhdraO3L2tInAKrjcAEt9PBCWfCDKWABpB9LXTU4uZwy3uD0Im1XdX5ev60n81dV+sgUOwqjUwrnyTKPrgcuVKRRS6zZQnV31jLV4DIF7YQIPVaT74RjRJYCkuGlqRkeRxM0Rw6BnKre8DP/vlcYp0bgVluOoxbJd9SvfnQY3hKm1UZRo/PgG9J99ey2NleHqnCtPA3OXmhXaZpPp7NL9MEmWatKElZmSipoSXJZZKMZ9DvGiLJLY6CAJg+dUl87h9l2YGFFn0dz67JvzIa5Q5stD0+Ny6iROmA7uYm2lRHvfz2STaHO9pIVbBZssGQmdLgZ3Qkj0OEZ6nz3SVLKv5pI6AOKA15gQ+LtfRSVX/OM0FGUK5VVJBbVA8ndCzjBm3rvPSQQSRkz/rS6QP08+1g1mWkcOVxf9fxynIa7U9+EGVdI8d1El9L8AZv+UuocJqW4i41SI6Yg/SS/HCWjsc9EqHl1QbHPW/RwtFsJTdo9e5xyk59l0Nk7cpGU083Ts3dh7ZxX8txKaIouhn9eIXHH2TAEgexYoUWYqIkxCw2YeNoRIEpVPW9xy05QpR/HFTMupKOqHbM+8srJJZaV5L+negnPmj8su0jhK7aZLlb0yy10uynsNjlbampe5Ou7Pi0qpUuZQXZEGya///B05B1nf/PkLBZVUtuv33xyYc/DR0sF9w7uRcN+I3j+YiIiJDY41Ho+Io6nnrfjWA2kyrH6kfdFXhNQTe/fdhZ4aoikiA3pPjHvtP7IWNycdOPAH5pOY16T88b1jTt4snzv3IpTl8AVQUHKeUPdE5NTnGkvzVnSixlfv2iePcgqp+hpLcu3Ubpw68f1QClD6FBXOaNHnt4qtoUn7Q6qMckQtJZRQOUfMeUVfTdV5OXAegh2PanaxHzbSTvjk0Cx3vnL5K6eIFpUjecuzZSUzZ7lIfK00Ui9XIdle4cpOnVmXTi/CHS/elebuzCv1rsSZ9+nqrZTSjJ259Tg6OfV2M26EJDkj5vVvn2iZprOp7/TYezH3qA15ndrfKM8nt79WQprtTDvfoJ0ppO62GbXNNLxYqTuxnXr+Slibv+hfJsOZrbyl/0M8HqejzFHY0rKNeBbeGDT74VDTaqNx9VGChLfJQR3OaJViRuaQIXXwAzJh6QkjOg0plBfbFiPlR0fo+QZqcLuLQSQVnw5ZCVM4qaWJ2jkYdWDfMYIpcXpWyG2Co0Et69k2/z3eDCIv01TWTdbEFlIPjXOJwYcdTqQHHZZ7RKz5NmE5uiBdQ/AsJzU98KNa6IGTUqRcIVWvl5yvXuWU7u09Qe3GgTQIu/uvz6GvDOkBbuquKpxHW7s1kkYOrqldRfhgPrO2dmVtyNqeflB+E/XxaabQfkq8YgYgFG1R+yjM+Omo05RHEHuENEwDL9PDhrzSDZ8AZmRu2+iWFvPAgaMHTg2kzQSHO22cSGkSHshAWsq02b6Hvr+hc7VThW3KCnYeNE9ITaVsPP7EgvSdyJZu0Y30IEdt4gf5ZEQ4bItH6jREF0YKkdPwV2Lmt7VXic1WE81PUmzWIJOOGqQWEXP5knOcOXkU5Y9Guvq/UBpqLT+4o97i3SA27GhCjmGN80zGVdY6rYKekvmuBV/komfQg5MdduBy5R+w4Hfee6LrE/Kx0rjv7t67RmlBmjqLYlqd5ou1e7xUmf29EnLlfByf1+UXOUxtQynTcEw7u1c1+Y34hiHFp+mQ2rte0Zz1fBwvtmfPHZDe4h3iXXQNpbfo91bo9U3bId3d0NouRR4L664pM0I4r2Obvj/Sv38c31WM0A+IvDTeTddm8vpETc2J+tbn9VP9NTnKAQHtz0kVI67sOL6sf1P/b0xeXMiSxeDEITU1Of074LGCRHSjdZT2DMwPKAgoCSBIVOUH9qQ0ZciPfNfCsOeg8ctKuEwBYx98Gcx1x3kUT3eZunO2Hpa0Bjs5Agv44ELEkUzivJnsRHbtcuVsnslZlkU6xxFI5dGFkxi+O1XL1Kvr5p23E2KLkJkG5jBmGip1+VlsiqExkJlMHx0sRb/dg3Z8pi6whJKdyHYWiSr1MT1fsINUbeSA/G8J4WG+poRAOmsjCEYAq6pYQqxSwpCSLhOZCsMcFirqCyMq4x0w8nVUZQ7I+VXA0gH42be6P6u8veZnhCx6lVMttc1YUObZu2pTJQPoZBL79rha1CEkfGEJB8SYnNfGkjqG5a+I7dKYAOnT/3AJ1CY8YclIopzPguQ+VYmoAmTkdGzC/HtsmNVgSPIzEr6QBp/qassUL4GKGcP81Rh/7AOQ3ZfsDm0bLK1MWpW0UwnSwxYDYVCBhTWpuJoEYrpwQiLMa2LCdal8AOM2DIsZagsXs/xNWcwZInV7Xr7YC6E2FPrxMKNVrKySWaFqzXp+qUpN7mo2MoLkc2EKEpGcS1CwJFpYxyZWlQhSZeMIejO0IUQjzlT0QgJSkMKxHZ+M1J9XqJJVqzoVmrTclE2D8Zr8l1lVaUEQDUkMiP728f5UNRurAvpyeEfKcSl4AwA=) format('woff2')}
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden;background:#000}
+  canvas{display:block;position:fixed;inset:0;touch-action:none}
+
+  /* CTA — Rock3D unless the Forge says otherwise. Place and size come from the sizing brain. */
+  #beginBtn{
+    position:fixed;left:50%;top:80%;transform:translate(-50%,-50%);
+    font-family:'Dune Rise',Georgia,serif;font-size:40px;letter-spacing:4px;
+    padding:0.4em 0.95em;border:none;border-radius:8px;cursor:pointer;
+    color:#fff;background:transparent;white-space:nowrap;z-index:10;
+    text-shadow:0 0 24px rgba(255,255,255,0.55);
+    transition:text-shadow 0.3s;
+  }
+  #beginBtn:hover{text-shadow:0 0 46px rgba(255,255,255,0.95)}
+
+  #hint{
+    position:fixed;left:50%;bottom:10%;transform:translateX(-50%);
+    font-family:'Futura Light',Georgia,serif;font-size:24px;letter-spacing:3px;
+    width:86vw;line-height:1.3;
+    color:rgba(255,255,255,0.9);z-index:10;pointer-events:none;
+    opacity:0;transition:opacity 1.2s ease;text-align:center;
+    text-shadow:0 0 18px rgba(0,0,0,0.6);
+  }
+  #hint.on{opacity:1}
+</style>
+</head>
+<body>
+<canvas id="art"></canvas>
+<button id="beginBtn">Get Abstract</button>
+<div id="hint">PRESS I FOR THE MENU &middot; OR TAP WITH TWO FINGERS</div>
+
+<script>
+"use strict";
+/* ============================================================
+   ABSTRACTIA — LITE TEMPLATE
+   Zero external graphics. Pure code, pure typography, pure
+   gradient. The ultra-lightweight member of the family.
+   ============================================================ */
+
+const WORK = {
+  number: 314,
+  numeral: "CCCXIV",
+  title: "SUDDEN SUNSET",
+  credit1: "INTERACTIVE FINE ART",
+  credit2: "by Maxximillian",
+  telegram: "t.me/abstractians",
+
+  titleFont: "Dune Rise",
+  h2Font: "Futura Light",
+
+  // preset: classic | wall | swiss | poster | film | masthead | spine
+  typography: { preset:"film", finish:"metallic", transparency:0.12 },
+  frame: { top:0.22, bottom:0.25, sides:0.18, letterbox:false },
+
+  palettes: {
+    DAYBREAK: ["aba026","f2eac5","e3ee72","bff41f","75e718","087d1f","e19951","f00000"],
+    GM:       ["2e2e3a","9f3924","eb4617","cc5526","c66c38","d98a4c","cfa27b","fdab08"],
+    SUNSET:   ["e25578","9a1857","e34905","c41717","bd6428","e07a27","d09059","ef8a06"],
+    GN:       ["151321","3b5a08","4c8100","427306","3e700f","41890a","1c3187","4a606d"],
+    GRASS:    ["004b23","006400","007200","008000","38b000","70e000","9ef01a","ccff33"]
+  },
+  schedule: [
+    { palette:"DAYBREAK", at:"sunrise", offset:-30 },
+    { palette:"GM", at:"sunrise", offset:45 },
+    { palette:"SUNSET", at:"sunset", offset:-45 },
+    { palette:"GN", at:"sunset", offset:40 }
+  ],
+  sun: { lat:36.17, lon:-115.14, follow:"viewer" },
+  grassWindow: { from:"16:20", to:"16:43" },
+
+  btc: null,  // neutral / on / off
+
+  // speed 0.1-3 · regularity 0-1 · breath 0-1 · variation 0-2
+  motion: {
+    lines:   { speed:1, regularity:1, breath:0, variation:1 },
+    waves:   { speed:0.5, regularity:0.79, breath:0.24, variation:0.17 },
+    oneness: { speed:1, regularity:1, breath:0.7, variation:0.17 }
+  },
+
+  patterns: [],
+
+  lagniappe: {}
+};
+
+/* ============================================================
+   ENGINE
+   ============================================================ */
+
+const cv = document.getElementById("art");
+const ctx = cv.getContext("2d");
+const beginBtn = document.getElementById("beginBtn");
+const hintEl = document.getElementById("hint");
+
+const UI_FONT = "Futura Light";
+const CTA_FONT = "Dune Rise";
+const MIN_TYPE = 24;          // nothing in a work is ever smaller than this
+
+let W = 0, H = 0, frame = 0;
+let scene = 0;
+let fadeAlpha = 0;
+const FADE_RATE = 6;
+
+let modeLines = false;       // L
+let modeWaves = false;       // W
+let modeMenu = false;        // I
+let modeDev = false;         // D — typographic community card
+let modeOneness = false;     // O — every layer, one breath
+let activeLagniappe = null;
+
+// C — Color shift: the collector holds the remote.
+// -1 = live time. Otherwise locked to a palette of their choosing.
+let colorShiftIdx = -1;
+const SHIFT_ORDER = ["DAYBREAK","GM","SUNSET","GN","GRASS"];
+
+let currentPalette = [];
+let targetKey = "";
+const LERP_RATE = 0.015;
+
+let menuHits = [];
+let devHits = [];
+let ombreScroll = 0;
+let lastT = 0, DT = 1/60;
+
+/* ---------- helpers ---------- */
+function hexToRgb(h){
+  return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)];
+}
+/*@shared:lerp*/function lerp(a, b, t){ return a + (b - a) * t; }/*@end*/
+function clamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
+function rgba(c, a){ return "rgba(" + (c[0]|0) + "," + (c[1]|0) + "," + (c[2]|0) + "," + a + ")"; }
+function lerpRgb(c1, c2, t){
+  return [lerp(c1[0],c2[0],t), lerp(c1[1],c2[1],t), lerp(c1[2],c2[2],t)];
+}
+function fontStack(f){ return "'" + f + "',Georgia,serif"; }
+function rgbToHsl(c){
+  const r = c[0]/255, g = c[1]/255, b = c[2]/255;
+  const mx = Math.max(r,g,b), mn = Math.min(r,g,b), l = (mx+mn)/2;
+  if(mx === mn) return [0, 0, l];
+  const d = mx - mn, s = l > 0.5 ? d/(2-mx-mn) : d/(mx+mn);
+  let h = mx === r ? (g-b)/d + (g < b ? 6 : 0) : (mx === g ? (b-r)/d + 2 : (r-g)/d + 4);
+  return [h*60, s, l];
+}
+function hslToRgb(h, s, l){
+  h = ((h % 360) + 360) % 360 / 360;
+  if(s === 0) return [l*255, l*255, l*255];
+  const q = l < 0.5 ? l*(1+s) : l+s-l*s, p = 2*l-q;
+  function f(t){ t = (t+1)%1; return t < 1/6 ? p+(q-p)*6*t : t < 1/2 ? q : t < 2/3 ? p+(q-p)*(2/3-t)*6 : p; }
+  return [f(h+1/3)*255, f(h)*255, f(h-1/3)*255];
+}
+
+/* ---------- THE SKY — sun-aware schedule ----------
+   Daybreak and Sunset ride the real sun. Everything stays on the
+   viewer's own clock; nothing asks for their location. */
+/*@shared:makeSky*/function makeSky(work){
+  function mins(s){ const p = String(s).split(":"); return (parseInt(p[0],10)||0)*60 + (parseInt(p[1],10)||0); }
+  function wrap(m){ m = Math.round(m) % 1440; return m < 0 ? m + 1440 : m; }
+  function inWin(now, from, to){ const f = mins(from), t = mins(to); return f <= t ? (now >= f && now <= t) : (now >= f || now <= t); }
+  function lonGuess(){
+    const y = new Date().getFullYear();
+    const std = Math.max(new Date(y,0,1).getTimezoneOffset(), new Date(y,6,1).getTimezoneOffset());
+    return -std / 4;
+  }
+  let memoKey = "", memo = null;
+  function sun(date){
+    const key = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate();
+    if(key === memoKey) return memo;
+    const sc = work.sun || {}, rad = Math.PI/180;
+    const lat = isFinite(+sc.lat) ? +sc.lat : 36.17;
+    const lon = sc.follow === "fixed" && isFinite(+sc.lon) ? +sc.lon : lonGuess();
+    const N = Math.floor((date - new Date(date.getFullYear(),0,0)) / 86400000);
+    const g = 2*Math.PI/365*(N - 1);
+    const eqt = 229.18*(0.000075 + 0.001868*Math.cos(g) - 0.032077*Math.sin(g) - 0.014615*Math.cos(2*g) - 0.040849*Math.sin(2*g));
+    const decl = 0.006918 - 0.399912*Math.cos(g) + 0.070257*Math.sin(g) - 0.006758*Math.cos(2*g) + 0.000907*Math.sin(2*g) - 0.002697*Math.cos(3*g) + 0.00148*Math.sin(3*g);
+    const cosH = (Math.cos(90.833*rad) - Math.sin(lat*rad)*Math.sin(decl)) / (Math.cos(lat*rad)*Math.cos(decl));
+    const tz = -date.getTimezoneOffset();
+    if(cosH > 1 || cosH < -1) memo = { rise:360, set:1080 };   // polar day or night: a plain 6 to 6
+    else {
+      const ha = Math.acos(cosH) / rad;
+      memo = { rise: wrap(720 - 4*(lon + ha) - eqt + tz), set: wrap(720 - 4*(lon - ha) - eqt + tz) };
+    }
+    memoKey = key;
+    return memo;
+  }
+  function start(e, s){
+    const base = e.at === "sunrise" ? s.rise : (e.at === "sunset" ? s.set : mins(e.at || "00:00"));
+    return wrap(base + (+e.offset || 0));
+  }
+  function active(date){
+    const now = date.getHours()*60 + date.getMinutes();
+    const gw = work.grassWindow;
+    if(gw && inWin(now, gw.from, gw.to)) return "GRASS";
+    const s = sun(date);
+    let best = null, bs = -1, last = null, ls = -1;
+    (work.schedule || []).forEach(function(e){
+      const st = start(e, s);
+      if(st <= now && st > bs){ best = e; bs = st; }
+      if(st > ls){ last = e; ls = st; }
+    });
+    const pick = best || last;
+    return pick && work.palettes[pick.palette] ? pick.palette : "GM";
+  }
+  return { sun:sun, start:start, active:active };
+}/*@end*/
+const SKY = makeSky(WORK);
+let skyMinute = -1, skyKey = "GM";
+function paletteKeyForNow(){
+  const d = new Date(), m = d.getHours()*60 + d.getMinutes();
+  if(m !== skyMinute){ skyMinute = m; skyKey = SKY.active(d); }
+  return skyKey;
+}
+function activePaletteKey(){
+  return colorShiftIdx >= 0 ? SHIFT_ORDER[colorShiftIdx] : paletteKeyForNow();
+}
+function paletteRgb(key){ return (WORK.palettes[key] || WORK.palettes.GM).map(hexToRgb); }
+
+/* ---------- palette lifecycle (the one palette lerp) ---------- */
+function snapPalette(key){
+  targetKey = key;
+  currentPalette = paletteRgb(key);
+}
+function updatePalette(){
+  const key = activePaletteKey();
+  if(key !== targetKey) targetKey = key;
+  const target = paletteRgb(targetKey);
+  for(let i=0;i<8;i++){
+    currentPalette[i] = lerpRgb(currentPalette[i], target[i], LERP_RATE);
+  }
+}
+
+/* ---------- MOTION — speed, regularity, breath, variation ----------
+   Every layer keeps its own clocks, so turning a dial mid-flight bends
+   the motion smoothly instead of jumping. None of it touches colour. */
+const MOTION_DEFAULT = { speed:1, regularity:1, breath:0, variation:1 };
+function mo(layer){ return (WORK.motion && WORK.motion[layer]) || MOTION_DEFAULT; }
+const LAYER_N = { lines:150, waves:50 };
+const SEED = {}, LCLOCK = {}, SWELL = { lines:0, waves:0 };
+["lines","waves"].forEach(function(k){
+  // fresh scatter every time the work opens: ABSTRACTIA improvises
+  SEED[k] = []; LCLOCK[k] = [];
+  for(let i=0;i<LAYER_N[k];i++){
+    SEED[k].push([Math.random()*2-1, Math.random()*2-1, Math.random()*2-1]);
+    LCLOCK[k].push(0);
+  }
+});
+function tickMotion(){
+  ["lines","waves"].forEach(function(k){
+    const m = mo(k), irr = 1 - m.regularity, s = SEED[k], c = LCLOCK[k];
+    for(let i=0;i<c.length;i++) c[i] += m.speed * (1 + s[i][2] * irr * 0.5);
+    SWELL[k] += m.speed;
+  });
+}
+function swell(k){
+  const m = mo(k), s = Math.sin(SWELL[k] * 0.012);
+  return { amp: 1 + m.breath * 0.6 * s, alpha: 1 - m.breath * 0.35 * (0.5 - 0.5 * s) };
+}
+
+/* ---------- PATTERNS — made in the Forge, run here ----------
+   A pattern that throws is switched off quietly. The work never stops. */
+const PATTERNS = (WORK.patterns || []).map(function(p){
+  return { id:p.id, name:p.name || "Pattern", kind:p.kind || "layer", key:String(p.key || "").toLowerCase(),
+           fn:p.fn || {}, motion:p.motion || { speed:1, variation:1 },
+           on:p.kind === "trigger" || p.kind === "breath", state:{}, t:0, ready:false, dead:false };
+});
+/*@shared:patternApi*/function patternApi(p, env){
+  const m = p.motion || {};
+  return {
+    ctx: env.ctx, W: env.W, H: env.H, frame: env.frame,
+    t: p.t, dt: env.dt * (m.speed || 1),
+    palette: env.palette,
+    rgba: function(c, a){ return "rgba(" + (c[0]|0) + "," + (c[1]|0) + "," + (c[2]|0) + "," + a + ")"; },
+    mix: function(c1, c2, k){ return [c1[0]+(c2[0]-c1[0])*k, c1[1]+(c2[1]-c1[1])*k, c1[2]+(c2[2]-c1[2])*k]; },
+    breath: env.breath, oneness: env.oneness,
+    speed: m.speed || 1, variation: m.variation == null ? 1 : m.variation,
+    safe: env.safe, state: p.state, random: Math.random
+  };
+}/*@end*/
+function patternEnv(){
+  return { ctx:ctx, W:W, H:H, frame:frame, dt:DT, palette:currentPalette,
+           breath:oneAmt * Math.sin(oneT), oneness:oneAmt, safe:TYPE.safe || { x:0, y:0, w:W, h:H } };
+}
+function runPattern(p, phase, x, y){
+  if(p.dead) return undefined;
+  try{
+    const a = patternApi(p, patternEnv());
+    if(!p.ready){ p.ready = true; if(p.fn.setup) p.fn.setup(a); }
+    if(phase === "draw" && p.fn.draw){ ctx.save(); p.fn.draw(a); ctx.restore(); }
+    else if(phase === "tap" && p.fn.tap){ p.fn.tap(a, x, y); }
+    else if(phase === "breath" && p.fn.breath){ return p.fn.breath(a, x); }
+  }catch(e){ p.dead = true; }
+  return undefined;
+}
+function breathPattern(){
+  for(let i=PATTERNS.length-1;i>=0;i--){ const p = PATTERNS[i]; if(p.kind === "breath" && p.on && !p.dead) return p; }
+  return null;
+}
+
+/* ---------- ONENESS — one shared breath for every layer ----------
+   Breath is opacity, amplitude and phase. It never reads or writes a
+   single RGB value. Layers: 0 ombre, 1 lines, 2 waves, 3 lagniappe. */
+const BREATH_MS = 8000;
+let oneAmt = 0, oneT = 0;
+function updateBreath(){
+  oneAmt = lerp(oneAmt, modeOneness ? 1 : 0, 0.02);
+  if(!modeOneness && oneAmt < 0.002) oneAmt = 0;
+  oneT += DT * 1000 / BREATH_MS * Math.PI * 2 * mo("oneness").speed;
+}
+function breathOf(li){
+  const bp = breathPattern();
+  if(bp){
+    const v = runPattern(bp, "breath", li);
+    if(typeof v === "number" && isFinite(v)) return clamp(v, -1, 1);
+  }
+  return Math.sin(oneT + (1 - mo("oneness").regularity) * li * 1.3);
+}
+function breathAlpha(depth, li){ return 1 - oneAmt * Math.min(1, depth * mo("oneness").breath) * (0.5 - 0.5 * breathOf(li)); }
+function breathAmp(depth, li){ const m = mo("oneness"); return 1 + oneAmt * depth * m.breath * m.variation * breathOf(li); }
+function breathPhase(li){ return oneAmt * breathOf(li) * 1.4 * mo("oneness").variation; }
+
+/* ---------- FONT TRUTH — did the face really land? ---------- */
+/*@shared:fontIsReal*/function fontIsReal(family){
+  if(!fontIsReal.cv) fontIsReal.cv = document.createElement("canvas");
+  const c = fontIsReal.cv.getContext("2d");
+  const probe = "ABSTRACTIA wmQ@#08&";
+  for(const fb of ["serif", "monospace"]){
+    c.font = "72px " + fb;
+    const bare = c.measureText(probe).width;
+    c.font = "72px '" + family + "'," + fb;
+    if(Math.abs(c.measureText(probe).width - bare) > 0.5) return true;
+  }
+  return false;
+}/*@end*/
+
+/* ============================================================
+   ONE SIZING BRAIN
+   Measures once per resize or font arrival. Every preset lays out
+   inside the frame, so the host site's header and footer and the
+   film-style edges stay clear of type.
+   ============================================================ */
+const TYPE = { dirty:true, unit:16, title:null, items:[], rules:[], menu:null, card:null, lag:{}, titleTrue:false, safe:null, ctaTf:"translate(-50%,-50%)" };
+const PROBE = 100;
+
+function makeRow(text, font, size, trackFrac){
+  const f = size + "px " + fontStack(font);
+  ctx.font = f;
+  const chars = Array.from(text || "");
+  const widths = chars.map(function(ch){ return ctx.measureText(ch).width; });
+  const track = size * trackFrac;
+  const total = widths.reduce(function(a,b){ return a+b; }, 0) + track * Math.max(0, chars.length-1);
+  return { font:f, size:size, chars:chars, widths:widths, track:track, total:total };
+}
+// draw a measured row with its left edge at x
+function drawRow(r, x, y){
+  ctx.font = r.font;
+  for(let i=0;i<r.chars.length;i++){
+    ctx.fillText(r.chars[i], x + r.widths[i]/2, y);
+    x += r.widths[i] + r.track;
+  }
+}
+function unitsOf(text, font, track){ return makeRow(text, font, PROBE, track).total / PROBE; }
+function fitLine(text, font, ideal, maxW, trackFrac){
+  const u = unitsOf(text, font, trackFrac);
+  return u > 0 ? Math.min(ideal, maxW / u) : ideal;
+}
+function splitsInto(words, k){
+  if(k === 1) return [[words.join(" ")]];
+  const out = [];
+  for(let i=1;i<=words.length-k+1;i++){
+    const head = words.slice(0,i).join(" ");
+    splitsInto(words.slice(i), k-1).forEach(function(rest){ out.push([head].concat(rest)); });
+  }
+  return out;
+}
+function wordsOf(t){ return String(t || "").split(/\s+/).filter(Boolean); }
+
+// balanced stack: the biggest type that fits maxW x maxH
+function fitStack(text, font, maxW, maxH, o){
+  const words = wordsOf(text), cache = {};
+  function u(s){ if(cache[s] === undefined) cache[s] = unitsOf(s, font, o.track); return cache[s]; }
+  const maxL = Math.max(1, Math.min(o.maxLines || 4, words.length));
+  const minL = Math.min(o.minLines || 1, maxL);
+  let best = null;
+  for(let k=minL;k<=maxL;k++){
+    const rhythm = [];
+    for(let i=0;i<k;i++) rhythm.push(o.rhythm && i % 2 === 1 ? 0.9 : 1);
+    const stackH = rhythm.reduce(function(a,r){ return a+r; }, 0) * o.lineH;
+    splitsInto(words, k).forEach(function(lines){
+      let size = maxH / stackH;
+      for(let i=0;i<k;i++){ const w = u(lines[i]); if(w > 0) size = Math.min(size, maxW / (w * rhythm[i])); }
+      if(!best || size > best.size * 1.02) best = { lines:lines, sizes:rhythm.map(function(r){ return size * r; }), size:size };
+    });
+  }
+  return best || { lines:[String(text)], sizes:[maxH / o.lineH], size:maxH / o.lineH };
+}
+// force-justified: every line runs the full measure, sizes differ per line
+function fitJustified(text, font, maxW, maxH, o){
+  const words = wordsOf(text), cache = {};
+  function u(s){ if(cache[s] === undefined) cache[s] = unitsOf(s, font, o.track); return cache[s]; }
+  let best = null;
+  const maxL = Math.max(1, Math.min(o.maxLines || 5, words.length));
+  for(let k=1;k<=maxL;k++){
+    splitsInto(words, k).forEach(function(lines){
+      const sizes = lines.map(function(l){ return maxW / Math.max(0.01, u(l)); });
+      const h = sizes.reduce(function(a,s){ return a + s * o.lineH; }, 0);
+      const f = Math.min(1, maxH / h);
+      const mn = Math.min.apply(null, sizes), mx = Math.max.apply(null, sizes);
+      const score = f * Math.sqrt(mn / mx) * Math.min(1, (h * f) / maxH + 0.15);
+      if(!best || score > best.score) best = { score:score, lines:lines, sizes:sizes.map(function(s){ return s * f; }), size:mx * f };
+    });
+  }
+  return best || { lines:[String(text)], sizes:[maxH / o.lineH], size:maxH / o.lineH };
+}
+// museum-label text: as big as the room allows, never under MIN_TYPE; wraps instead of shrinking
+function labelRows(text, font, ideal, maxW, track){
+  text = String(text || "").trim();
+  if(!text) return [];
+  const size = Math.max(MIN_TYPE, Math.min(ideal, maxW / Math.max(0.01, unitsOf(text, font, track))));
+  const one = makeRow(text, font, size, track);
+  if(one.total <= maxW + 0.5) return [one];
+  const tight = makeRow(text, font, MIN_TYPE, 0);
+  if(tight.total <= maxW + 0.5) return [tight];
+  const rows = []; let line = "";
+  wordsOf(text).forEach(function(w){
+    const test = line ? line + " " + w : w;
+    if(line && makeRow(test, font, MIN_TYPE, 0).total > maxW){ rows.push(makeRow(line, font, MIN_TYPE, 0)); line = w; }
+    else line = test;
+  });
+  if(line) rows.push(makeRow(line, font, MIN_TYPE, 0));
+  return rows;
+}
+// stack groups of label rows; returns items with left x and centre y
+function stackItems(groups, align, x0, x1, yTop){
+  const items = []; let y = yTop;
+  groups.forEach(function(g, gi){
+    if(!g.rows.length) return;
+    g.rows.forEach(function(r){
+      const h = r.size * (g.lead || 1.3);
+      const x = align === "left" ? x0 : (align === "right" ? x1 - r.total : (x0 + x1) / 2 - r.total / 2);
+      items.push({ row:r, x:x, y:y + h / 2, tone:g.tone || "main" });
+      y += h;
+    });
+    if(gi < groups.length - 1) y += g.gap || 0;
+  });
+  return { items:items, h:y - yTop, w:items.reduce(function(a,it){ return Math.max(a, it.row.total); }, 0) };
+}
+function shift(list, dy){ list.forEach(function(it){ it.y += dy; }); return list; }
+function titleRows(fit, font, track, align, x0, x1, yTop, lineH){
+  const rows = []; let y = yTop;
+  fit.lines.forEach(function(line, i){
+    const r = makeRow(line, font, fit.sizes[i], track);
+    const h = r.size * lineH;
+    const x = align === "left" ? x0 : (align === "right" ? x1 - r.total : (x0 + x1) / 2 - r.total / 2);
+    rows.push({ row:r, x:x, y:y + h / 2 });
+    y += h;
+  });
+  return { rows:rows, h:y - yTop, w:rows.reduce(function(a,o){ return Math.max(a, o.row.total); }, 0) };
+}
+function creditBits(){
+  const artist = String(WORK.credit2 || "").replace(/^\s*(by|art by|created by)\s+/i, "").trim();
+  return {
+    medium: WORK.credit1 || "",
+    byline: WORK.credit2 || "",
+    artist: artist,
+    numeral: WORK.numeral || "",
+    series: "ABSTRACTIA" + (WORK.numeral ? " " + WORK.numeral : "")
+  };
+}
+function frameRect(){
+  const f = WORK.frame || {};
+  const top = Math.round(H * clamp(+f.top || 0, 0, 0.3));
+  const bottom = Math.round(H * clamp(+f.bottom || 0, 0, 0.3));
+  const side = Math.round(W * clamp(+f.sides || 0, 0, 0.25));
+  return { x:side, y:top, w:W - 2 * side, h:H - top - bottom, top:top, bottom:bottom };
+}
+
+/* ---------- THE PRESETS — masthead + museum label ----------
+   Each one lays the title, the label and the doorway inside the frame. */
+const PRESETS = {
+  // Center Stage: the title holds the middle, credits stack beneath
+  classic: function(L){
+    const S = L.S, B = creditBits(), F = WORK.titleFont, G = WORK.h2Font;
+    const areaH = S.h - L.ctaH * 1.3;
+    const fit = fitStack(WORK.title, F, S.w, areaH * 0.62, { track:0.05, lineH:1.1, rhythm:true });
+    const t = titleRows(fit, F, 0.05, "center", S.x, S.x + S.w, 0, 1.1);
+    const cs = Math.max(MIN_TYPE, Math.min(L.lab * 1.4, fit.size * 0.22));
+    const lb = stackItems([
+      { rows:labelRows(B.medium, G, cs, S.w, 0.3), tone:"main", lead:1.5 },
+      { rows:labelRows(B.byline, G, cs, S.w, 0.14), tone:"accent", lead:1.5, gap:cs * 0.15 },
+      { rows:labelRows(B.numeral, UI_FONT, cs * 1.1, S.w, 0.3), tone:"dim", lead:1.4 }
+    ], "center", S.x, S.x + S.w, 0);
+    const gap = fit.size * 0.28, total = t.h + gap + lb.h;
+    const y0 = S.y + Math.max(0, (areaH - total) / 2);
+    shift(t.rows, y0); shift(lb.items, y0 + t.h + gap);
+    return { title:{ rows:t.rows, tf:{ x:0, y:0, rot:0 } }, items:lb.items, rules:[],
+             cta:{ x:S.x + S.w / 2, y:S.y + S.h - L.ctaH / 2, align:"center" } };
+  },
+
+  // Wall Label: the title owns the wall, the label sits low-left like a gallery card
+  wall: function(L){
+    const S = L.S, B = creditBits(), F = WORK.titleFont, G = WORK.h2Font;
+    const narrow = S.w < 640;
+    const labW = narrow ? S.w : Math.min(S.w * 0.55, Math.max(S.w * 0.38, 460));
+    const lb = stackItems([
+      { rows:labelRows(B.artist || B.byline, G, L.lab * 1.35, labW, 0.03), tone:"main", lead:1.3 },
+      { rows:labelRows(B.series, UI_FONT, L.lab, labW, 0.14), tone:"accent", lead:1.4 },
+      { rows:labelRows(B.medium, G, L.lab, labW, 0.06), tone:"dim", lead:1.4 }
+    ], "left", S.x, S.x + labW, 0);
+    const labTop = S.y + S.h - lb.h;
+    shift(lb.items, labTop);
+    const ruleH = Math.max(2, L.lab * 0.08), ruleY = labTop - L.lab * 0.55;
+    const rules = [{ x:S.x, y:ruleY, w:Math.max(lb.w, S.w * 0.22), h:ruleH }];
+    const cta = narrow ? { x:S.x, y:ruleY - L.lab * 0.6 - L.ctaH / 2, align:"left" }
+                       : { x:S.x + S.w, y:S.y + S.h - L.ctaH / 2, align:"right" };
+    const areaBot = (narrow ? cta.y - L.ctaH / 2 : ruleY) - L.lab;
+    const areaH = Math.max(L.lab * 3, areaBot - S.y);
+    const fit = fitStack(WORK.title, F, S.w, areaH, { track:0.03, lineH:1.04 });
+    const t = titleRows(fit, F, 0.03, "center", S.x, S.x + S.w, 0, 1.04);
+    shift(t.rows, S.y + Math.max(0, (areaH - t.h) / 2));
+    return { title:{ rows:t.rows, tf:{ x:0, y:0, rot:0 } }, items:lb.items, rules:rules, cta:cta };
+  },
+
+  // Swiss Grid: flush-left, tight leading, a hard rule and a label column
+  swiss: function(L){
+    const S = L.S, B = creditBits(), F = WORK.titleFont, G = WORK.h2Font;
+    const lb = stackItems([
+      { rows:labelRows(B.series, UI_FONT, L.lab * 1.15, S.w, 0.06), tone:"main", lead:1.3 },
+      { rows:labelRows(B.medium, G, L.lab, S.w, 0.04), tone:"dim", lead:1.35 },
+      { rows:labelRows(B.byline, G, L.lab, S.w, 0.02), tone:"accent", lead:1.35 }
+    ], "left", S.x, S.x + S.w, 0);
+    const labTop = S.y + S.h - lb.h;
+    shift(lb.items, labTop);
+    const ruleH = Math.max(3, L.lab * 0.12), ruleY = labTop - L.lab * 0.7;
+    const sideBySide = lb.w + L.ctaW + L.lab * 2 <= S.w;
+    const cta = sideBySide ? { x:S.x + S.w, y:S.y + S.h - L.ctaH / 2, align:"right" }
+                           : { x:S.x + S.w, y:ruleY - L.lab * 0.5 - L.ctaH / 2, align:"right" };
+    const areaBot = (sideBySide ? ruleY : cta.y - L.ctaH / 2) - L.lab * 0.8;
+    const areaH = Math.max(L.lab * 3, areaBot - S.y);
+    const fit = fitStack(WORK.title, F, S.w, areaH, { track:0, lineH:0.92, minLines:2, maxLines:5 });
+    const t = titleRows(fit, F, 0, "left", S.x, S.x + S.w, S.y, 0.92);
+    return { title:{ rows:t.rows, tf:{ x:0, y:0, rot:0 } }, items:lb.items,
+             rules:[{ x:S.x, y:ruleY, w:S.w, h:ruleH }], cta:cta };
+  },
+
+  // Poster Stack: force-justified, every line the full measure
+  poster: function(L){
+    const S = L.S, B = creditBits(), F = WORK.titleFont, G = WORK.h2Font;
+    const line = [B.medium, B.byline, B.numeral].filter(Boolean).join("  ·  ");
+    const lb = stackItems([{ rows:labelRows(line, G, L.lab * 1.1, S.w, 0.16), tone:"main", lead:1.4 }], "center", S.x, S.x + S.w, 0);
+    const gap = L.lab * 0.8;
+    const areaH = S.h - L.ctaH * 1.25;
+    const fit = fitJustified(WORK.title, F, S.w, areaH - lb.h - gap, { track:0.02, lineH:0.98 });
+    const t = titleRows(fit, F, 0.02, "center", S.x, S.x + S.w, 0, 0.98);
+    const y0 = S.y + Math.max(0, (areaH - t.h - gap - lb.h) / 2);
+    shift(t.rows, y0); shift(lb.items, y0 + t.h + gap);
+    return { title:{ rows:t.rows, tf:{ x:0, y:0, rot:0 } }, items:lb.items, rules:[],
+             cta:{ x:S.x + S.w / 2, y:S.y + S.h - L.ctaH / 2, align:"center" } };
+  },
+
+  // Title Card: an opening credit — wide tracking, a line above, a line below
+  film: function(L){
+    const S = L.S, B = creditBits(), F = WORK.titleFont, G = WORK.h2Font;
+    const top = stackItems([{ rows:labelRows(B.medium, UI_FONT, L.lab, S.w, 0.45), tone:"dim", lead:1.4 }], "center", S.x, S.x + S.w, 0);
+    const bottom = stackItems([{ rows:labelRows([B.byline, B.numeral].filter(Boolean).join("  ·  "), G, L.lab * 1.15, S.w, 0.22), tone:"accent", lead:1.4 }], "center", S.x, S.x + S.w, 0);
+    const areaH = S.h - L.ctaH * 1.3;
+    const gap = L.lab * 0.9;
+    const room = areaH - top.h - bottom.h - gap * 2;
+    const fit = fitStack(WORK.title, F, S.w * 0.94, room * 0.85, { track:0.16, lineH:1.12 });
+    const t = titleRows(fit, F, 0.16, "center", S.x, S.x + S.w, 0, 1.12);
+    const total = top.h + gap + t.h + gap + bottom.h;
+    const y0 = S.y + Math.max(0, (areaH - total) / 2);
+    shift(top.items, y0); shift(t.rows, y0 + top.h + gap); shift(bottom.items, y0 + top.h + gap + t.h + gap);
+    return { title:{ rows:t.rows, tf:{ x:0, y:0, rot:0 } }, items:top.items.concat(bottom.items), rules:[],
+             cta:{ x:S.x + S.w / 2, y:S.y + S.h - L.ctaH / 2, align:"center" } };
+  },
+
+  // Masthead: a nameplate across the top, double rule, a dateline
+  masthead: function(L){
+    const S = L.S, B = creditBits(), F = WORK.titleFont, G = WORK.h2Font;
+    const fit = fitJustified(WORK.title, F, S.w, S.h * 0.42, { track:0, lineH:0.95, maxLines:wordsOf(WORK.title).length > 3 ? 2 : 1 });
+    const t = titleRows(fit, F, 0, "center", S.x, S.x + S.w, S.y, 0.95);
+    const thick = Math.max(4, fit.size * 0.05), thin = Math.max(2, thick * 0.35);
+    let y = S.y + t.h + L.lab * 0.35;
+    const rules = [{ x:S.x, y:y, w:S.w, h:thick }, { x:S.x, y:y + thick + thin * 1.6, w:S.w, h:thin }];
+    y += thick + thin * 2.6 + L.lab * 0.4;
+    const pieces = [WORK.numeral ? "No. " + WORK.numeral : "ABSTRACTIA", B.medium, B.byline].filter(Boolean);
+    const rows = pieces.map(function(p){ return makeRow(p, G, L.lab, 0.1); });
+    const sum = rows.reduce(function(a,r){ return a + r.total; }, 0);
+    let items = [];
+    if(sum + L.lab * 2 * (rows.length - 1) <= S.w){
+      rows.forEach(function(r, i){
+        const x = rows.length === 1 ? S.x + S.w / 2 - r.total / 2
+          : (i === 0 ? S.x : (i === rows.length - 1 ? S.x + S.w - r.total : S.x + S.w / 2 - r.total / 2));
+        items.push({ row:r, x:x, y:y + r.size * 0.7, tone:i === 2 ? "accent" : "main" });
+      });
+    } else {
+      items = stackItems(pieces.map(function(p, i){ return { rows:labelRows(p, G, L.lab, S.w, 0.06), tone:i === 2 ? "accent" : "main", lead:1.35 }; }),
+                         "left", S.x, S.x + S.w, y).items;
+    }
+    return { title:{ rows:t.rows, tf:{ x:0, y:0, rot:0 } }, items:items, rules:rules,
+             cta:{ x:S.x + S.w / 2, y:S.y + S.h - L.ctaH / 2, align:"center" } };
+  },
+
+  // Spine: the title climbs the left edge like a book spine
+  spine: function(L){
+    const S = L.S, B = creditBits(), F = WORK.titleFont, G = WORK.h2Font;
+    const across = S.w * (S.w < 640 ? 0.48 : 0.42);
+    const fit = fitStack(WORK.title, F, S.h, across, { track:0.04, lineH:0.95, maxLines:3 });
+    const t = titleRows(fit, F, 0.04, "center", 0, S.h, 0, 0.95);   // local coords: x runs up the spine
+    const labX0 = S.x + t.h + L.lab, labX1 = S.x + S.w;
+    const lb = stackItems([
+      { rows:labelRows(B.series, UI_FONT, L.lab * 1.1, labX1 - labX0, 0.1), tone:"accent", lead:1.35 },
+      { rows:labelRows(B.byline, G, L.lab, labX1 - labX0, 0.04), tone:"main", lead:1.35 },
+      { rows:labelRows(B.medium, G, L.lab, labX1 - labX0, 0.04), tone:"dim", lead:1.35 }
+    ], "right", labX0, labX1, 0);
+    const labTop = S.y + S.h - lb.h;
+    shift(lb.items, labTop);
+    return { title:{ rows:t.rows, tf:{ x:S.x, y:S.y + S.h, rot:-Math.PI / 2 } }, items:lb.items,
+             rules:[{ x:labX1 - Math.max(lb.w, 120), y:labTop - L.lab * 0.5, w:Math.max(lb.w, 120), h:Math.max(2, L.lab * 0.08) }],
+             cta:{ x:labX1, y:labTop - L.lab * 1.1 - L.ctaH / 2, align:"right" } };
+  }
+};
+
+function computeType(){
+  TYPE.dirty = false;
+  TYPE.lag = {};
+  const S = frameRect();
+  TYPE.safe = S;
+  const unit = Math.max(16, Math.min(W, H) * 0.032);
+  TYPE.unit = unit;
+  const lab = Math.max(MIN_TYPE, unit * 1.05);
+
+  // the doorway first: every layout leaves it room
+  const ctaS = Math.max(MIN_TYPE, fitLine("Get Abstract", CTA_FONT, Math.min(46, Math.max(MIN_TYPE, unit * 1.5)), S.w * 0.8, 0.1));
+  beginBtn.style.fontSize = ctaS.toFixed(1) + "px";
+  beginBtn.style.letterSpacing = (ctaS * 0.1).toFixed(1) + "px";
+  const ctaW = makeRow("Get Abstract", CTA_FONT, ctaS, 0.1).total + ctaS * 1.9;
+  const ctaH = ctaS * 1.9;
+
+  const T = WORK.typography || {};
+  const lay = (PRESETS[T.preset] || PRESETS.classic)({ S:S, unit:unit, lab:lab, ctaS:ctaS, ctaW:ctaW, ctaH:ctaH });
+  TYPE.title = lay.title;
+  TYPE.items = lay.items;
+  TYPE.rules = lay.rules || [];
+  const c = lay.cta;
+  beginBtn.style.left = c.x.toFixed(1) + "px";
+  beginBtn.style.top = c.y.toFixed(1) + "px";
+  TYPE.ctaTf = "translate(" + (c.align === "left" ? "0" : (c.align === "right" ? "-100%" : "-50%")) + ",-50%)";
+  beginBtn.style.transformOrigin = c.align === "left" ? "left center" : (c.align === "right" ? "right center" : "center");
+
+  // the hint rides inside the frame
+  hintEl.style.fontSize = Math.max(MIN_TYPE, unit * 0.85).toFixed(1) + "px";
+  hintEl.style.letterSpacing = Math.max(1, unit * 0.1).toFixed(1) + "px";
+  hintEl.style.bottom = (S.bottom + H * 0.03).toFixed(0) + "px";
+  hintEl.style.width = S.w + "px";
+
+  // menu — never under MIN_TYPE
+  const rowsN = MENU_ROWS.length + 1;
+  const rowH = Math.min(Math.max(MIN_TYPE * 2.2, unit * 2.6), S.h / rowsN);
+  const fs = Math.max(MIN_TYPE, Math.min(unit * 1.25, rowH / 2.1));
+  TYPE.menu = { fs:fs, rowH:Math.max(rowH, fs * 1.9), rowW:Math.min(S.w, 640), tag:Math.max(MIN_TYPE, fs * 0.8) };
+
+  // community card
+  const big = Math.max(MIN_TYPE, fitLine("ABSTRACTIANS", WORK.titleFont, Math.min(S.w * 0.12, S.h * 0.13, 130), S.w, 0));
+  const subRows = labelRows("THE DAILY RITUAL, DELIVERED", UI_FONT, Math.max(MIN_TYPE, big * 0.3), S.w, 0.25);
+  const linkS = Math.max(MIN_TYPE, fitLine(WORK.telegram, UI_FONT, Math.min(unit * 1.9, 48), S.w * 0.7, 0));
+  ctx.font = linkS + "px " + fontStack(UI_FONT);
+  const linkW = ctx.measureText(WORK.telegram).width;
+  TYPE.card = { big:big, sub:subRows, linkS:linkS, linkW:linkW,
+                foot:labelRows("tap to join", UI_FONT, MIN_TYPE, S.w, 0).concat(labelRows("tap anywhere else to return", UI_FONT, MIN_TYPE, S.w, 0)) };
+
+  TYPE.titleTrue = fontIsReal(WORK.titleFont);
+}
+function lagSize(linesArr){
+  if(TYPE.lag[activeLagniappe]) return TYPE.lag[activeLagniappe];
+  const S = TYPE.safe;
+  let s = Math.min(S.h * 0.8 / (linesArr.length * 1.3), S.w * 0.14);
+  linesArr.forEach(function(l){ s = fitLine(l, WORK.titleFont, s, S.w, 0); });
+  s = Math.max(MIN_TYPE, s);
+  TYPE.lag[activeLagniappe] = s;
+  return s;
+}
+function markType(){ TYPE.dirty = true; }
+
+/* ---------- THE OMBRE — smooth mode, the serene default ------ */
+const strip = document.createElement("canvas");
+const stripCtx = strip.getContext("2d");
+function drawOmbre(targetCtx, w, h){
+  strip.width = 1;
+  strip.height = h;
+  const id = stripCtx.createImageData(1, h);
+  const d = id.data;
+  const n = 8;
+  const dNow = new Date();
+  const timeFactor = (dNow.getHours() + dNow.getMinutes()/60) * 0.1;
+  for(let y=0; y<h; y++){
+    let pos = (y/h) * (n - 1.001) + ombreScroll + timeFactor * 0.5;
+    pos = pos % n; if(pos < 0) pos += n; if(pos >= n) pos = 0;
+    const i1 = Math.floor(pos), i2 = (i1+1) % n, t = pos % 1;
+    const c = lerpRgb(currentPalette[i1], currentPalette[i2], t);
+    const k = y*4;
+    d[k]=c[0]; d[k+1]=c[1]; d[k+2]=c[2]; d[k+3]=255;
+  }
+  stripCtx.putImageData(id, 0, 0);
+  targetCtx.imageSmoothingEnabled = false;
+  targetCtx.drawImage(strip, 0, 0, w, h);
+  targetCtx.imageSmoothingEnabled = true;
+}
+
+/* ---------- WAVES — the original motion, tunable and breathing ---------- */
+function drawWaves(){
+  ctx.save();
+  ctx.globalCompositeOperation = "lighter";
+  ctx.lineWidth = 2;
+  const numLines = LAYER_N.waves, m = mo("waves"), sw = swell("waves"), irr = 1 - m.regularity;
+  const amp = breathAmp(0.5, 2) * m.variation * sw.amp, ph = breathPhase(2);
+  const a = (0.7 * breathAlpha(0.4, 2) * sw.alpha).toFixed(3);
+  for(let i=0; i<numLines; i++){
+    const s = SEED.waves[i], t = LCLOCK.waves[i];
+    const y = (i/numLines) * H + s[0] * irr * (H/numLines) * 0.8;
+    const lp = ph + s[1] * irr * Math.PI;
+    const ci = Math.floor((i/numLines)*8) % 8;
+    const c1 = currentPalette[ci], c2 = currentPalette[(ci+2)%8];
+    const rise = Math.sin(t*0.025 + y*0.01 + lp)*50;
+    for(let x=0; x<W; x+=10){
+      const c = lerpRgb(c1, c2, x / W);
+      const y1 = y + (rise + Math.sin(t*0.015 + x*0.02 + lp)*20) * amp;
+      const y2 = y + (rise + Math.sin(t*0.015 + (x+10)*0.02 + lp)*20) * amp;
+      ctx.strokeStyle = rgba(c, a);
+      ctx.beginPath(); ctx.moveTo(x, y1); ctx.lineTo(x+10, y2); ctx.stroke();
+    }
+  }
+  ctx.restore();
+}
+
+/* ---------- LINES — the original shimmer, tunable and breathing ---------- */
+function drawLines(){
+  ctx.save();
+  ctx.globalCompositeOperation = "lighter";
+  ctx.lineWidth = 1.5;
+  const numLines = LAYER_N.lines, m = mo("lines"), sw = swell("lines"), irr = 1 - m.regularity;
+  const amp = breathAmp(0.6, 1) * m.variation * sw.amp, ph = breathPhase(1);
+  const a = (0.7 * breathAlpha(0.4, 1) * sw.alpha).toFixed(3);
+  for(let i=0; i<numLines; i++){
+    const s = SEED.lines[i], t = LCLOCK.lines[i];
+    const y = i * (H/numLines) + s[0] * irr * (H/numLines) * 0.8;
+    const lp = ph + s[1] * irr * Math.PI;
+    const ci = Math.floor((i/numLines)*8) % 8;
+    const c1 = currentPalette[ci], c2 = currentPalette[(ci+2)%8];
+    const rise = Math.sin(t*0.03 + y*0.01 + lp)*10;
+    for(let x=0; x<W; x+=20){
+      const c = lerpRgb(c1, c2, x / W);
+      const y1 = y + (rise + Math.sin(t*0.01 + x*0.02 + lp)*5) * amp;
+      const y2 = y + (rise + Math.sin(t*0.01 + (x+20)*0.02 + lp)*5) * amp;
+      ctx.strokeStyle = rgba(c, a);
+      ctx.beginPath(); ctx.moveTo(x, y1); ctx.lineTo(x+20, y2); ctx.stroke();
+    }
+  }
+  ctx.restore();
+}
+
+/* ---------- FINISHES — solid, iridescent, metallic, see-through ---------- */
+function paletteTone(){
+  let r = 0, g = 0, b = 0;
+  currentPalette.forEach(function(c){ r += c[0]; g += c[1]; b += c[2]; });
+  return rgbToHsl([r/8, g/8, b/8]);
+}
+function titlePaint(r, x, y, ri){
+  const fin = (WORK.typography || {}).finish || "solid", s = r.size;
+  if(fin === "iridescent"){
+    const ph = frame * 0.006 + ri * 0.7;
+    const g = ctx.createLinearGradient(x - Math.cos(ph) * s, y - s * 0.6, x + r.total + Math.cos(ph) * s, y + s * 0.6);
+    for(let k=0;k<=8;k++){
+      const hsl = rgbToHsl(currentPalette[(k + ri) % 8]);
+      g.addColorStop(k / 8, rgba(hslToRgb(hsl[0] + Math.sin(ph * 2 + k * 0.9) * 55, Math.min(1, hsl[1] * 0.7 + 0.35), clamp(hsl[2] * 0.4 + 0.52, 0, 0.9)), 1));
+    }
+    return { fill:g, glint:null, glow:true };
+  }
+  if(fin === "metallic"){
+    const tone = paletteTone();
+    function t(l){ return rgba(hslToRgb(tone[0], 0.22, l), 1); }
+    const g = ctx.createLinearGradient(0, y - s * 0.55, 0, y + s * 0.55);
+    g.addColorStop(0, t(0.96)); g.addColorStop(0.3, t(0.8)); g.addColorStop(0.47, t(0.42));
+    g.addColorStop(0.5, t(0.24)); g.addColorStop(0.57, t(0.55)); g.addColorStop(0.82, t(0.88)); g.addColorStop(1, t(0.97));
+    const p = ((frame * 0.004 + ri * 0.21) % 1.6) - 0.3;
+    let glint = null;
+    if(p > 0.02 && p < 0.98){
+      glint = ctx.createLinearGradient(x, 0, x + r.total, 0);
+      glint.addColorStop(Math.max(0, p - 0.1), "rgba(255,255,255,0)");
+      glint.addColorStop(p, "rgba(255,255,255,0.9)");
+      glint.addColorStop(Math.min(1, p + 0.1), "rgba(255,255,255,0)");
+    }
+    return { fill:g, glint:glint, glow:false };
+  }
+  return { fill:"rgba(255,255,255,0.96)", glint:null, glow:true };
+}
+function drawTitle(){
+  const T = TYPE.title;
+  if(!T) return;
+  const tr = clamp(+(WORK.typography || {}).transparency || 0, 0, 0.9);
+  const alpha = 1 - tr;
+  ctx.save();
+  ctx.translate(T.tf.x, T.tf.y);
+  ctx.rotate(T.tf.rot);
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  let li = 0;
+  T.rows.forEach(function(o, ri){
+    const r = o.row, paint = titlePaint(r, o.x, o.y, ri);
+    ctx.font = r.font;
+    let x = o.x;
+    for(let i=0;i<r.chars.length;i++){
+      const cx = x + r.widths[i] / 2;
+      const cy = o.y + Math.sin(frame * 0.03 + li * 0.7 + ri * 0.9) * r.size * 0.05;
+      if(paint.glow){
+        ctx.shadowColor = rgba(currentPalette[(li + Math.floor(frame * 0.02)) % 8], 0.9 * alpha);
+        ctx.shadowBlur = 28 + Math.sin(frame * 0.05 + li) * 10;
+        ctx.shadowOffsetY = 0;
+      } else {
+        ctx.shadowColor = "rgba(0,0,0," + (0.5 * alpha) + ")";
+        ctx.shadowBlur = r.size * 0.06;
+        ctx.shadowOffsetY = r.size * 0.035;
+      }
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = paint.fill;
+      ctx.fillText(r.chars[i], cx, cy);
+      ctx.shadowBlur = 0; ctx.shadowOffsetY = 0;
+      if(paint.glint){ ctx.fillStyle = paint.glint; ctx.fillText(r.chars[i], cx, cy); }
+      if(tr > 0.3){
+        ctx.globalAlpha = 1;
+        ctx.strokeStyle = "rgba(255,255,255," + (0.35 + tr * 0.55).toFixed(3) + ")";
+        ctx.lineWidth = Math.max(1, r.size * 0.014);
+        ctx.strokeText(r.chars[i], cx, cy);
+      }
+      x += r.widths[i] + r.track;
+      li++;
+    }
+  });
+  ctx.restore();
+}
+/* ---------- INK — label text reads the gradient behind it ----------
+   The ombre never stops moving, so every label checks what it sits on
+   each frame and eases between light ink and dark ink. */
+function bgAt(y){
+  const n = 8, d = new Date();
+  let pos = (y / H) * (n - 1.001) + ombreScroll + (d.getHours() + d.getMinutes() / 60) * 0.05;
+  pos = pos % n; if(pos < 0) pos += n; if(pos >= n) pos = 0;
+  const i1 = Math.floor(pos);
+  return lerpRgb(currentPalette[i1], currentPalette[(i1 + 1) % n], pos % 1);
+}
+function lum(c){ return (0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]) / 255; }
+// 0 = light ink, 1 = dark ink. Picks a side outright (grey reads on nothing),
+// then eases over a few frames so a crossing never flickers.
+function inkTarget(y){ return lum(bgAt(y)) > 0.58 ? 1 : 0; }
+function eased(obj, y){
+  const t = inkTarget(y);
+  obj._k = obj._k === undefined ? t : obj._k + (t - obj._k) * 0.12;
+  return obj._k;
+}
+function paletteEnds(){
+  let lo = currentPalette[0], hi = currentPalette[0];
+  currentPalette.forEach(function(c){ if(lum(c) < lum(lo)) lo = c; if(lum(c) > lum(hi)) hi = c; });
+  return { lo:lo, hi:hi };
+}
+function inkFor(tone, k, ends){
+  const light = tone === "accent" ? lerpRgb(ends.hi, [255,255,255], 0.45) : [255,255,255];
+  const dark = tone === "accent" ? lerpRgb(ends.lo, [0,0,0], 0.35) : [14,10,24];
+  const a = tone === "dim" ? 0.74 : 0.95;
+  return rgba(lerpRgb(light, dark, k), a);
+}
+function drawLabels(){
+  const ends = paletteEnds();
+  ctx.save();
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.shadowBlur = 12;
+  TYPE.items.forEach(function(it){
+    const k = eased(it, it.y);
+    ctx.shadowColor = k > 0.5 ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.45)";
+    ctx.fillStyle = inkFor(it.tone, k, ends);
+    drawRow(it.row, it.x, it.y);
+  });
+  ctx.shadowBlur = 0;
+  TYPE.rules.forEach(function(r){ ctx.fillStyle = inkFor("main", eased(r, r.y), ends); ctx.fillRect(r.x, r.y, r.w, r.h); });
+  ctx.restore();
+}
+/* the DOM type (doorway, hint) follows the same rule, a few times a second */
+function inkDom(el, y){
+  const k = eased(el, y);
+  const c = lerpRgb([255,255,255], [14,10,24], k);
+  el.style.color = rgba(c, 1);
+  el.style.textShadow = k > 0.5 ? "0 0 22px rgba(255,255,255,0.7)" : "0 0 24px rgba(0,0,0,0.5), 0 0 30px rgba(255,255,255,0.35)";
+}
+function drawLetterbox(){
+  if(!(WORK.frame && WORK.frame.letterbox)) return;
+  const S = TYPE.safe;
+  ctx.save();
+  ctx.fillStyle = "rgba(0,0,0,0.94)";
+  if(S.top) ctx.fillRect(0, 0, W, S.top);
+  if(S.bottom) ctx.fillRect(0, H - S.bottom, W, S.bottom);
+  ctx.restore();
+}
+
+/* ---------- OPENING — the title IS the opening movie --------- */
+function drawOpening(){
+  drawOmbre(ctx, W, H);
+  drawTitle();
+  drawLabels();
+  drawLetterbox();
+  const s = 1 + Math.sin(frame*0.05)*0.025;
+  beginBtn.style.transform = TYPE.ctaTf + " scale(" + s + ")";
+  inkDom(beginBtn, parseFloat(beginBtn.style.top) || H * 0.8);
+}
+
+/* ---------- COMMUNITY CARD (D) — typography only ---------- */
+function drawCommunityCard(){
+  devHits = [];
+  const K = TYPE.card, S = TYPE.safe;
+  const cx = S.x + S.w / 2;
+  ctx.save();
+  ctx.fillStyle = "rgba(0,0,0,0.68)";
+  ctx.fillRect(0,0,W,H);
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+
+  const topY = S.y + S.h * 0.3;
+  ctx.font = K.big + "px " + fontStack(WORK.titleFont);
+  const c = currentPalette[5];
+  ctx.shadowColor = rgba(c, 0.9);
+  ctx.shadowBlur = 30;
+  ctx.fillStyle = "rgba(255,255,255,0.96)";
+  ctx.fillText("ABSTRACTIANS", cx, topY);
+
+  ctx.shadowBlur = 0;
+  ctx.fillStyle = "rgba(255,255,255,0.88)";
+  let y = topY + K.big * 0.75;
+  K.sub.forEach(function(r){ y += r.size * 0.75; drawRow(r, cx - r.total / 2, y); y += r.size * 0.55; });
+
+  ctx.font = K.linkS + "px " + fontStack(UI_FONT);
+  const boxW = K.linkW + K.linkS*2.2, boxH = K.linkS*2.4;
+  const boxY = Math.max(y + K.linkS * 0.8, S.y + S.h * 0.58 - boxH / 2), boxX = cx - boxW/2;
+  ctx.fillStyle = rgba(c, 0.18);
+  ctx.fillRect(boxX, boxY, boxW, boxH);
+  ctx.strokeStyle = rgba(c, 0.95);
+  ctx.lineWidth = 2;
+  ctx.strokeRect(boxX, boxY, boxW, boxH);
+  ctx.fillStyle = "rgba(255,255,255,0.98)";
+  ctx.fillText(WORK.telegram, cx, boxY + boxH / 2);
+  devHits.push({ x:boxX, y:boxY, w:boxW, h:boxH, act:"link" });
+
+  ctx.fillStyle = "rgba(255,255,255,0.65)";
+  y = boxY + boxH + MIN_TYPE * 0.6;
+  K.foot.forEach(function(r){ y += r.size * 0.7; drawRow(r, cx - r.total / 2, y); y += r.size * 0.6; });
+  ctx.restore();
+}
+
+/* ---------- LAGNIAPPE — typographic, from the config ---------- */
+function drawLagniappe(){
+  const linesArr = WORK.lagniappe[activeLagniappe];
+  if(!linesArr) return;
+  const size = lagSize(linesArr), S = TYPE.safe;
+  ctx.save();
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.font = size + "px " + fontStack(WORK.titleFont);
+  const startY = S.y + S.h/2 - ((linesArr.length-1)*size*1.3)/2;
+  const a = (0.97 * breathAlpha(0.3, 3)).toFixed(3), blur = 34 * breathAmp(0.6, 3);
+  for(let i=0;i<linesArr.length;i++){
+    const c = currentPalette[(i*2+1) % 8];
+    ctx.shadowColor = rgba(c, 0.95);
+    ctx.shadowBlur = blur;
+    ctx.fillStyle = "rgba(255,255,255," + a + ")";
+    ctx.fillText(linesArr[i], S.x + S.w/2, startY + i*size*1.3);
+  }
+  ctx.restore();
+}
+
+/* ---------- INTERACTIVE MENU ---------- */
+const MENU_ROWS = [
+  { k:"w", label:"Waves" },
+  { k:"l", label:"Lines" },
+  { k:"o", label:"Oneness" }
+].concat(PATTERNS.filter(function(p){ return p.key; }).map(function(p){ return { k:p.key, label:p.name, pattern:p }; }))
+ .concat([
+  { k:"c", label:"Color shift" },
+  { k:"d", label:"Community" },
+  { k:"b", label:"Begin again" },
+  { k:"x", label:"Close menu" }
+]);
+const SHIFT_NAMES = { DAYBREAK:"DAYBREAK", GM:"GM", SUNSET:"SUNSET", GN:"GN", GRASS:"4:20" };
+function stateOf(row){
+  if(row.pattern) return row.pattern.on && !row.pattern.dead;
+  if(row.k==="w") return modeWaves;
+  if(row.k==="l") return modeLines;
+  if(row.k==="o") return modeOneness;
+  if(row.k==="c") return colorShiftIdx >= 0;
+  return null;
+}
+function stateText(row){
+  if(row.k==="c" && !row.pattern) return colorShiftIdx >= 0 ? SHIFT_NAMES[SHIFT_ORDER[colorShiftIdx]] : "LIVE";
+  const s = stateOf(row);
+  return s === null ? "" : (s ? "ON" : "OFF");
+}
+function drawMenu(){
+  menuHits = [];
+  const M = TYPE.menu, S = TYPE.safe;
+  ctx.save();
+  ctx.fillStyle = "rgba(0,0,0,0.62)";
+  ctx.fillRect(0,0,W,H);
+
+  ctx.textBaseline = "middle";
+  const fs = M.fs, rowH = M.rowH, rowW = M.rowW;
+  const startY = S.y + S.h/2 - ((MENU_ROWS.length + 1) * rowH)/2;
+  const rowX = S.x + S.w/2 - rowW/2;
+
+  for(let i=0;i<MENU_ROWS.length;i++){
+    const r = MENU_ROWS[i];
+    const y = startY + i*rowH;
+    const on = !!stateOf(r);
+    const c = currentPalette[i % 8];
+
+    ctx.fillStyle = on ? rgba(c, 0.38) : "rgba(255,255,255,0.07)";
+    ctx.fillRect(rowX, y + rowH*0.08, rowW, rowH*0.84);
+    if(on){
+      ctx.strokeStyle = rgba(c, 0.95);
+      ctx.lineWidth = 2;
+      ctx.strokeRect(rowX, y + rowH*0.08, rowW, rowH*0.84);
+    }
+
+    ctx.font = fs + "px " + fontStack(UI_FONT);
+    ctx.textAlign = "left";
+    ctx.fillStyle = rgba(c, 1);
+    ctx.fillText(r.k === "x" ? "✕" : r.k.toUpperCase(), rowX + rowW*0.05, y + rowH/2);
+
+    ctx.fillStyle = "rgba(255,255,255,0.92)";
+    ctx.fillText(r.label, rowX + rowW*0.15, y + rowH/2);
+
+    const st = stateText(r);
+    if(st){
+      ctx.textAlign = "right";
+      ctx.fillStyle = on ? rgba(c,1) : "rgba(255,255,255,0.35)";
+      ctx.fillText(st, rowX + rowW*0.95, y + rowH/2);
+    }
+    menuHits.push({ x:rowX, y:y, w:rowW, h:rowH, k:r.k });
+  }
+
+  ctx.textAlign = "center";
+  ctx.font = M.tag + "px " + fontStack(UI_FONT);
+  ctx.fillStyle = "rgba(255,255,255,0.55)";
+  ctx.fillText("ABSTRACTIA" + (WORK.numeral ? " " + WORK.numeral : ""), S.x + S.w/2, startY + MENU_ROWS.length*rowH + rowH*0.5);
+  ctx.restore();
+}
+
+/* ---------- LIVE SCENE ---------- */
+function drawLive(){
+  ctx.globalAlpha = breathAlpha(0.22, 0);   // the ombre inhales too — opacity only
+  drawOmbre(ctx, W, H);
+  ctx.globalAlpha = 1;
+  if(modeLines) drawLines();
+  if(modeWaves) drawWaves();
+  PATTERNS.forEach(function(p){
+    if(p.kind === "breath" || !p.on || p.dead) return;
+    p.t += DT * (p.motion.speed || 1);
+    runPattern(p, "draw");
+  });
+  if(activeLagniappe) drawLagniappe();
+  drawLetterbox();
+  if(modeDev) drawCommunityCard();
+  if(modeMenu) drawMenu();
+}
+
+/* ---------- main loop ---------- */
+function loop(now){
+  frame++;
+  now = now || performance.now();
+  DT = lastT ? Math.min(0.1, (now - lastT) / 1000) : 1/60;
+  lastT = now;
+  if(TYPE.dirty) computeType();
+  else if(!TYPE.titleTrue && frame % 30 === 0 && fontIsReal(WORK.titleFont)) markType();
+  updatePalette();
+  updateBreath();
+  tickMotion();
+  ombreScroll -= 0.01 * breathAmp(0.8, 0);
+  ctx.clearRect(0,0,W,H);
+
+  if(scene === 0){
+    drawOpening();
+  } else if(scene === 1){
+    drawOpening();
+    fadeAlpha += FADE_RATE;
+    ctx.fillStyle = "rgba(0,0,0," + Math.min(1, fadeAlpha/255) + ")";
+    ctx.fillRect(0,0,W,H);
+    if(fadeAlpha >= 255){
+      fadeAlpha = 255;
+      scene = 2;
+      beginBtn.style.display = "none";
+      showHint();
+    }
+  } else {
+    drawLive();
+    if(hintEl.classList.contains("on")) inkDom(hintEl, H - (TYPE.safe ? TYPE.safe.bottom : 0) - H * 0.05);
+    if(fadeAlpha > 0){
+      fadeAlpha -= FADE_RATE;
+      ctx.fillStyle = "rgba(0,0,0," + Math.max(0, fadeAlpha/255) + ")";
+      ctx.fillRect(0,0,W,H);
+    }
+  }
+  requestAnimationFrame(loop);
+}
+
+/* ---------- hint: after Begin, gone in eight seconds ---------- */
+let hintTimer = null;
+function showHint(){
+  hintEl.classList.add("on");
+  clearTimeout(hintTimer);
+  hintTimer = setTimeout(function(){ hintEl.classList.remove("on"); }, 8000);
+}
+
+/* ---------- one brain for keyboard AND touch ---------- */
+function resetToOpening(){
+  scene = 0; fadeAlpha = 0;
+  modeLines = modeWaves = modeMenu = modeDev = modeOneness = false;
+  oneAmt = 0;
+  activeLagniappe = null;
+  colorShiftIdx = -1;
+  PATTERNS.forEach(function(p){ p.on = p.kind === "trigger" || p.kind === "breath"; p.t = 0; });
+  beginBtn.style.display = "block";
+  hintEl.classList.remove("on");
+  snapPalette(paletteKeyForNow());
+}
+function toggleMode(k){
+  if(k === "b"){ if(scene > 0) resetToOpening(); return; }
+  if(scene !== 2) return;
+  if(k === "c"){
+    colorShiftIdx++;
+    if(colorShiftIdx >= SHIFT_ORDER.length) colorShiftIdx = -1;
+  }
+  else if(k === "l"){ modeLines = !modeLines; }
+  else if(k === "w"){ modeWaves = !modeWaves; }
+  else if(k === "o"){ modeOneness = !modeOneness; }
+  else if(k === "i"){ modeMenu = !modeMenu; if(modeMenu){ modeDev = false; hintEl.classList.remove("on"); } }
+  else if(k === "d"){ modeDev = !modeDev; if(modeDev) modeMenu = false; }
+  else if(k === "x"){ modeMenu = false; }
+  else {
+    const p = PATTERNS.find(function(q){ return q.key === k; });
+    if(p){ p.on = !p.on; return; }
+    if(WORK.lagniappe[k]) activeLagniappe = (activeLagniappe === k) ? null : k;
+  }
+}
+
+document.addEventListener("keydown", function(e){
+  if(e.metaKey || e.ctrlKey || e.altKey) return;
+  toggleMode(e.key.toLowerCase());
+});
+
+/* ---------- touch + mouse ---------- */
+document.addEventListener("touchstart", function(e){
+  if(scene === 2 && e.touches.length === 2 && !modeMenu && !modeDev){
+    modeMenu = true;
+    hintEl.classList.remove("on");
+  }
+}, {passive:true});
+
+cv.addEventListener("pointerdown", function(e){
+  if(scene !== 2) return;
+  const x = e.clientX, y = e.clientY;
+
+  if(modeMenu){
+    for(const h of menuHits){
+      if(x >= h.x && x <= h.x + h.w && y >= h.y && y <= h.y + h.h){
+        toggleMode(h.k);
+        return;
+      }
+    }
+    modeMenu = false;
+    return;
+  }
+
+  if(modeDev){
+    for(const h of devHits){
+      if(x >= h.x && x <= h.x + h.w && y >= h.y && y <= h.y + h.h && h.act === "link"){
+        window.open("https://" + WORK.telegram, "_blank", "noopener");
+        return;
+      }
+    }
+    modeDev = false;
+    return;
+  }
+
+  PATTERNS.forEach(function(p){ if(p.on && p.fn.tap) runPattern(p, "tap", x, y); });
+});
+
+/* ---------- begin ---------- */
+beginBtn.addEventListener("click", function(){
+  if(scene === 0) scene = 1;
+});
+
+/* ---------- resize: square, portrait, landscape — re-fit live, no reload */
+function fit(){
+  W = window.innerWidth; H = window.innerHeight;
+  cv.width = W; cv.height = H;
+  markType();
+}
+window.addEventListener("resize", fit);
+window.addEventListener("orientationchange", function(){ setTimeout(fit, 80); });
+
+/* ---------- boot ---------- */
+fit();
+snapPalette(paletteKeyForNow());
+if(document.fonts){
+  if(document.fonts.ready) document.fonts.ready.then(markType);
+  if(document.fonts.addEventListener) document.fonts.addEventListener("loadingdone", markType);
+  [WORK.titleFont, WORK.h2Font, UI_FONT, CTA_FONT].forEach(function(f){
+    document.fonts.load("100px '" + f + "'").then(markType, markType);
+  });
+}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
